@@ -19,3 +19,12 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# region main
+if __name__ == '__main__':
+    # Check if database is created
+    # Check if configuration is created
+    # Check subcommand
+    pass
+
+# endregion
