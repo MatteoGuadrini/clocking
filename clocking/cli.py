@@ -25,6 +25,7 @@ if __name__ == '__main__':
     # Check if database is created
     # Check if configuration is created
     # Check subcommand
+    # Check optional arguments
     pass
 
 # endregion
