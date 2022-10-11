@@ -20,12 +20,20 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# region main
-if __name__ == '__main__':
+# region functions
+def main():
+    """main function"""
     # Check if database is created
     # Check if configuration is created
     # Check subcommand
     # Check optional arguments
     pass
+
+
+# endregion
+
+# region main
+if __name__ == '__main__':
+    main()
 
 # endregion
