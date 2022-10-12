@@ -20,7 +20,25 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# region imports
+import argparse
+
+
+# endregion
+
 # region functions
+def get_args():
+    """Get command-line arguments
+
+    :return: ArgumentParser
+    """
+    parser = argparse.ArgumentParser(description='Use this tool to tracking or monitoring worked hours',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                     prog='clocking'
+                                     )
+    return parser.parse_args()
+
+
 def main():
     """main function"""
     # Check if database is created
