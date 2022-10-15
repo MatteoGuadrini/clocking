@@ -36,7 +36,8 @@ def get_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      prog='clocking'
                                      )
-    subparser = parser.add_subparsers(dest='command')
+    parser.add_argument('-v', '--verbose', help='Enable verbosity', action='store_true')
+    subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
     init = subparser.add_parser('init', help='Initialize configuration database')
 
     return parser.parse_args()
