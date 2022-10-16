@@ -23,6 +23,11 @@
 # region imports
 import argparse
 
+# endregion
+
+# region globals
+__version__ = '0.0.1'
+
 
 # endregion
 
@@ -37,6 +42,7 @@ def get_args():
                                      prog='clocking'
                                      )
     parser.add_argument('-v', '--verbose', help='Enable verbosity', action='store_true')
+    parser.add_argument('-V', '--version', help='Print version', version=__version__)
     subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
     init = subparser.add_parser('init', help='Initialize configuration database')
 
