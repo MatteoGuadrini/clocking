@@ -45,6 +45,7 @@ def get_args():
     parser.add_argument('-V', '--version', help='Print version', version=__version__)
     subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
     init = subparser.add_parser('init', help='Initialize configuration database')
+    init.add_argument('-p', '--print', help='Print current configurations', action='store_true')
 
     return parser.parse_args()
 
