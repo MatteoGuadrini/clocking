@@ -37,6 +37,7 @@ def get_args():
 
     :return: ArgumentParser
     """
+    # Principal parser
     parser = argparse.ArgumentParser(description='Use this tool to tracking or monitoring worked hours',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      prog='clocking'
@@ -44,8 +45,10 @@ def get_args():
     parser.add_argument('-v', '--verbose', help='Enable verbosity', action='store_true')
     parser.add_argument('-V', '--version', help='Print version', version=__version__)
     subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
+    # Config subparser
     config = subparser.add_parser('config', help="Database's configuration")
-    config.add_argument('-p', '--print', help='Print current configurations', action='store_true')
+    print_group = config.add_argument_group('print')
+    print_group.add_argument('-p', '--print', help='Print current configurations', action='store_true')
 
     return parser.parse_args()
 
