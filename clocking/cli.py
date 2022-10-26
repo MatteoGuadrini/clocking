@@ -49,6 +49,8 @@ def get_args():
     config = subparser.add_parser('config', help="Database's configuration")
     print_group = config.add_argument_group('print')
     print_group.add_argument('-p', '--print', help='Print current configurations', action='store_true')
+    set_group = config.add_argument_group('set')
+    set_group.add_argument('-D', '--daily-hours', help='Daily work hours', type=float, default=8.0)
 
     return parser.parse_args()
 
