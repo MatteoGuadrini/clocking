@@ -51,6 +51,11 @@ def get_args():
     print_group.add_argument('-p', '--print', help='Print current configurations', action='store_true')
     set_group = config.add_argument_group('set')
     set_group.add_argument('-D', '--daily-hours', help='Daily work hours', type=float, default=8.0)
+    set_group.add_argument('-N', '--day-name',
+                           help="Working day's name",
+                           nargs='+',
+                           default=["Mon", "Tue", "Wed", "Thu", "Fri"],
+                           choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"})
 
     return parser.parse_args()
 
