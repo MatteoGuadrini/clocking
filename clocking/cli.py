@@ -53,9 +53,10 @@ def get_args():
     set_group.add_argument('-D', '--daily-hours', help='Daily work hours', type=float, default=8.0)
     set_group.add_argument('-N', '--day-name',
                            help="Working day's name",
-                           nargs='+',
-                           default=["Mon", "Tue", "Wed", "Thu", "Fri"],
-                           choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"})
+                           nargs=argparse.ONE_OR_MORE,
+                           default={"Mon", "Tue", "Wed", "Thu", "Fri"},
+                           choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
+                           type=str)
 
     return parser.parse_args()
 
