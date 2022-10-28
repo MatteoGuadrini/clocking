@@ -50,13 +50,14 @@ def get_args():
     print_group = config.add_argument_group('print')
     print_group.add_argument('-p', '--print', help='Print current configurations', action='store_true')
     set_group = config.add_argument_group('set')
-    set_group.add_argument('-D', '--daily-hours', help='Daily work hours', type=float, default=8.0)
+    set_group.add_argument('-D', '--daily-hours', help='Daily work hours', default=8.0, type=float)
     set_group.add_argument('-N', '--day-name',
                            help="Working day's name",
                            nargs=argparse.ONE_OR_MORE,
                            default={"Mon", "Tue", "Wed", "Thu", "Fri"},
                            choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
                            type=str)
+    set_group.add_argument('-E', '--extraordinary', help="Extraordinary hour value", default=1.0, type=float)
 
     return parser.parse_args()
 
