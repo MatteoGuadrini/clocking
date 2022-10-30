@@ -58,6 +58,7 @@ def get_args():
                            choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
                            type=str)
     set_group.add_argument('-E', '--extraordinary', help="Extraordinary hour value", default=1.0, type=float)
+    set_group.add_argument('-P', '--permit-hour', help="Permit work hour value", default=1.0, type=float)
     set_group.add_argument('-H', '--holiday', help="Holiday value", default='Holiday', type=str)
 
     return parser.parse_args()
