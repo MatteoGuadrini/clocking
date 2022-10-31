@@ -60,6 +60,7 @@ def get_args():
     set_group.add_argument('-E', '--extraordinary', help="Extraordinary hour value", default=1.0, type=float)
     set_group.add_argument('-P', '--permit-hour', help="Permit work hour value", default=1.0, type=float)
     set_group.add_argument('-H', '--holiday', help="Holiday value", default='Holiday', type=str)
+    set_group.add_argument('-R', '--hour-reward', help="Hour reward", default=10.0, type=float)
 
     return parser.parse_args()
 
