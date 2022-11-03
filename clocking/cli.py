@@ -64,6 +64,7 @@ def get_args():
     set_group.add_argument('-R', '--hour-reward', help="Hour reward", default=10.0, type=float)
     set_group.add_argument('-W', '--extraordinary-reward', help="Extraordinary hour reward", default=15.0, type=float)
     set_group.add_argument('-F', '--food-ticket', help="Food ticket reward", default=7.0, type=float)
+    set_group.add_argument('-O', '--other-reward', help="Other reward", default=0, type=float)
 
     return parser.parse_args()
 
