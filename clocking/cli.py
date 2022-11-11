@@ -43,7 +43,7 @@ def get_args():
                                      prog='clocking'
                                      )
     parser.add_argument('-v', '--verbose', help='Enable verbosity', action='store_true')
-    parser.add_argument('-V', '--version', help='Print version', version=__version__)
+    parser.add_argument('-V', '--version', help='Print version', action='version', version=__version__)
     subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
     # Config subparser
     config = subparser.add_parser('config', help="Database's configuration")
@@ -67,6 +67,8 @@ def get_args():
     set_group.add_argument('-F', '--food-ticket', help="Food ticket reward", default=7.0, type=float)
     set_group.add_argument('-U', '--other-hours', help="Other worked hours", default=1.0, type=float)
     set_group.add_argument('-O', '--other-reward', help="Other reward", default=0, type=float)
+    reset_group = config.add_argument_group('reset')
+    reset_group.add_argument('-r', '--reset', help="Reset with default values", action='store_true')
 
     return parser.parse_args()
 
