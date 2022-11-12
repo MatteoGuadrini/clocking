@@ -46,7 +46,7 @@ def get_args():
     parser.add_argument('-V', '--version', help='Print version', action='version', version=__version__)
     subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
     # Config subparser
-    config = subparser.add_parser('config', help="Database's configuration")
+    config = subparser.add_parser('config', help="Default's configuration")
     print_group = config.add_argument_group('print')
     print_group.add_argument('-p', '--print',
                              help='Print current configurations',
@@ -116,6 +116,9 @@ def get_args():
                            metavar='NUMBER')
     reset_group = config.add_argument_group('reset')
     reset_group.add_argument('-r', '--reset', help="Reset with default values", action='store_true')
+
+    # Set subparser
+    config = subparser.add_parser('set', help="Setting values")
 
     return parser.parse_args()
 
