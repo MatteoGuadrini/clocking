@@ -118,7 +118,11 @@ def get_args():
     reset_group.add_argument('-r', '--reset', help="Reset with default values", action='store_true')
 
     # Set subparser
-    config = subparser.add_parser('set', help="Setting values")
+    setting = subparser.add_parser('set', help="Setting values")
+    setting.add_argument('-d', '--date',
+                         help="Setting date",
+                         default=None,
+                         metavar='DATE')
 
     return parser.parse_args()
 
