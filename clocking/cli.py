@@ -123,6 +123,11 @@ def get_args():
                          help="Setting date",
                          default=None,
                          metavar='DATE')
+    setting.add_argument('-w', '--worked-hours',
+                         help="Worked hours",
+                         default=None,
+                         type=float,
+                         metavar='HOURS')
 
     return parser.parse_args()
 
