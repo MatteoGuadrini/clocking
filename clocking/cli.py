@@ -119,7 +119,7 @@ def get_args():
 
     # Set subparser
     setting = subparser.add_parser('set', help="Setting values")
-    setting.add_argument('-d', '--date',
+    setting.add_argument('-D', '--date',
                          help="Setting date",
                          default=None,
                          metavar='DATE')
@@ -128,6 +128,10 @@ def get_args():
                          default=None,
                          type=float,
                          metavar='HOURS')
+    setting.add_argument('-d', '--day',
+                         help="Setting day",
+                         default=None,
+                         metavar='DAY')
 
     return parser.parse_args()
 
