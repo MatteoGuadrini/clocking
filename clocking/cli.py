@@ -136,6 +136,10 @@ def get_args():
                          help="Setting month",
                          default=None,
                          metavar='MONTH')
+    setting.add_argument('-y', '--year',
+                         help="Setting year",
+                         default=None,
+                         metavar='YEAR')
 
     return parser.parse_args()
 
