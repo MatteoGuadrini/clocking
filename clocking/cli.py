@@ -132,6 +132,10 @@ def get_args():
                          help="Setting day",
                          default=None,
                          metavar='DAY')
+    setting.add_argument('-m', '--month',
+                         help="Setting month",
+                         default=None,
+                         metavar='MONTH')
 
     return parser.parse_args()
 
