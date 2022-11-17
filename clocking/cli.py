@@ -125,7 +125,7 @@ def get_args():
                          metavar='DATE')
     setting.add_argument('hours',
                          help="Worked hours",
-                         default=None,
+                         default=0,
                          type=float,
                          metavar='HOURS')
     setting.add_argument('-d', '--day',
@@ -140,6 +140,11 @@ def get_args():
                          help="Setting year",
                          default=None,
                          metavar='YEAR')
+    setting.add_argument('-e', '--extraordinary',
+                         help="Extraordinary hours",
+                         type=float,
+                         default=0,
+                         metavar='HOURS')
 
     return parser.parse_args()
 
