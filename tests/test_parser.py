@@ -23,6 +23,7 @@
 """Unit testing module for arguments parser"""
 
 import os
+from subprocess import getstatusoutput
 
 prg = 'clocking/cli.py'
 
@@ -32,3 +33,13 @@ def test_exists():
     """exists cli"""
 
     assert os.path.isfile(prg)
+
+
+# --------------------------------------------------
+def test_usage():
+    """usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage')
