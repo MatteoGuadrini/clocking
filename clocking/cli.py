@@ -38,110 +38,110 @@ def get_args():
     :return: ArgumentParser
     """
     # Principal parser
-    parser = argparse.ArgumentParser(description='Use this tool to tracking or monitoring worked hours',
+    parser = argparse.ArgumentParser(description='tracking or monitoring worked hours',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      prog='clocking'
                                      )
-    parser.add_argument('-v', '--verbose', help='Enable verbosity', action='store_true')
-    parser.add_argument('-V', '--version', help='Print version', action='version', version=__version__)
-    subparser = parser.add_subparsers(dest='command', help='Commands to run', required=True)
+    parser.add_argument('-v', '--verbose', help='enable verbosity', action='store_true')
+    parser.add_argument('-V', '--version', help='print version', action='version', version=__version__)
+    subparser = parser.add_subparsers(dest='command', help='commands to run', required=True)
     # Config subparser
-    config = subparser.add_parser('config', help="Default's configuration")
+    config = subparser.add_parser('config', help="default's configuration")
     print_group = config.add_argument_group('print')
     print_group.add_argument('-p', '--print',
-                             help='Print current configurations',
+                             help='print current configurations',
                              action='store_true')
     set_group = config.add_argument_group('set')
     set_group.add_argument('-D', '--daily-hours',
-                           help='Daily work hours',
+                           help='daily work hours',
                            default=8.0,
                            type=float,
                            metavar='HOURS')
     set_group.add_argument('-N', '--day-name',
-                           help="Working day's name",
+                           help="working day's name",
                            nargs=argparse.ONE_OR_MORE,
                            default={"Mon", "Tue", "Wed", "Thu", "Fri"},
                            choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
                            type=str,
                            metavar='STR')
     set_group.add_argument('-E', '--extraordinary',
-                           help="Extraordinary hour value",
+                           help="extraordinary hour value",
                            default=1.0,
                            type=float,
                            metavar='HOURS')
     set_group.add_argument('-P', '--permit-hour',
-                           help="Permit work hour value",
+                           help="permit work hour value",
                            default=1.0,
                            type=float,
                            metavar='HOURS')
     set_group.add_argument('-S', '--disease',
-                           help="Disease value",
+                           help="disease value",
                            default='Disease',
                            type=str,
                            metavar='STR')
     set_group.add_argument('-H', '--holiday',
-                           help="Holiday value",
+                           help="holiday value",
                            default='Holiday',
                            type=str,
                            metavar='STR')
     set_group.add_argument('-C', '--currency',
-                           help="Currency value",
+                           help="currency value",
                            default='$',
                            type=str,
                            metavar='SYMBOL')
     set_group.add_argument('-R', '--hour-reward',
-                           help="Hour reward",
+                           help="hour reward",
                            default=10.0,
                            type=float,
                            metavar='NUMBER')
     set_group.add_argument('-W', '--extraordinary-reward',
-                           help="Extraordinary hour reward",
+                           help="extraordinary hour reward",
                            default=15.0,
                            type=float,
                            metavar='NUMBER')
     set_group.add_argument('-F', '--food-ticket',
-                           help="Food ticket reward",
+                           help="food ticket reward",
                            default=7.0,
                            type=float,
                            metavar='NUMBER')
     set_group.add_argument('-U', '--other-hours',
-                           help="Other worked hours",
+                           help="other worked hours",
                            default=1.0,
                            type=float,
                            metavar='HOURS')
     set_group.add_argument('-O', '--other-reward',
-                           help="Other reward",
+                           help="other reward",
                            default=0,
                            type=float,
                            metavar='NUMBER')
     reset_group = config.add_argument_group('reset')
-    reset_group.add_argument('-r', '--reset', help="Reset with default values", action='store_true')
+    reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
 
     # Set subparser
     setting = subparser.add_parser('set', help="Setting values")
     setting.add_argument('-D', '--date',
-                         help="Setting date",
+                         help="setting date",
                          default=None,
                          metavar='DATE')
     setting.add_argument('hours',
-                         help="Worked hours",
+                         help="worked hours",
                          default=0,
                          type=float,
                          metavar='HOURS')
     setting.add_argument('-d', '--day',
-                         help="Setting day",
+                         help="setting day",
                          default=None,
                          metavar='DAY')
     setting.add_argument('-m', '--month',
-                         help="Setting month",
+                         help="setting month",
                          default=None,
                          metavar='MONTH')
     setting.add_argument('-y', '--year',
-                         help="Setting year",
+                         help="setting year",
                          default=None,
                          metavar='YEAR')
     setting.add_argument('-e', '--extraordinary',
-                         help="Extraordinary hours",
+                         help="extraordinary hours",
                          type=float,
                          default=0,
                          metavar='HOURS')
@@ -155,7 +155,7 @@ def main():
     # Check if configuration is created
     # Check subcommand
     # Check optional arguments
-    pass
+    args = get_args()
 
 
 # endregion
