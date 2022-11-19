@@ -119,15 +119,15 @@ def get_args():
 
     # Set subparser
     setting = subparser.add_parser('set', help="Setting values")
+    daily_value_group = setting.add_mutually_exclusive_group(required=True)
+    daily_value_group.add_argument('-w', '--hours',
+                                   help="worked hours",
+                                   default=0,
+                                   type=float)
     setting.add_argument('-D', '--date',
                          help="setting date",
                          default=None,
                          metavar='DATE')
-    setting.add_argument('hours',
-                         help="worked hours",
-                         default=0,
-                         type=float,
-                         metavar='HOURS')
     setting.add_argument('-d', '--day',
                          help="setting day",
                          default=None,
