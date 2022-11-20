@@ -124,6 +124,9 @@ def get_args():
                                    help="worked hours",
                                    default=0,
                                    type=float)
+    daily_value_group.add_argument('-s', '--disease',
+                                   help="disease day",
+                                   action='store_true')
     setting.add_argument('-D', '--date',
                          help="setting date",
                          default=None,
