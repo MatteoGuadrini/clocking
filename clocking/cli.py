@@ -122,11 +122,17 @@ def get_args():
     daily_value_group = setting.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument('-w', '--hours',
                                    help="worked hours",
-                                   default=0,
+                                   default=None,
                                    type=float)
     daily_value_group.add_argument('-s', '--disease',
                                    help="disease day",
                                    action='store_true')
+    daily_value_group.add_argument('-H', '--holiday',
+                                   help="holiday day",
+                                   action='store_true')
+    daily_value_group.add_argument('-R', '--holidays-range',
+                                   help="holidays day",
+                                   metavar='DAYS')
     setting.add_argument('-D', '--date',
                          help="setting date",
                          default=None,
