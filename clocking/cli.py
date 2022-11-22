@@ -114,6 +114,11 @@ def get_args():
                            default=0,
                            type=float,
                            metavar='NUMBER')
+    set_group.add_argument('-L', '--location',
+                           help="current location",
+                           default='Office',
+                           type=str,
+                           metavar='LOCATION')
     reset_group = config.add_argument_group('reset')
     reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
 
@@ -131,7 +136,7 @@ def get_args():
                                    help="holiday day",
                                    action='store_true')
     daily_value_group.add_argument('-R', '--holidays-range',
-                                   help="holidays day",
+                                   help="holiday days",
                                    metavar='DAYS')
     setting.add_argument('-D', '--date',
                          help="setting date",
@@ -154,6 +159,10 @@ def get_args():
                          type=float,
                          default=0,
                          metavar='HOURS')
+    setting.add_argument('-l', '--location',
+                         help="current location",
+                         default=None,
+                         type=str)
 
     return parser.parse_args()
 
