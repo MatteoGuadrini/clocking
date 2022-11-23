@@ -135,6 +135,9 @@ def get_args():
     daily_value_group.add_argument('-H', '--holiday',
                                    help="holiday day",
                                    action='store_true')
+    daily_value_group.add_argument('-u', '--uptime',
+                                   help="calculate hours from uptime",
+                                   action='store_true')
     daily_value_group.add_argument('-R', '--holidays-range',
                                    help="holiday days",
                                    metavar='DAYS')
