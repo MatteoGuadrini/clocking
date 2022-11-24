@@ -141,6 +141,9 @@ def get_args():
     daily_value_group.add_argument('-R', '--holidays-range',
                                    help="holiday days",
                                    metavar='DAYS')
+    daily_value_group.add_argument('-c', '--custom',
+                                   help="fill selected date with custom value",
+                                   metavar='VALUE')
     setting.add_argument('-D', '--date',
                          help="setting date",
                          default=None,
