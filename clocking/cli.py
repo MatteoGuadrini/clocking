@@ -119,6 +119,10 @@ def get_args():
                            default='Office',
                            type=str,
                            metavar='LOCATION')
+    set_group.add_argument('-F', '--fill-empty',
+                           help="fill empty date with value",
+                           default=0,
+                           metavar='VALUE')
     reset_group = config.add_argument_group('reset')
     reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
 
