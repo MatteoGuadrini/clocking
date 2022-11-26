@@ -119,7 +119,7 @@ def get_args():
                            default='Office',
                            type=str,
                            metavar='LOCATION')
-    set_group.add_argument('-F', '--fill-empty',
+    set_group.add_argument('-f', '--fill-empty',
                            help="fill empty date with value",
                            default=0,
                            metavar='VALUE')
@@ -148,6 +148,9 @@ def get_args():
     daily_value_group.add_argument('-c', '--custom',
                                    help="fill selected date with custom value",
                                    metavar='VALUE')
+    daily_value_group.add_argument('-r', '--reset',
+                                   help="reset current date with default fill empty value",
+                                   action='store_true')
     setting.add_argument('-D', '--date',
                          help="setting date",
                          default=None,
