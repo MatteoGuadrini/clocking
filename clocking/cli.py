@@ -142,7 +142,7 @@ def get_args():
     daily_value_group.add_argument('-u', '--uptime',
                                    help="calculate hours from uptime",
                                    action='store_true')
-    daily_value_group.add_argument('-R', '--holidays-range',
+    daily_value_group.add_argument('-G', '--holidays-range',
                                    help="holiday days",
                                    metavar='DAYS')
     daily_value_group.add_argument('-c', '--custom',
@@ -151,6 +151,9 @@ def get_args():
     daily_value_group.add_argument('-r', '--reset',
                                    help="reset current date with default fill empty value",
                                    action='store_true')
+    daily_value_group.add_argument('-R', '--remove',
+                                   help="remove date",
+                                   metavar='DATE')
     setting.add_argument('-D', '--date',
                          help="setting date",
                          default=None,
