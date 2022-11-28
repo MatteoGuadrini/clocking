@@ -179,6 +179,12 @@ def get_args():
                          help="current location",
                          default=None,
                          type=str)
+    # Remove subparser
+    removing = subparser.add_parser('rm', help="Remove values")
+    removing.add_argument('-D', '--date',
+                          help="removing date",
+                          default=None,
+                          metavar='DATE')
 
     return parser.parse_args()
 
