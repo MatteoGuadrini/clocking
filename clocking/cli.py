@@ -123,6 +123,8 @@ def get_args():
                            help="fill empty date with value",
                            default=0,
                            metavar='VALUE')
+    selection_group = config.add_argument_group('selection')
+    selection_group.add_argument('-i', '--select-id', help="load configuration selecting id", type=int, metavar='ID')
     reset_group = config.add_argument_group('reset')
     reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
 
