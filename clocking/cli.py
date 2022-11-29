@@ -49,7 +49,10 @@ def get_args():
     config = subparser.add_parser('config', help="default's configuration")
     print_group = config.add_argument_group('print')
     print_group.add_argument('-p', '--print',
-                             help='print current configurations',
+                             help='print current configuration',
+                             action='store_true')
+    print_group.add_argument('-a', '--print-all',
+                             help='print all configurations',
                              action='store_true')
     set_group = config.add_argument_group('set')
     set_group.add_argument('-D', '--daily-hours',
