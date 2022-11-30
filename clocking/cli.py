@@ -188,8 +188,11 @@ def get_args():
     removing = subparser.add_parser('rm', help="Remove values")
     removing.add_argument('-D', '--date',
                           help="removing date",
-                          default=None,
                           metavar='DATE')
+    removing.add_argument('-Y', '--year',
+                          help="removing whole year",
+                          type=int,
+                          metavar='YEAR')
 
     return parser.parse_args()
 
