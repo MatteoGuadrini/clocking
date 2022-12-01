@@ -187,12 +187,16 @@ def get_args():
     # Remove subparser
     removing = subparser.add_parser('rm', help="Remove values")
     removing.add_argument('-D', '--date',
-                          help="removing date",
+                          help="removing specific date",
                           metavar='DATE')
     removing.add_argument('-Y', '--year',
                           help="removing whole year",
                           type=int,
                           metavar='YEAR')
+    removing.add_argument('-M', '--month',
+                          help="removing whole month",
+                          type=int,
+                          metavar='MONTH')
 
     return parser.parse_args()
 
