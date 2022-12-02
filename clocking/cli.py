@@ -184,6 +184,9 @@ def get_args():
                          help="current location",
                          default=None,
                          type=str)
+    setting.add_argument('-U', '--user',
+                         help="user to track time",
+                         type=str)
     # Remove subparser
     removing = subparser.add_parser('rm', help="Remove values")
     removing.add_argument('-D', '--date',
