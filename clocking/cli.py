@@ -200,6 +200,10 @@ def get_args():
                           help="removing whole month",
                           type=int,
                           metavar='MONTH')
+    removing.add_argument('-U', '--user',
+                          help="removing whole user data",
+                          type=int,
+                          metavar='USER')
 
     return parser.parse_args()
 
