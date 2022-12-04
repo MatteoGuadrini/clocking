@@ -178,7 +178,10 @@ def get_args():
     setting.add_argument('-e', '--extraordinary',
                          help="extraordinary hours",
                          type=float,
-                         default=0,
+                         metavar='HOURS')
+    setting.add_argument('-o', '--other',
+                         help="other hours",
+                         type=float,
                          metavar='HOURS')
     setting.add_argument('-l', '--location',
                          help="current location",
