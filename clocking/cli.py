@@ -161,19 +161,15 @@ def get_args():
                                    metavar='DATE')
     setting.add_argument('-D', '--date',
                          help="setting date",
-                         default=None,
                          metavar='DATE')
     setting.add_argument('-d', '--day',
                          help="setting day",
-                         default=None,
                          metavar='DAY')
     setting.add_argument('-m', '--month',
                          help="setting month",
-                         default=None,
                          metavar='MONTH')
     setting.add_argument('-y', '--year',
                          help="setting year",
-                         default=None,
                          metavar='YEAR')
     setting.add_argument('-e', '--extraordinary',
                          help="extraordinary hours",
@@ -185,7 +181,6 @@ def get_args():
                          metavar='HOURS')
     setting.add_argument('-l', '--location',
                          help="current location",
-                         default=None,
                          type=str)
     setting.add_argument('-U', '--user',
                          help="user to track time",
