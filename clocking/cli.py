@@ -54,6 +54,9 @@ def get_args():
     print_group.add_argument('-a', '--print-all',
                              help='print all configurations',
                              action='store_true')
+    print_group.add_argument('-t', '--print-user',
+                             help='print all user configurations',
+                             action='store_true')
     set_group = config.add_argument_group('set')
     set_group.add_argument('-D', '--daily-hours',
                            help='daily work hours',
