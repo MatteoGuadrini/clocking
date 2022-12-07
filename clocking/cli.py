@@ -126,6 +126,9 @@ def get_args():
                            help="fill empty date with value",
                            default=0,
                            metavar='VALUE')
+    set_group.add_argument('-u', '--user',
+                           help="change user",
+                           metavar='USER')
     selection_group = config.add_argument_group('selection')
     selection_group.add_argument('-i', '--select-id', help="load configuration selecting id", type=int, metavar='ID')
     reset_group = config.add_argument_group('reset')
