@@ -138,7 +138,7 @@ def get_args():
     reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
 
     # Set subparser
-    setting = subparser.add_parser('set', help="Setting values")
+    setting = subparser.add_parser('set', help="setting values")
     daily_value_group = setting.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument('-w', '--hours',
                                    help="worked hours",
@@ -192,7 +192,7 @@ def get_args():
                          help="user to track time",
                          type=str)
     # Remove subparser
-    removing = subparser.add_parser('rm', help="Remove values")
+    removing = subparser.add_parser('rm', help="remove values")
     removing.add_argument('-D', '--date',
                           help="removing specific date",
                           metavar='DATE')
@@ -211,6 +211,11 @@ def get_args():
     removing.add_argument('-C', '--clear',
                           help="clear all data",
                           action='store_true')
+    # Print subparser
+    printing = subparser.add_parser('print', help="print values")
+    printing.add_argument('-D', '--date',
+                          help="print specific date",
+                          metavar='DATE')
 
     return parser.parse_args()
 
