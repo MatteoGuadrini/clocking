@@ -214,13 +214,14 @@ def get_args():
                                 action='store_true')
     # Print subparser
     printing = subparser.add_parser('print', help="print values")
-    printing.add_argument('-D', '--date',
-                          help="print specific date",
-                          metavar='DATE')
-    printing.add_argument('-Y', '--year',
-                          help="print whole year",
-                          type=int,
-                          metavar='YEAR')
+    printing_group = printing.add_mutually_exclusive_group(required=True)
+    printing_group.add_argument('-D', '--date',
+                                help="print specific date",
+                                metavar='DATE')
+    printing_group.add_argument('-Y', '--year',
+                                help="print whole year",
+                                type=int,
+                                metavar='YEAR')
 
     return parser.parse_args()
 
