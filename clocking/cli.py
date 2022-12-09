@@ -193,24 +193,25 @@ def get_args():
                          type=str)
     # Remove subparser
     removing = subparser.add_parser('rm', help="remove values")
-    removing.add_argument('-D', '--date',
-                          help="remove specific date",
-                          metavar='DATE')
-    removing.add_argument('-Y', '--year',
-                          help="remove whole year",
-                          type=int,
-                          metavar='YEAR')
-    removing.add_argument('-M', '--month',
-                          help="remove whole month",
-                          type=int,
-                          metavar='MONTH')
-    removing.add_argument('-U', '--user',
-                          help="remove whole user data",
-                          type=str,
-                          metavar='USER')
-    removing.add_argument('-C', '--clear',
-                          help="clear all data",
-                          action='store_true')
+    removing_group = removing.add_mutually_exclusive_group(required=True)
+    removing_group.add_argument('-D', '--date',
+                                help="remove specific date",
+                                metavar='DATE')
+    removing_group.add_argument('-Y', '--year',
+                                help="remove whole year",
+                                type=int,
+                                metavar='YEAR')
+    removing_group.add_argument('-M', '--month',
+                                help="remove whole month",
+                                type=int,
+                                metavar='MONTH')
+    removing_group.add_argument('-U', '--user',
+                                help="remove whole user data",
+                                type=str,
+                                metavar='USER')
+    removing_group.add_argument('-C', '--clear',
+                                help="clear all data",
+                                action='store_true')
     # Print subparser
     printing = subparser.add_parser('print', help="print values")
     printing.add_argument('-D', '--date',
