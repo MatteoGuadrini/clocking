@@ -216,6 +216,10 @@ def get_args():
     printing.add_argument('-D', '--date',
                           help="print specific date",
                           metavar='DATE')
+    printing.add_argument('-Y', '--year',
+                          help="print whole year",
+                          type=int,
+                          metavar='YEAR')
 
     return parser.parse_args()
 
