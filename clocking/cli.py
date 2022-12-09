@@ -141,71 +141,71 @@ def get_args():
     setting = subparser.add_parser('set', help="setting values")
     daily_value_group = setting.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument('-w', '--hours',
-                                   help="worked hours",
+                                   help="set worked hours",
                                    default=None,
                                    type=float)
     daily_value_group.add_argument('-s', '--disease',
-                                   help="disease day",
+                                   help="set disease day",
                                    action='store_true')
     daily_value_group.add_argument('-H', '--holiday',
-                                   help="holiday day",
+                                   help="set holiday day",
                                    action='store_true')
     daily_value_group.add_argument('-u', '--uptime',
                                    help="calculate hours from uptime",
                                    action='store_true')
     daily_value_group.add_argument('-G', '--holidays-range',
-                                   help="holiday days",
+                                   help="set holiday days",
                                    metavar='DAYS')
     daily_value_group.add_argument('-c', '--custom',
-                                   help="fill selected date with custom value",
+                                   help="set fill selected date with custom value",
                                    metavar='VALUE')
     daily_value_group.add_argument('-r', '--reset',
                                    help="reset current date with default fill empty value",
                                    action='store_true')
     daily_value_group.add_argument('-R', '--remove',
-                                   help="remove date",
+                                   help="remove values date",
                                    metavar='DATE')
     setting.add_argument('-D', '--date',
-                         help="setting date",
+                         help="set date",
                          metavar='DATE')
     setting.add_argument('-d', '--day',
-                         help="setting day",
+                         help="set day",
                          metavar='DAY')
     setting.add_argument('-m', '--month',
-                         help="setting month",
+                         help="set month",
                          metavar='MONTH')
     setting.add_argument('-y', '--year',
-                         help="setting year",
+                         help="set year",
                          metavar='YEAR')
     setting.add_argument('-e', '--extraordinary',
-                         help="extraordinary hours",
+                         help="set extraordinary hours",
                          type=float,
                          metavar='HOURS')
     setting.add_argument('-o', '--other',
-                         help="other hours",
+                         help="set other hours",
                          type=float,
                          metavar='HOURS')
     setting.add_argument('-l', '--location',
-                         help="current location",
+                         help="set current location",
                          type=str)
     setting.add_argument('-U', '--user',
-                         help="user to track time",
+                         help="set user to track time",
                          type=str)
     # Remove subparser
     removing = subparser.add_parser('rm', help="remove values")
     removing.add_argument('-D', '--date',
-                          help="removing specific date",
+                          help="remove specific date",
                           metavar='DATE')
     removing.add_argument('-Y', '--year',
-                          help="removing whole year",
+                          help="remove whole year",
                           type=int,
                           metavar='YEAR')
     removing.add_argument('-M', '--month',
-                          help="removing whole month",
+                          help="remove whole month",
                           type=int,
                           metavar='MONTH')
     removing.add_argument('-U', '--user',
-                          help="removing whole user data",
+                          help="remove whole user data",
                           type=str,
                           metavar='USER')
     removing.add_argument('-C', '--clear',
