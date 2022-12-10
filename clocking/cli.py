@@ -222,6 +222,10 @@ def get_args():
                                 help="print whole year",
                                 type=int,
                                 metavar='YEAR')
+    printing_group.add_argument('-M', '--month',
+                                help="print whole month",
+                                type=int,
+                                metavar='MONTH')
 
     return parser.parse_args()
 
