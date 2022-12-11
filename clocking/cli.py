@@ -226,6 +226,10 @@ def get_args():
                                 help="print whole month",
                                 type=int,
                                 metavar='MONTH')
+    printing_group.add_argument('-U', '--user',
+                                help="remove whole user data",
+                                type=str,
+                                metavar='USER')
 
     return parser.parse_args()
 
