@@ -227,9 +227,12 @@ def get_args():
                                 type=int,
                                 metavar='MONTH')
     printing_group.add_argument('-U', '--user',
-                                help="remove whole user data",
+                                help="print whole user data",
                                 type=str,
                                 metavar='USER')
+    printing.add_argument('-c', '--csv',
+                          help="print in csv format",
+                          action='store_true')
 
     return parser.parse_args()
 
