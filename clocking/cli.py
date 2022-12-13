@@ -230,9 +230,13 @@ def get_args():
                                 help="print whole user data",
                                 type=str,
                                 metavar='USER')
-    printing.add_argument('-c', '--csv',
-                          help="print in csv format",
-                          action='store_true')
+    printing_fmt_group = printing.add_mutually_exclusive_group()
+    printing_fmt_group.add_argument('-c', '--csv',
+                                    help="print in csv format",
+                                    action='store_true')
+    printing_fmt_group.add_argument('-j', '--json',
+                                    help="print in json format",
+                                    action='store_true')
 
     return parser.parse_args()
 
