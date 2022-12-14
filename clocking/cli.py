@@ -237,6 +237,9 @@ def get_args():
     printing_fmt_group.add_argument('-j', '--json',
                                     help="print in json format",
                                     action='store_true')
+    printing.add_argument('-H', '--holiday',
+                          help="print only holidays",
+                          action='store_true')
 
     return parser.parse_args()
 
