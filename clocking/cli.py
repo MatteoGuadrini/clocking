@@ -240,6 +240,9 @@ def get_args():
     printing.add_argument('-H', '--holiday',
                           help="print only holidays",
                           action='store_true')
+    printing.add_argument('-S', '--disease',
+                          help="print only diseases",
+                          action='store_true')
 
     return parser.parse_args()
 
