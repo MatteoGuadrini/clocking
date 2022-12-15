@@ -237,12 +237,13 @@ def get_args():
     printing_fmt_group.add_argument('-j', '--json',
                                     help="print in json format",
                                     action='store_true')
-    printing.add_argument('-H', '--holiday',
-                          help="print only holidays",
-                          action='store_true')
-    printing.add_argument('-S', '--disease',
-                          help="print only diseases",
-                          action='store_true')
+    printing_selection_group = printing.add_mutually_exclusive_group()
+    printing_selection_group.add_argument('-H', '--holiday',
+                                          help="print only holidays",
+                                          action='store_true')
+    printing_selection_group.add_argument('-S', '--disease',
+                                          help="print only diseases",
+                                          action='store_true')
 
     return parser.parse_args()
 
