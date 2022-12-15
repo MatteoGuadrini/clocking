@@ -241,8 +241,11 @@ def get_args():
     printing_selection_group.add_argument('-H', '--holiday',
                                           help="print only holidays",
                                           action='store_true')
-    printing_selection_group.add_argument('-S', '--disease',
+    printing_selection_group.add_argument('-s', '--disease',
                                           help="print only diseases",
+                                          action='store_true')
+    printing_selection_group.add_argument('-e', '--extraordinary',
+                                          help="print only extraordinaries hours",
                                           action='store_true')
 
     return parser.parse_args()
