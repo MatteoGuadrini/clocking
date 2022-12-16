@@ -251,6 +251,7 @@ def get_args():
     printing_selection_group.add_argument('-e', '--extraordinary',
                                           help="print only extraordinaries hours",
                                           action='store_true')
+    printing.add_argument('-E', '--export', help="suppress output and export value into file", metavar='FILE')
 
     return parser.parse_args()
 
