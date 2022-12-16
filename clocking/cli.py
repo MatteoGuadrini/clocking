@@ -191,6 +191,10 @@ def get_args():
     setting.add_argument('-U', '--user',
                          help="set user to track time",
                          type=str)
+    setting.add_argument('-p', '--permit-hour',
+                         help="set permit work hour value",
+                         type=float,
+                         metavar='HOURS')
     # Remove subparser
     removing = subparser.add_parser('rm', help="remove values")
     removing_group = removing.add_mutually_exclusive_group(required=True)
