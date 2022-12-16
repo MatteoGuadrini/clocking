@@ -112,12 +112,12 @@ def get_args():
                            metavar='NUMBER')
     set_group.add_argument('-U', '--other-hours',
                            help="other worked hours",
-                           default=1.0,
-                           type=float,
-                           metavar='HOURS')
+                           default='unknown',
+                           type=str,
+                           metavar='VALUE')
     set_group.add_argument('-O', '--other-reward',
                            help="other reward",
-                           default=0,
+                           default=5.0,
                            type=float,
                            metavar='NUMBER')
     set_group.add_argument('-L', '--location',
