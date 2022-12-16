@@ -127,7 +127,7 @@ def get_args():
                            metavar='LOCATION')
     set_group.add_argument('-f', '--fill-empty',
                            help="fill empty date with value",
-                           default=0,
+                           default='not worked',
                            metavar='VALUE')
     set_group.add_argument('-u', '--user',
                            help="change user",
