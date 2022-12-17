@@ -46,7 +46,7 @@ def get_args():
     parser.add_argument('-V', '--version', help='print version', action='version', version=__version__)
     subparser = parser.add_subparsers(dest='command', help='commands to run', required=True)
     # Config subparser
-    config = subparser.add_parser('config', help="default's configuration")
+    config = subparser.add_parser('config', help="default's configuration", aliases=['cfg', 'c'])
     print_group = config.add_argument_group('print')
     print_group.add_argument('-p', '--print',
                              help='print current configuration',
@@ -138,7 +138,7 @@ def get_args():
     reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
 
     # Set subparser
-    setting = subparser.add_parser('set', help="setting values")
+    setting = subparser.add_parser('set', help="setting values", aliases=['st', 's'])
     daily_value_group = setting.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument('-w', '--hours',
                                    help="set worked hours",
@@ -196,7 +196,7 @@ def get_args():
                          type=float,
                          metavar='HOURS')
     # Remove subparser
-    removing = subparser.add_parser('rm', help="remove values")
+    removing = subparser.add_parser('remove', help="remove values", aliases=['rm', 'r'])
     removing_group = removing.add_mutually_exclusive_group(required=True)
     removing_group.add_argument('-D', '--date',
                                 help="remove specific date",
@@ -217,7 +217,7 @@ def get_args():
                                 help="clear all data",
                                 action='store_true')
     # Print subparser
-    printing = subparser.add_parser('print', help="print values")
+    printing = subparser.add_parser('print', help="print values", aliases=['prt', 'p'])
     printing_group = printing.add_mutually_exclusive_group(required=True)
     printing_group.add_argument('-D', '--date',
                                 help="print specific date",
