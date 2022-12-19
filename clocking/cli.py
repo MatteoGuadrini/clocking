@@ -254,6 +254,9 @@ def get_args():
     printing_selection_group.add_argument('-o', '--other',
                                           help="print only other hours",
                                           action='store_true')
+    printing_selection_group.add_argument('-p', '--permit-hour',
+                                          help="print only permit hours",
+                                          action='store_true')
     printing.add_argument('-E', '--export', help="suppress output and export value into file", metavar='FILE')
 
     return parser.parse_args()
