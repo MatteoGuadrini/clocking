@@ -44,6 +44,7 @@ def get_args():
                                      )
     parser.add_argument('-v', '--verbose', help='enable verbosity', action='store_true')
     parser.add_argument('-V', '--version', help='print version', action='version', version=__version__)
+    parser.add_argument('-d', '--database', help='select database fle', metavar='FILE', type=str)
     subparser = parser.add_subparsers(dest='command', help='commands to run', required=True)
     # Config subparser
     config = subparser.add_parser('config', help="default's configuration", aliases=['cfg', 'c'])
