@@ -44,7 +44,7 @@ def get_args():
                                      )
     parser.add_argument('-v', '--verbose', help='enable verbosity', action='store_true')
     parser.add_argument('-V', '--version', help='print version', action='version', version=__version__)
-    parser.add_argument('-d', '--database', help='select database fle', metavar='FILE', type=str)
+    parser.add_argument('-d', '--database', help='select database file', metavar='FILE', type=str)
     subparser = parser.add_subparsers(dest='command', help='commands to run', required=True)
     # Config subparser
     config = subparser.add_parser('config', help="default's configuration", aliases=['cfg', 'c'])
@@ -64,7 +64,7 @@ def get_args():
                            default=8.0,
                            type=float,
                            metavar='HOURS')
-    set_group.add_argument('-N', '--day-name',
+    set_group.add_argument('-N', '--working-days',
                            help="working day's name",
                            nargs=argparse.ONE_OR_MORE,
                            default={"Mon", "Tue", "Wed", "Thu", "Fri"},
