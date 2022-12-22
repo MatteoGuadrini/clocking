@@ -46,6 +46,7 @@ def get_args():
     parser.add_argument('-V', '--version', help='print version', action='version', version=__version__)
     parser.add_argument('-d', '--database', help='select database file', metavar='FILE', type=str)
     subparser = parser.add_subparsers(dest='command', help='commands to run', required=True)
+
     # Config subparser
     config = subparser.add_parser('config', help="default's configuration", aliases=['cfg', 'c'])
     print_group = config.add_argument_group('print')
@@ -259,6 +260,7 @@ def get_args():
                                           help="print only permit hours",
                                           action='store_true')
     printing.add_argument('-E', '--export', help="suppress output and export value into file", metavar='FILE')
+    printing.add_argument('-r', '--rewards', help="print rewards", action='store_true')
 
     return parser.parse_args()
 
