@@ -200,6 +200,9 @@ def get_args():
     # Remove subparser
     removing = subparser.add_parser('remove', help="remove values", aliases=['rm', 'r'])
     removing_group = removing.add_mutually_exclusive_group(required=True)
+    removing_group.add_argument('-I', '--id',
+                                help="remove specific id",
+                                metavar='ID')
     removing_group.add_argument('-D', '--date',
                                 help="remove specific date",
                                 metavar='DATE')
