@@ -1,6 +1,19 @@
 # `clocking` 
 
-Is a command line utility to help you manage your hours worked, on vacation, for a project or whatever you need to consider applied time.
+`clocking` is a command line utility to help you manage your worked hours, vacation, projects or whatever you need to consider tracking time.
+
+> This project is WIP!
+
+## Testing
+
+To test package before use it, follow this:
+
+```commandline
+pip install -U pytest
+git clone https://github.com/MatteoGuadrini/clocking.git
+cd clocking
+pytest tests 
+```
 
 ## Open source
 _clocking_ is an open source project. Any contribute, It's welcome.
@@ -18,8 +31,6 @@ For [Telethon](http://www.telethon.it/)
 The Telethon Foundation is a non-profit organization recognized by the Ministry of University and Scientific and Technological Research.
 They were born in 1990 to respond to the appeal of patients suffering from rare diseases.
 Come today, we are organized to dare to listen to them and answers, every day of the year.
-
-<a href="https://www.telethon.it/sostienici/dona-ora"> <img src="https://www.telethon.it/dev/_nuxt/img/c6d474e.svg" alt="Telethon" title="Telethon" width="200" height="104" /> </a>
 
 [Adopt the future](https://www.ioadottoilfuturo.it/)
 
