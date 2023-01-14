@@ -43,3 +43,13 @@ def test_usage():
         rv, out = getstatusoutput(f'python3 {prg} {flag}')
         assert rv == 0
         assert out.lower().startswith('usage')
+
+
+# --------------------------------------------------
+def test_config_usage():
+    """config usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} config {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage: clocking config')
