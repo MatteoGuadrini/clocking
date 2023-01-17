@@ -73,3 +73,13 @@ def test_remove_usage():
         rv, out = getstatusoutput(f'python3 {prg} remove {flag}')
         assert rv == 0
         assert out.lower().startswith('usage: clocking remove')
+
+
+# --------------------------------------------------
+def test_print_usage():
+    """config usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} print {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage: clocking print')
