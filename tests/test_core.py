@@ -21,3 +21,12 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Unit testing module for core logic"""
+
+import os
+from tempfile import gettempdir
+from ..clocking.core import database_exists
+
+
+def test_database_exists():
+    """Check if database exists"""
+    assert database_exists(os.path.join(gettempdir(), 'test_database.db'))
