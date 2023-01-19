@@ -24,7 +24,7 @@
 
 import os
 from tempfile import gettempdir
-from ..clocking.core import database_exists
+from clocking.core import database_exists
 
 
 def test_database_exists():

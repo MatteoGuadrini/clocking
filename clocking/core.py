@@ -21,3 +21,33 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Module that contains business logic of clocking command line tool"""
+
+# region import
+import os.path
+
+
+# endregion
+
+# region functions
+def database_exists(database):
+    """Check if database exists
+
+    :param database: database file path
+    :return: bool
+    """
+    # SQLite database path exists
+    if not os.path.exists(database):
+        return False
+
+    # SQLite database is file
+    if not os.path.isfile(database):
+        return False
+
+    # SQLite database file header is 100 bytes
+    if os.path.getsize(database) < 100:
+        return False
+
+    # Is a SQLite database
+    return True
+
+# endregion
