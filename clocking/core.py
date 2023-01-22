@@ -23,7 +23,13 @@
 """Module that contains business logic of clocking command line tool"""
 
 # region import
+import sqlite3
 import os.path
+
+# endregion
+
+# region globals
+__version__ = '0.0.1'
 
 
 # endregion
@@ -49,5 +55,27 @@ def database_exists(database):
 
     # Is a SQLite database
     return True
+
+
+def make_database(database):
+    """Create a blank database
+
+    :param database: database file path
+    :return: None
+    """
+    # Create the database connection
+    conn = sqlite3.connect(database)
+
+    # Create cursor
+    cur = conn.cursor()
+
+    # Create clocking version table
+    cur.execute(r"CREATE TABLE version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
+    # Insert version into properly table
+    cur.execute(rf"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
+
+    # Close connection of the database
+    conn.commit()
+    conn.close()
 
 # endregion
