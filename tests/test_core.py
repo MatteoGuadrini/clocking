@@ -26,16 +26,16 @@ import os
 from tempfile import gettempdir
 from clocking.core import database_exists, make_database
 
-
-# --------------------------------------------------
-def test_database_exists():
-    """Check if database exists"""
-    assert database_exists(os.path.join(gettempdir(), 'test_database.db'))
+TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
 
 
 # --------------------------------------------------
 def test_create_database():
     """Check database creation"""
-    database = os.path.join(gettempdir(), 'test_database.db')
-    if database_exists(database):
-        assert make_database(database) is not None
+    assert make_database(TEMP_DB) is None
+
+
+# --------------------------------------------------
+def test_database_exists():
+    """Check if database exists"""
+    assert database_exists(TEMP_DB)
