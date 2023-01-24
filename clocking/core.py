@@ -78,4 +78,47 @@ def make_database(database):
     conn.commit()
     conn.close()
 
+
+def create_configuration_table(database):
+    """Create configuration table
+
+    :param database: database file path
+    :return: bool
+    """
+    # Create the database connection
+    conn = sqlite3.connect(database)
+
+    # Create cursor
+    cur = conn.cursor()
+
+    # Create configuration table
+    cur.execute(r"CREATE TABLE IF NOT EXISTS configuration ("
+                r"id INTEGER PRIMARY KEY,"
+                r"user TEXT NOT NULL,"
+                r"location TEXT NOT NULL,"
+                r"empty_value TEXT NOT NULL,"
+                r"daily_hours FLOAT NOT NULL,"
+                r"working_days TEXT NOT NULL,"
+                r"extraordinary FLOAT NOT NULL,"
+                r"permit_hour FLOAT NOT NULL,"
+                r"disease TEXT NOT NULL,"
+                r"holiday TEXT NOT NULL,"
+                r"currency TEXT NOT NULL,"
+                r"hour_reward FLOAT NOT NULL,"
+                r"extraordinary_reward FLOAT NOT NULL,"
+                r"food_ticket FLOAT NOT NULL,"
+                r"other_hours TEXT NOT NULL,"
+                r"other_reward FLOAT NOT NULL"
+                r");")
+
+    # Return boolean if configuration table was created
+    cur.execute("SELECT name FROM sqlite_master WHERE name='configuration'")
+    result = True if cur.fetchone()[0] == 'configuration' else False
+
+    # Close connection of the database
+    conn.commit()
+    conn.close()
+
+    return result
+
 # endregion
