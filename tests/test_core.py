@@ -24,7 +24,7 @@
 
 import os
 from tempfile import gettempdir
-from clocking.core import database_exists, make_database
+from clocking.core import database_exists, make_database, create_configuration_table
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
 
@@ -39,3 +39,9 @@ def test_create_database():
 def test_database_exists():
     """Check if database exists"""
     assert database_exists(TEMP_DB)
+
+
+# --------------------------------------------------
+def test_configuration():
+    """Check database configuration table"""
+    assert create_configuration_table(TEMP_DB)
