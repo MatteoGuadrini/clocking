@@ -70,9 +70,12 @@ def make_database(database):
     cur = conn.cursor()
 
     # Create clocking version table
-    cur.execute(r"CREATE TABLE version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
+    cur.execute(r"CREATE TABLE IF NOT EXISTS version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
     # Insert version into properly table
-    cur.execute(rf"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
+    cur.execute("SELECT version_id FROM version")
+    result = True if cur.fetchone()[0] == __version__ else False
+    if not result:
+        cur.execute(rf"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
 
     # Close connection of the database
     conn.commit()
@@ -94,6 +97,7 @@ def create_configuration_table(database):
     # Create configuration table
     cur.execute(r"CREATE TABLE IF NOT EXISTS configuration ("
                 r"id INTEGER PRIMARY KEY,"
+                r"active BOOL NOT NULL,"
                 r"user TEXT NOT NULL,"
                 r"location TEXT NOT NULL,"
                 r"empty_value TEXT NOT NULL,"
