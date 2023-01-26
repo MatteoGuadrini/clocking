@@ -24,7 +24,11 @@
 
 import os
 from tempfile import gettempdir
-from clocking.core import database_exists, make_database, create_configuration_table
+from clocking.core import (database_exists,
+                           make_database,
+                           create_configuration_table,
+                           add_configuration
+                           )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
 
@@ -45,3 +49,21 @@ def test_database_exists():
 def test_configuration():
     """Check database configuration table"""
     assert create_configuration_table(TEMP_DB)
+    assert add_configuration(TEMP_DB,
+                             active=True,
+                             user='test',
+                             location='Italy Office',
+                             empty_value='X',
+                             daily_hours=8.0,
+                             working_days="Mon Tue Wed Thu Fri",
+                             extraordinary=0.5,
+                             permit_hour=1.0,
+                             disease='disease',
+                             holiday='holiday',
+                             currency='€',
+                             hour_reward=7.5,
+                             extraordinary_reward=8.5,
+                             food_ticket=None,
+                             other_hours=1.0,
+                             other_reward=8.0
+                             )
