@@ -73,8 +73,7 @@ def make_database(database):
     cur.execute(r"CREATE TABLE IF NOT EXISTS version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
     # Insert version into properly table
     cur.execute("SELECT version_id FROM version")
-    result = True if cur.fetchone()[0] == __version__ else False
-    if not result:
+    if not cur.fetchone():
         cur.execute(rf"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
 
     # Close connection of the database
@@ -118,6 +117,69 @@ def create_configuration_table(database):
     # Return boolean if configuration table was created
     cur.execute("SELECT name FROM sqlite_master WHERE name='configuration'")
     result = True if cur.fetchone()[0] == 'configuration' else False
+
+    # Close connection of the database
+    conn.commit()
+    conn.close()
+
+    return result
+
+
+def add_configuration(database,
+                      active,
+                      user,
+                      location,
+                      empty_value,
+                      daily_hours,
+                      working_days,
+                      extraordinary,
+                      permit_hour,
+                      disease,
+                      holiday,
+                      currency,
+                      hour_reward,
+                      extraordinary_reward,
+                      food_ticket,
+                      other_hours,
+                      other_reward
+                      ):
+    """Add new configuration into database
+
+    :param database:
+    :param active:
+    :param user:
+    :param location:
+    :param empty_value:
+    :param daily_hours:
+    :param working_days:
+    :param extraordinary:
+    :param permit_hour:
+    :param disease:
+    :param holiday:
+    :param currency:
+    :param hour_reward:
+    :param extraordinary_reward:
+    :param food_ticket:
+    :param other_hours:
+    :param other_reward:
+    :return: int
+    """
+    # Create the database connection
+    conn = sqlite3.connect(database)
+
+    # Create cursor
+    cur = conn.cursor()
+
+    # Insert values into configuration table
+    cur.execute(r"INSERT INTO configuration("
+                r"active, user, location, empty_value, daily_hours, working_days, extraordinary,"
+                r"permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
+                r"food_ticket, other_hours, other_reward) "
+                r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                (active, user, location, empty_value, daily_hours, working_days, extraordinary, permit_hour, disease,
+                 holiday, currency, hour_reward, extraordinary_reward, food_ticket, other_hours, other_reward))
+
+    result = cur.lastrowid
 
     # Close connection of the database
     conn.commit()

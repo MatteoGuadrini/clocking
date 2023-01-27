@@ -63,7 +63,7 @@ def test_configuration():
                              currency='€',
                              hour_reward=7.5,
                              extraordinary_reward=8.5,
-                             food_ticket=None,
+                             food_ticket=0,
                              other_hours=1.0,
                              other_reward=8.0
                              )
