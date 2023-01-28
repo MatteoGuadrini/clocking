@@ -27,7 +27,8 @@ from tempfile import gettempdir
 from clocking.core import (database_exists,
                            make_database,
                            create_configuration_table,
-                           add_configuration
+                           add_configuration,
+                           enable_configuration
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -67,3 +68,4 @@ def test_configuration():
                              other_hours=1.0,
                              other_reward=8.0
                              )
+    assert enable_configuration(TEMP_DB, row_id=1)
