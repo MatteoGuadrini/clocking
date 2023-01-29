@@ -187,4 +187,41 @@ def add_configuration(database,
 
     return result
 
+
+def enable_configuration(database, row_id):
+    """Enable configuration to specific id.
+
+    :param database: database file path
+    :param row_id: row id
+    :return: bool
+    """
+    # Create the database connection
+    conn = sqlite3.connect(database)
+
+    # Create cursor
+    cur = conn.cursor()
+
+    # Update active into configuration table
+    cur.execute(r"UPDATE configuration "
+                r"SET active = ? "
+                r"WHERE id = ?;",
+                (True, row_id))
+    print(cur.lastrowid)
+
+    # Disable other configuration for user
+    cur.execute(r"SELECT user FROM configuration "
+                r"WHERE id = ?;", (row_id,))
+    user = cur.fetchone()[0]
+    cur.execute(r"UPDATE configuration "
+                r"SET active = ? "
+                r"WHERE user = ? AND id != ?;",
+                (False, user, row_id))
+    result = bool(cur.rowcount)
+
+    # Close connection of the database
+    conn.commit()
+    conn.close()
+
+    return result
+
 # endregion
