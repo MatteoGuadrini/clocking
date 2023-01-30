@@ -145,23 +145,23 @@ def add_configuration(database,
                       ):
     """Add new configuration into database
 
-    :param database:
-    :param active:
-    :param user:
-    :param location:
-    :param empty_value:
-    :param daily_hours:
-    :param working_days:
-    :param extraordinary:
-    :param permit_hour:
-    :param disease:
-    :param holiday:
-    :param currency:
-    :param hour_reward:
-    :param extraordinary_reward:
-    :param food_ticket:
-    :param other_hours:
-    :param other_reward:
+    :param database: database file path
+    :param active: configuration active boolean
+    :param user: configuration user owner
+    :param location: location name
+    :param empty_value: replacement for empty value
+    :param daily_hours: daily hours value
+    :param working_days: working name's days
+    :param extraordinary: minimum extraordinary value
+    :param permit_hour: minimum permit value
+    :param disease: disease string name
+    :param holiday: holiday string name
+    :param currency: currency char value
+    :param hour_reward: total hour reward
+    :param extraordinary_reward: total extraordinary hour reward
+    :param food_ticket: food ticket reward
+    :param other_hours: other hours value
+    :param other_reward: other hours reward
     :return: int
     """
     # Create the database connection
