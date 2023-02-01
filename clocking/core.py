@@ -212,7 +212,7 @@ def enable_configuration(database, row_id):
     cur.execute(r"UPDATE configuration "
                 r"SET active = ? "
                 r"WHERE user = ? AND id != ?;", (False, user, row_id))
-    result = bool(cur.rowcount)
+    result = bool(cur.rowcount) if cur.rowcount != 0 else True
 
     # Close connection of the database
     conn.commit()
