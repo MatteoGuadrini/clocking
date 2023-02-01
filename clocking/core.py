@@ -64,21 +64,17 @@ def make_database(database):
     :return: None
     """
     # Create the database connection
-    conn = sqlite3.connect(database)
+    with sqlite3.connect(database) as conn:
 
-    # Create cursor
-    cur = conn.cursor()
+        # Create cursor
+        cur = conn.cursor()
 
-    # Create clocking version table
-    cur.execute(r"CREATE TABLE IF NOT EXISTS version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
-    # Insert version into properly table
-    cur.execute("SELECT version_id FROM version")
-    if not cur.fetchone():
-        cur.execute(rf"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
-
-    # Close connection of the database
-    conn.commit()
-    conn.close()
+        # Create clocking version table
+        cur.execute(r"CREATE TABLE IF NOT EXISTS version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
+        # Insert version into properly table
+        cur.execute("SELECT version_id FROM version")
+        if not cur.fetchone():
+            cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
 
 
 def create_configuration_table(database):
@@ -88,39 +84,35 @@ def create_configuration_table(database):
     :return: bool
     """
     # Create the database connection
-    conn = sqlite3.connect(database)
+    with sqlite3.connect(database) as conn:
 
-    # Create cursor
-    cur = conn.cursor()
+        # Create cursor
+        cur = conn.cursor()
 
-    # Create configuration table
-    cur.execute(r"CREATE TABLE IF NOT EXISTS configuration ("
-                r"id INTEGER PRIMARY KEY,"
-                r"active BOOL NOT NULL,"
-                r"user TEXT NOT NULL,"
-                r"location TEXT NOT NULL,"
-                r"empty_value TEXT NOT NULL,"
-                r"daily_hours FLOAT NOT NULL,"
-                r"working_days TEXT NOT NULL,"
-                r"extraordinary FLOAT NOT NULL,"
-                r"permit_hour FLOAT NOT NULL,"
-                r"disease TEXT NOT NULL,"
-                r"holiday TEXT NOT NULL,"
-                r"currency TEXT NOT NULL,"
-                r"hour_reward FLOAT NOT NULL,"
-                r"extraordinary_reward FLOAT NOT NULL,"
-                r"food_ticket FLOAT NOT NULL,"
-                r"other_hours FLOAT NOT NULL,"
-                r"other_reward FLOAT NOT NULL"
-                r");")
+        # Create configuration table
+        cur.execute(r"CREATE TABLE IF NOT EXISTS configuration ("
+                    r"id INTEGER PRIMARY KEY,"
+                    r"active BOOL NOT NULL,"
+                    r"user TEXT NOT NULL,"
+                    r"location TEXT NOT NULL,"
+                    r"empty_value TEXT NOT NULL,"
+                    r"daily_hours FLOAT NOT NULL,"
+                    r"working_days TEXT NOT NULL,"
+                    r"extraordinary FLOAT NOT NULL,"
+                    r"permit_hour FLOAT NOT NULL,"
+                    r"disease TEXT NOT NULL,"
+                    r"holiday TEXT NOT NULL,"
+                    r"currency TEXT NOT NULL,"
+                    r"hour_reward FLOAT NOT NULL,"
+                    r"extraordinary_reward FLOAT NOT NULL,"
+                    r"food_ticket FLOAT NOT NULL,"
+                    r"other_hours FLOAT NOT NULL,"
+                    r"other_reward FLOAT NOT NULL"
+                    r");")
 
-    # Return boolean if configuration table was created
-    cur.execute("SELECT name FROM sqlite_master WHERE name='configuration'")
-    result = True if cur.fetchone()[0] == 'configuration' else False
-
-    # Close connection of the database
-    conn.commit()
-    conn.close()
+        # Return boolean if configuration table was created
+        cur.execute("SELECT name FROM sqlite_master WHERE name='configuration'")
+        result = True if cur.fetchone()[0] == 'configuration' else False
 
     return result
 
@@ -165,25 +157,23 @@ def add_configuration(database,
     :return: int
     """
     # Create the database connection
-    conn = sqlite3.connect(database)
+    with sqlite3.connect(database) as conn:
 
-    # Create cursor
-    cur = conn.cursor()
+        # Create cursor
+        cur = conn.cursor()
 
-    # Insert values into configuration table
-    cur.execute(r"INSERT INTO configuration("
-                r"active, user, location, empty_value, daily_hours, working_days, extraordinary,"
-                r"permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
-                r"food_ticket, other_hours, other_reward) "
-                r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                (active, user, location, empty_value, daily_hours, working_days, extraordinary, permit_hour, disease,
-                 holiday, currency, hour_reward, extraordinary_reward, food_ticket, other_hours, other_reward))
+        # Insert values into configuration table
+        cur.execute("INSERT INTO configuration("
+                    "active, user, location, empty_value, daily_hours, working_days, extraordinary,"
+                    "permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
+                    "food_ticket, other_hours, other_reward) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                    (active, user, location, empty_value, daily_hours,
+                     working_days, extraordinary, permit_hour, disease,
+                     holiday, currency, hour_reward, extraordinary_reward,
+                     food_ticket, other_hours, other_reward))
 
-    result = cur.lastrowid
-
-    # Close connection of the database
-    conn.commit()
-    conn.close()
+        result = cur.lastrowid
 
     return result
 
@@ -196,27 +186,23 @@ def enable_configuration(database, row_id):
     :return: bool
     """
     # Create the database connection
-    conn = sqlite3.connect(database)
+    with sqlite3.connect(database) as conn:
 
-    # Create cursor
-    cur = conn.cursor()
+        # Create cursor
+        cur = conn.cursor()
 
-    # Update active into configuration table
-    cur.execute(r"UPDATE configuration "
-                r"SET active = ? "
-                r"WHERE id = ?;", (True, row_id))
-    # Disable other configuration for user
-    cur.execute(r"SELECT user FROM configuration "
-                r"WHERE id = ?;", (row_id,))
-    user = cur.fetchone()[0]
-    cur.execute(r"UPDATE configuration "
-                r"SET active = ? "
-                r"WHERE user = ? AND id != ?;", (False, user, row_id))
-    result = bool(cur.rowcount) if cur.rowcount != 0 else True
-
-    # Close connection of the database
-    conn.commit()
-    conn.close()
+        # Update active into configuration table
+        cur.execute(r"UPDATE configuration "
+                    r"SET active = ? "
+                    r"WHERE id = ?;", (True, row_id))
+        # Disable other configuration for user
+        cur.execute(r"SELECT user FROM configuration "
+                    r"WHERE id = ?;", (row_id,))
+        user = cur.fetchone()[0]
+        cur.execute(r"UPDATE configuration "
+                    r"SET active = ? "
+                    r"WHERE user = ? AND id != ?;", (False, user, row_id))
+        result = bool(cur.rowcount) if cur.rowcount != 0 else True
 
     return result
 
