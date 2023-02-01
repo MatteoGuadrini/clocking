@@ -66,7 +66,7 @@ def test_configuration():
                              hour_reward=7.5,
                              extraordinary_reward=8.5,
                              food_ticket=0,
-                             other_hours=1.0,
+                             other_hours=0,
                              other_reward=8.0
                              )
     assert enable_configuration(TEMP_DB, row_id=1)

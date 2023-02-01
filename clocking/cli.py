@@ -114,8 +114,8 @@ def get_args():
                            metavar='NUMBER')
     set_group.add_argument('-U', '--other-hours',
                            help="other worked hours",
-                           default='unknown',
-                           type=str,
+                           default=0,
+                           type=float,
                            metavar='VALUE')
     set_group.add_argument('-O', '--other-reward',
                            help="other reward",
