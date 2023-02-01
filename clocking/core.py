@@ -110,7 +110,7 @@ def create_configuration_table(database):
                 r"hour_reward FLOAT NOT NULL,"
                 r"extraordinary_reward FLOAT NOT NULL,"
                 r"food_ticket FLOAT NOT NULL,"
-                r"other_hours TEXT NOT NULL,"
+                r"other_hours FLOAT NOT NULL,"
                 r"other_reward FLOAT NOT NULL"
                 r");")
 
@@ -204,18 +204,14 @@ def enable_configuration(database, row_id):
     # Update active into configuration table
     cur.execute(r"UPDATE configuration "
                 r"SET active = ? "
-                r"WHERE id = ?;",
-                (True, row_id))
-    print(cur.lastrowid)
-
+                r"WHERE id = ?;", (True, row_id))
     # Disable other configuration for user
     cur.execute(r"SELECT user FROM configuration "
                 r"WHERE id = ?;", (row_id,))
     user = cur.fetchone()[0]
     cur.execute(r"UPDATE configuration "
                 r"SET active = ? "
-                r"WHERE user = ? AND id != ?;",
-                (False, user, row_id))
+                r"WHERE user = ? AND id != ?;", (False, user, row_id))
     result = bool(cur.rowcount)
 
     # Close connection of the database
@@ -223,5 +219,34 @@ def enable_configuration(database, row_id):
     conn.close()
 
     return result
+
+
+def reset_configuration(database):
+    """Reset configuration table with default values
+
+    :param database: database file path
+    :return: bool
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+
+        # Create cursor
+        cur = conn.cursor()
+
+        # Delete all rows from table
+        cur.execute('DELETE FROM configuration;')
+
+        # Insert values into configuration table
+        cur.execute(r"INSERT INTO configuration("
+                    r"active, user, location, empty_value, daily_hours, working_days, extraordinary,"
+                    r"permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
+                    r"food_ticket, other_hours, other_reward) "
+                    r"VALUES (True, 'User', 'Office', 'not worked', "
+                    r"8.0, 'Mon Tue Wed Thu Fri', 1.0, 1.0, 'Disease', 'Holiday', "
+                    r"'$', 10.0, 15.0, 7.0, 0, 5.0);")
+        result = bool(cur.rowcount)
+
+    return result
+
 
 # endregion
