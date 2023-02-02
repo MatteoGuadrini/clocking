@@ -49,7 +49,7 @@ def test_database_exists():
 
 # --------------------------------------------------
 def test_configuration():
-    """Check database configuration table"""
+    """Operation on configuration table"""
     assert create_configuration_table(TEMP_DB)
     assert add_configuration(TEMP_DB,
                              active=True,
@@ -71,3 +71,26 @@ def test_configuration():
                              )
     assert enable_configuration(TEMP_DB, row_id=1)
     assert reset_configuration(TEMP_DB)
+
+
+def test_insert_daily_value():
+    """Setting value on a user table value"""
+    assert add_configuration(TEMP_DB,
+                             active=True,
+                             user='test',
+                             location='Italy Office',
+                             empty_value='X',
+                             daily_hours=8.0,
+                             working_days="Mon Tue Wed Thu Fri",
+                             extraordinary=0.5,
+                             permit_hour=1.0,
+                             disease='disease',
+                             holiday='holiday',
+                             currency='€',
+                             hour_reward=7.5,
+                             extraordinary_reward=8.5,
+                             food_ticket=0,
+                             other_hours=0,
+                             other_reward=8.0
+                             )
+    assert enable_configuration(TEMP_DB, row_id=2)
