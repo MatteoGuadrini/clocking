@@ -235,4 +235,26 @@ def reset_configuration(database):
     return result
 
 
+def get_current_configuration(database, user):
+    """Get current enabled configuration for user
+
+    :param database: database file path
+    :param user: user in configuration table
+    :return: tuple
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get active configuration for user
+        cur.execute(r"SELECT * FROM configuration "
+                    r"WHERE user = ? AND active = 1;",
+                    (user, ))
+        result = cur.fetchone()
+
+        return result if result else ()
+
+
 # endregion
