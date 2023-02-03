@@ -73,6 +73,7 @@ def test_configuration():
     assert reset_configuration(TEMP_DB)
 
 
+# --------------------------------------------------
 def test_insert_daily_value():
     """Setting value on a user table value"""
     assert add_configuration(TEMP_DB,
