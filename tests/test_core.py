@@ -29,7 +29,8 @@ from clocking.core import (database_exists,
                            create_configuration_table,
                            add_configuration,
                            enable_configuration,
-                           reset_configuration
+                           reset_configuration,
+                           get_current_configuration
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -70,6 +71,14 @@ def test_configuration():
                              other_reward=8.0
                              )
     assert enable_configuration(TEMP_DB, row_id=1)
+    assert isinstance(get_current_configuration(TEMP_DB, 'test'), tuple)
+    assert get_current_configuration(TEMP_DB, 'test') == (1, 1, 'test', 'Italy Office',
+                                                          'X', 8.0, 'Mon Tue Wed Thu Fri',
+                                                          0.5, 1.0, 'disease',
+                                                          'holiday', '€', 7.5, 8.5, 0.0,
+                                                          0.0, 8.0)
+    assert isinstance(get_current_configuration(TEMP_DB, 'unknown'), tuple)
+    assert get_current_configuration(TEMP_DB, 'unknown') == ()
     assert reset_configuration(TEMP_DB)
 
 
