@@ -42,9 +42,12 @@ def get_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      prog='clocking'
                                      )
-    parser.add_argument('-v', '--verbose', help='enable verbosity', action='store_true')
-    parser.add_argument('-V', '--version', help='print version', action='version', version=__version__)
-    parser.add_argument('-d', '--database', help='select database file', metavar='FILE', type=str)
+    parser.add_argument('-v', '--verbose',
+                        help='enable verbosity', action='store_true')
+    parser.add_argument('-V', '--version',
+                        help='print version', action='version', version=__version__)
+    parser.add_argument('-d', '--database',
+                        help='select database file', metavar='FILE', type=str)
     subparser = parser.add_subparsers(dest='command', help='commands to run', required=True)
 
     # Config subparser
@@ -114,8 +117,8 @@ def get_args():
                            metavar='NUMBER')
     set_group.add_argument('-U', '--other-hours',
                            help="other worked hours",
-                           default='unknown',
-                           type=str,
+                           default=0,
+                           type=float,
                            metavar='VALUE')
     set_group.add_argument('-O', '--other-reward',
                            help="other reward",
@@ -197,6 +200,9 @@ def get_args():
                          help="set permit work hour value",
                          type=float,
                          metavar='HOURS')
+    setting.add_argument('-t', '--description',
+                         help="set description",
+                         type=str)
     # Remove subparser
     removing = subparser.add_parser('remove', help="remove values", aliases=['rm', 'r'])
     removing_group = removing.add_mutually_exclusive_group(required=True)

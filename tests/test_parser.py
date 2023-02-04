@@ -43,3 +43,43 @@ def test_usage():
         rv, out = getstatusoutput(f'python3 {prg} {flag}')
         assert rv == 0
         assert out.lower().startswith('usage')
+
+
+# --------------------------------------------------
+def test_config_usage():
+    """config usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} config {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage: clocking config')
+
+
+# --------------------------------------------------
+def test_set_usage():
+    """config usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} set {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage: clocking set')
+
+
+# --------------------------------------------------
+def test_remove_usage():
+    """config usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} remove {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage: clocking remove')
+
+
+# --------------------------------------------------
+def test_print_usage():
+    """config usage"""
+
+    for flag in ['-h', '--help']:
+        rv, out = getstatusoutput(f'python3 {prg} print {flag}')
+        assert rv == 0
+        assert out.lower().startswith('usage: clocking print')
