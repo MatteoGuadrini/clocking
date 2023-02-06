@@ -105,4 +105,5 @@ def test_insert_daily_value():
                              other_reward=8.0
                              )
     assert enable_configuration(TEMP_DB, row_id=2)
-    assert insert_working_hours(TEMP_DB, 'test')
+    assert insert_working_hours(TEMP_DB, 8, user='test')
+    assert insert_working_hours(TEMP_DB, 8)
