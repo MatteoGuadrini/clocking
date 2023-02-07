@@ -105,5 +105,11 @@ def test_insert_daily_value():
                              other_reward=8.0
                              )
     assert enable_configuration(TEMP_DB, row_id=2)
-    assert insert_working_hours(TEMP_DB, 8, user='test')
-    assert insert_working_hours(TEMP_DB, 8)
+    (rowid, active, user, location, empty_value,
+     daily_hours, working_days, extraordinary,
+     permit_hour, disease, holiday, currency,
+     hour_reward, extraordinary_reward, food_ticket,
+     other_hours, other_reward) = get_current_configuration(TEMP_DB, 'test')
+    assert insert_working_hours(TEMP_DB, 8, user=user)
+    assert insert_working_hours(TEMP_DB, 8, user=user, extraordinary=2)
+    assert insert_working_hours(TEMP_DB, holiday=holiday, user=user)
