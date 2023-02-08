@@ -110,6 +110,12 @@ def test_insert_daily_value():
      permit_hour, disease, holiday, currency,
      hour_reward, extraordinary_reward, food_ticket,
      other_hours, other_reward) = get_current_configuration(TEMP_DB, 'test')
+    # Today inserting
     assert insert_working_hours(TEMP_DB, 8, user=user)
     assert insert_working_hours(TEMP_DB, 8, user=user, extraordinary=2)
     assert insert_working_hours(TEMP_DB, holiday=holiday, user=user)
+    assert insert_working_hours(TEMP_DB, disease=disease, user=user)
+    assert insert_working_hours(TEMP_DB, 6, permit_hour=2)
+    assert insert_working_hours(TEMP_DB, 7, permit_hour=permit_hour)
+    assert insert_working_hours(TEMP_DB, 8, other_hours=4.5)
+    assert insert_working_hours(TEMP_DB, empty_value=empty_value)
