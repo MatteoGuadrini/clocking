@@ -119,3 +119,17 @@ def test_insert_daily_value():
     assert insert_working_hours(TEMP_DB, 7, permit_hour=permit_hour)
     assert insert_working_hours(TEMP_DB, 8, other_hours=4.5)
     assert insert_working_hours(TEMP_DB, empty_value=empty_value)
+    # Selecting date
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='2023-02-08')
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='2023/08/02')
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='2023-08-02')
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='2023/02/08')
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='08-02-2023')
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='08/02/2023')
+    assert insert_working_hours(TEMP_DB, 8, user=user, date='20230208')
+    assert insert_working_hours(TEMP_DB, 8, user=user, day='08',
+                                month='02', year='2023')
+    assert insert_working_hours(TEMP_DB, 8, user=user, day=8, month=2, year=2023)
+    assert insert_working_hours(TEMP_DB, 8, user=user, day=8)
+    assert insert_working_hours(TEMP_DB, 8, user=user, month=2)
+    assert insert_working_hours(TEMP_DB, 8, user=user, year=2023)
