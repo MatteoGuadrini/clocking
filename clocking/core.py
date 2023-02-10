@@ -257,4 +257,37 @@ def get_current_configuration(database, user):
         return result if result else ()
 
 
+def insert_working_hours(database,
+                         hours=0,
+                         user=None,
+                         description=None,
+                         extraordinary=0,
+                         permit_hour=0,
+                         other_hours=0,
+                         holiday=None,
+                         disease=None,
+                         date=None,
+                         day=None,
+                         month=None,
+                         year=None):
+    """Insert working day into database
+
+    :param database: database file path
+    :param hours: number of working hours
+    :param user: user in configuration table
+    :param description: description of working day
+    :param extraordinary: extraordinary hours
+    :param permit_hour: permit hours
+    :param other_hours: other working hours
+    :param holiday: holiday value
+    :param disease: disease value
+    :param date: date for inset values
+    :param day: day of the date
+    :param month: month of the date
+    :param year: year of the date
+    :return: bool
+    """
+    pass
+
+
 # endregion
