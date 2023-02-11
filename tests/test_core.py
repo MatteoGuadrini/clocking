@@ -31,6 +31,7 @@ from clocking.core import (database_exists,
                            enable_configuration,
                            reset_configuration,
                            get_current_configuration,
+                           create_working_hours_table,
                            insert_working_hours
                            )
 
@@ -110,6 +111,7 @@ def test_insert_daily_value():
      permit_hour, disease, holiday, currency,
      hour_reward, extraordinary_reward, food_ticket,
      other_hours, other_reward) = get_current_configuration(TEMP_DB, 'test')
+    assert create_working_hours_table(TEMP_DB, user)
     # Today inserting
     assert insert_working_hours(TEMP_DB, 8, user=user)
     assert insert_working_hours(TEMP_DB, 8, user=user, extraordinary=2)
