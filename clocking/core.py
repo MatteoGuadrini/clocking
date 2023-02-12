@@ -65,7 +65,6 @@ def make_database(database):
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
-
         # Create cursor
         cur = conn.cursor()
 
@@ -85,7 +84,6 @@ def create_configuration_table(database):
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
-
         # Create cursor
         cur = conn.cursor()
 
@@ -158,7 +156,6 @@ def add_configuration(database,
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
-
         # Create cursor
         cur = conn.cursor()
 
@@ -187,7 +184,6 @@ def enable_configuration(database, row_id):
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
-
         # Create cursor
         cur = conn.cursor()
 
@@ -215,7 +211,6 @@ def reset_configuration(database):
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
-
         # Create cursor
         cur = conn.cursor()
 
@@ -244,17 +239,48 @@ def get_current_configuration(database, user):
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
-
         # Create cursor
         cur = conn.cursor()
 
         # Get active configuration for user
         cur.execute(r"SELECT * FROM configuration "
                     r"WHERE user = ? AND active = 1;",
-                    (user, ))
+                    (user,))
         result = cur.fetchone()
 
         return result if result else ()
+
+
+def create_working_hours_table(database, user):
+    """Create working hours table
+
+    :param database: database file path
+    :param user: user 
+    :return: bool
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Create configuration table
+        cur.execute(rf"CREATE TABLE IF NOT EXISTS {user} ("
+                    r"id INTEGER PRIMARY KEY,"
+                    r"date DATE NOT NULL,"
+                    r"hours FLOAT NOT NULL,"
+                    r"description TEXT,"
+                    r"extraordinary FLOAT,"
+                    r"permit_hour FLOAT,"
+                    r"other_hours FLOAT ,"
+                    r"holiday TEXT,"
+                    r"disease TEXT,"
+                    r"empty TEXT"
+                    r");")
+
+        # Return boolean if configuration table was created
+        cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
+
+    return bool(True if cur.fetchone()[0] == user else False)
 
 
 def insert_working_hours(database,
@@ -288,6 +314,5 @@ def insert_working_hours(database,
     :return: bool
     """
     pass
-
 
 # endregion
