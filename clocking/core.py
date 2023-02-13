@@ -263,7 +263,7 @@ def create_working_hours_table(database, user):
         # Create cursor
         cur = conn.cursor()
 
-        # Create configuration table
+        # Create user table
         cur.execute(rf"CREATE TABLE IF NOT EXISTS {user} ("
                     r"id INTEGER PRIMARY KEY,"
                     r"date DATE NOT NULL,"
@@ -277,15 +277,15 @@ def create_working_hours_table(database, user):
                     r"empty TEXT"
                     r");")
 
-        # Return boolean if configuration table was created
+        # Return boolean if user table was created
         cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
 
-    return bool(True if cur.fetchone()[0] == user else False)
+    return bool(cur.fetchone())
 
 
 def insert_working_hours(database,
+                         user,
                          hours=0,
-                         user=None,
                          description=None,
                          extraordinary=0,
                          permit_hour=0,
@@ -313,6 +313,16 @@ def insert_working_hours(database,
     :param year: year of the date
     :return: bool
     """
-    pass
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+        
+        # Check if user table exists
+        cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
+        if not cur.fetchone():
+            create_working_hours_table(database, user)
+        
+        
 
 # endregion
