@@ -322,6 +322,12 @@ def insert_working_hours(database,
         cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
         if not cur.fetchone():
             create_working_hours_table(database, user)
+            
+        # Check None values
+        description = description if description else ''
+        holiday = holiday if holiday else ''
+        disease = disease if disease else ''
+
         
         
 
