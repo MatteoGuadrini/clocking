@@ -323,11 +323,14 @@ def insert_working_hours(database,
         if not cur.fetchone():
             create_working_hours_table(database, user)
             
-        # Check None values
-        description = description if description else ''
-        holiday = holiday if holiday else ''
-        disease = disease if disease else ''
-
+        # Build date
+        if date and (day or month or year):
+            print('warning: date arguments is selected first')
+        
+        if date:
+            date = datestring_to_datetime(date)
+        
+        
         
         
 
