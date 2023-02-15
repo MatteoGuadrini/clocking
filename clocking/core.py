@@ -25,6 +25,7 @@
 # region import
 import sqlite3
 import os.path
+from util import datestring_to_datetime
 
 # endregion
 
@@ -317,21 +318,17 @@ def insert_working_hours(database,
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
-        
+
         # Check if user table exists
         cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
         if not cur.fetchone():
             create_working_hours_table(database, user)
-            
+
         # Build date
         if date and (day or month or year):
             print('warning: date arguments is selected first')
-        
+
         if date:
             date = datestring_to_datetime(date)
-        
-        
-        
-        
 
 # endregion
