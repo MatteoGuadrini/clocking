@@ -22,14 +22,31 @@
 
 """clocking module that contains some utility"""
 
-
 # region imports
+from datetime import datetime
+
+
 # endregion
 
+# region functions
 def datestring_to_datetime(date):
     """Convert any date-string format to datetime object
     
     :param date: date in string format
     :return: datetime
     """
-    pass
+    all_date_format = (
+        '%Y%m%d', '%m%Y%d', '%m%d%Y', '%d%Y%m', '%Y%d%m', '%d%m%Y',
+        '%y%m%d', '%m%y%d', '%m%d%y', '%d%y%m', '%y%d%m', '%d%m%y'
+    )
+    # Remove separator date chars
+    date = ''.join([char for char in date if char not in r'\/-.:;'])
+    for fmt in all_date_format:
+        try:
+            date = datetime.strptime(date, fmt)
+            return date
+        except ValueError:
+            pass
+    raise ValueError(f'{date} is not a valid date format')
+
+# endregion
