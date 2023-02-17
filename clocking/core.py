@@ -25,6 +25,7 @@
 # region import
 import sqlite3
 import os.path
+from datetime import datetime
 from util import datestring_to_datetime
 
 # endregion
@@ -325,10 +326,10 @@ def insert_working_hours(database,
             create_working_hours_table(database, user)
 
         # Build date
-        if date and (day or month or year):
-            print('warning: date arguments is selected first')
-
         if date:
+            print('warning: date arguments is selected first')
             date = datestring_to_datetime(date)
+        else:
+            date = datetime(year=year, month=month, day=day)
 
 # endregion
