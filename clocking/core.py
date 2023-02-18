@@ -26,7 +26,7 @@
 import sqlite3
 import os.path
 from datetime import datetime
-from util import datestring_to_datetime
+from .util import datestring_to_datetime
 
 # endregion
 
@@ -267,8 +267,7 @@ def create_working_hours_table(database, user):
 
         # Create user table
         cur.execute(rf"CREATE TABLE IF NOT EXISTS {user} ("
-                    r"id INTEGER PRIMARY KEY,"
-                    r"date DATE NOT NULL,"
+                    r"date_id INTEGER PRIMARY KEY,"
                     r"hours FLOAT NOT NULL,"
                     r"description TEXT,"
                     r"extraordinary FLOAT,"
@@ -315,6 +314,15 @@ def insert_working_hours(database,
     :param year: year of the date
     :return: bool
     """
+    # Build date
+    if date:
+        print('warning: date arguments is selected first')
+        date = datestring_to_datetime(date)
+    elif year and month and day:
+        date = datetime(year=year, month=month, day=day)
+    else:
+        date = datetime.today()
+        
     # Create the database connection
     with sqlite3.connect(database) as conn:
         # Create cursor
@@ -324,12 +332,11 @@ def insert_working_hours(database,
         cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
         if not cur.fetchone():
             create_working_hours_table(database, user)
+            
+        # Get date_id
+        date.strftime('%Y%m%d')
+        
+        # Insert into database
 
-        # Build date
-        if date:
-            print('warning: date arguments is selected first')
-            date = datestring_to_datetime(date)
-        else:
-            date = datetime(year=year, month=month, day=day)
 
 # endregion
