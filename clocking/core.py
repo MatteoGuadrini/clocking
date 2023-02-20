@@ -296,9 +296,10 @@ def insert_working_hours(database,
                          date=None,
                          day=None,
                          month=None,
-                         year=None):
+                         year=None,
+                         empty_value=None):
     """Insert working day into database
-
+ 
     :param database: database file path
     :param hours: number of working hours
     :param user: user in configuration table
@@ -312,6 +313,7 @@ def insert_working_hours(database,
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
+    :param empty_value: empty value if worked hours is 0
     :return: bool
     """
     # Build date
@@ -334,9 +336,17 @@ def insert_working_hours(database,
             create_working_hours_table(database, user)
             
         # Get date_id
-        date.strftime('%Y%m%d')
+        date_id = date.strftime('%Y%m%d')
         
         # Insert into database
+        cur.execute(rf"INSERT INTO {user}("
+                    r"date_id, hours, description, extraordinary, permit_hour, other_hours, holiday,"
+                    r"disease, empty) "
+                    r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                    (date_id, hours, description, extraordinary, permit_hour, 
+                     other_hours, holiday, disease, empty_value))
+        result = bool(cur.rowcount)
 
+    return result
 
 # endregion
