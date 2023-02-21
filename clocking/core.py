@@ -317,10 +317,12 @@ def insert_working_hours(database,
     :return: bool
     """
     # Build date
-    if date:
+    if date and (year or month or day):
         print('warning: date arguments is selected first')
+    if date:
         date = datestring_to_datetime(date)
     elif year and month and day:
+        year, month, day = [int(i) for i in (year, month, day) if i]
         date = datetime(year=year, month=month, day=day)
     else:
         date = datetime.today()
@@ -338,13 +340,26 @@ def insert_working_hours(database,
         # Get date_id
         date_id = date.strftime('%Y%m%d')
         
-        # Insert into database
-        cur.execute(rf"INSERT INTO {user}("
-                    r"date_id, hours, description, extraordinary, permit_hour, other_hours, holiday,"
-                    r"disease, empty) "
-                    r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                    (date_id, hours, description, extraordinary, permit_hour, 
-                     other_hours, holiday, disease, empty_value))
+        # Check if date_id exists
+        cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
+        if not cur.fetchone():
+        
+            # Insert into database
+            cur.execute(rf"INSERT INTO {user}("
+                        r"date_id, hours, description, extraordinary, permit_hour, other_hours, holiday,"
+                        r"disease, empty) "
+                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                        (date_id, hours, description, extraordinary, permit_hour, 
+                         other_hours, holiday, disease, empty_value))
+        else:
+            
+            # Update into database
+            cur.execute(rf"UPDATE {user} "
+                        r"SET hours = ?, description = ?, extraordinary = ?, permit_hour = ?, "
+                        r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
+                        r"WHERE date_id = ?;",
+                        (hours, description, extraordinary, permit_hour,
+                         other_hours, holiday, disease, empty_value, date_id))
         result = bool(cur.rowcount)
 
     return result
