@@ -218,15 +218,6 @@ def reset_configuration(database):
 
         # Delete all rows from table
         cur.execute('DELETE FROM configuration;')
-
-        # Insert values into configuration table
-        cur.execute(r"INSERT INTO configuration("
-                    r"active, user, location, empty_value, daily_hours, working_days, extraordinary,"
-                    r"permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
-                    r"food_ticket, other_hours, other_reward) "
-                    r"VALUES (True, 'User', 'Office', 'not worked', "
-                    r"8.0, 'Mon Tue Wed Thu Fri', 1.0, 1.0, 'Disease', 'Holiday', "
-                    r"'$', 10.0, 15.0, 7.0, 0, 5.0);")
         result = bool(cur.rowcount)
 
     return result
