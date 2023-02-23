@@ -32,7 +32,8 @@ from clocking.core import (database_exists,
                            reset_configuration,
                            get_current_configuration,
                            create_working_hours_table,
-                           insert_working_hours
+                           insert_working_hours,
+                           remove_working_hours
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -132,3 +133,20 @@ def test_insert_daily_value():
     assert insert_working_hours(TEMP_DB, user, 8, day='08',
                                 month='02', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
+
+
+# --------------------------------------------------
+def test_remove_daily_value():
+    """Remove value on a user table value"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert remove_working_hours(TEMP_DB, user, date='2023-02-08')
+    assert remove_working_hours(TEMP_DB, user, date='2023/08/02')
+    assert remove_working_hours(TEMP_DB, user, date='2023-08-02')
+    assert remove_working_hours(TEMP_DB, user, date='2023/02/08')
+    assert remove_working_hours(TEMP_DB, user, date='08-02-2023')
+    assert remove_working_hours(TEMP_DB, user, date='08/02/2023')
+    assert remove_working_hours(TEMP_DB, user, date='20230208')
+    assert remove_working_hours(TEMP_DB, user, day='08',
+                                month='02', year='2023')
+    assert remove_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
+    
