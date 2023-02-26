@@ -23,7 +23,9 @@
 """Unit testing module for core logic"""
 
 import os
+from pytest import raises
 from tempfile import gettempdir
+from clocking.exception import WorkingDayError
 from clocking.core import (database_exists,
                            make_database,
                            create_configuration_table,
@@ -160,4 +162,6 @@ def test_remove_daily_value():
                                 month='02', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert remove_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
+    with raises(WorkingDayError):
+        assert remove_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
     
