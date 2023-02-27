@@ -27,6 +27,7 @@ import sqlite3
 import os.path
 from datetime import datetime
 from .util import datestring_to_datetime
+from .exception import WorkingDayError
 
 # endregion
 
@@ -317,7 +318,7 @@ def insert_working_hours(database,
         date = datetime(year=year, month=month, day=day)
     else:
         date = datetime.today()
-        
+
     # Create the database connection
     with sqlite3.connect(database) as conn:
         # Create cursor
@@ -327,23 +328,23 @@ def insert_working_hours(database,
         cur.execute(f"SELECT name FROM sqlite_master WHERE name='{user}'")
         if not cur.fetchone():
             create_working_hours_table(database, user)
-            
+
         # Get date_id
         date_id = date.strftime('%Y%m%d')
-        
+
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if not cur.fetchone():
-        
+
             # Insert into database
             cur.execute(rf"INSERT INTO {user}("
                         r"date_id, hours, description, extraordinary, permit_hour, other_hours, holiday,"
                         r"disease, empty) "
                         r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                        (date_id, hours, description, extraordinary, permit_hour, 
+                        (date_id, hours, description, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value))
         else:
-            
+
             # Update into database
             cur.execute(rf"UPDATE {user} "
                         r"SET hours = ?, description = ?, extraordinary = ?, permit_hour = ?, "
@@ -351,6 +352,56 @@ def insert_working_hours(database,
                         r"WHERE date_id = ?;",
                         (hours, description, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value, date_id))
+        result = bool(cur.rowcount)
+
+    return result
+
+
+def remove_working_hours(database, user, date=None, day=None, month=None, year=None, empty_value=None):
+    """Remove working day into database
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :param date: date for inset values
+    :param date: date for inset values
+    :param day: day of the date
+    :param month: month of the date
+    :param year: year of the date
+    :param empty_value: fill empty value
+    :return: 
+    """
+    # Build date
+    if date and (year or month or day):
+        print('warning: date arguments is selected first')
+    if date:
+        date = datestring_to_datetime(date)
+    elif year and month and day:
+        year, month, day = [int(i) for i in (year, month, day) if i]
+        date = datetime(year=year, month=month, day=day)
+    else:
+        date = datetime.today()
+
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get date_id
+        date_id = date.strftime('%Y%m%d')
+
+        # Check if date_id exists
+        cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
+        if cur.fetchone():
+
+            # Update empty day into database
+            cur.execute(rf"UPDATE {user} "
+                        r"SET hours = ?, description = ?, extraordinary = ?, permit_hour = ?, "
+                        r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
+                        r"WHERE date_id = ?;", (0, None, 0, 0, 0, None, None, empty_value, date_id))
+
+        else:
+            raise WorkingDayError(f'date_id {date_id} not exists from table "{user}" into database {database}')
+        
         result = bool(cur.rowcount)
 
     return result

@@ -161,7 +161,7 @@ def test_remove_daily_value():
     assert remove_working_hours(TEMP_DB, user, day='08',
                                 month='02', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
-    assert remove_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
+    assert remove_working_hours(TEMP_DB, user, day=8, month=2, year=2023)
     with raises(WorkingDayError):
-        assert remove_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
+        assert remove_working_hours(TEMP_DB, user, day=5, month=2, year=2023)
     
