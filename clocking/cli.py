@@ -203,28 +203,30 @@ def get_args():
     setting.add_argument('-t', '--description',
                          help="set description",
                          type=str)
-    # Remove subparser
-    removing = subparser.add_parser('remove', help="remove values", aliases=['rm', 'r'])
-    removing_group = removing.add_mutually_exclusive_group(required=True)
-    removing_group.add_argument('-I', '--id',
+    # Delete subparser
+    deleting = subparser.add_parser('delete', 
+                                    help="remove values",
+                                    aliases=['del', 'd'])
+    deleting_group = deleting.add_mutually_exclusive_group(required=True)
+    deleting_group.add_argument('-I', '--id',
                                 help="remove specific id",
                                 metavar='ID')
-    removing_group.add_argument('-D', '--date',
+    deleting_group.add_argument('-D', '--date',
                                 help="remove specific date",
                                 metavar='DATE')
-    removing_group.add_argument('-Y', '--year',
+    deleting_group.add_argument('-Y', '--year',
                                 help="remove whole year",
                                 type=int,
                                 metavar='YEAR')
-    removing_group.add_argument('-M', '--month',
+    deleting_group.add_argument('-M', '--month',
                                 help="remove whole month",
                                 type=int,
                                 metavar='MONTH')
-    removing_group.add_argument('-U', '--user',
+    deleting_group.add_argument('-U', '--user',
                                 help="remove whole user data",
                                 type=str,
                                 metavar='USER')
-    removing_group.add_argument('-C', '--clear',
+    deleting_group.add_argument('-C', '--clear',
                                 help="clear all data",
                                 action='store_true')
     # Print subparser
@@ -280,7 +282,7 @@ def main():
     # Check if configuration is created
     # Check subcommand
     # Check optional arguments
-    args = get_args()
+    get_args()
 
 
 # endregion

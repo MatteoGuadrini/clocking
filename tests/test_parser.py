@@ -66,13 +66,13 @@ def test_set_usage():
 
 
 # --------------------------------------------------
-def test_remove_usage():
+def test_delete_usage():
     """config usage"""
 
     for flag in ['-h', '--help']:
-        rv, out = getstatusoutput(f'python3 {prg} remove {flag}')
+        rv, out = getstatusoutput(f'python3 {prg} delete {flag}')
         assert rv == 0
-        assert out.lower().startswith('usage: clocking remove')
+        assert out.lower().startswith('usage: clocking delete')
 
 
 # --------------------------------------------------
