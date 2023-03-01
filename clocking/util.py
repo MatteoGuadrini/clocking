@@ -49,4 +49,28 @@ def datestring_to_datetime(date):
             pass
     raise ValueError(f'{date} is not a valid date format')
 
+
+def build_dateid(date, year=None, month=None, day=None, fmt='%Y%m%d'):
+    """Build date_id for database
+    
+    :param date: datetime object
+    :param year: number represents the year
+    :param month: number represents the year
+    :param day: number represents the year
+    :param fmt: datetime string format
+    :return: str
+    """
+    # Build date
+    if date and (year or month or day):
+        print('warning: date arguments is selected first')
+    if date:
+        date = datestring_to_datetime(date)
+    elif year and month and day:
+        year, month, day = [int(i) for i in (year, month, day) if i]
+        date = datetime(year=year, month=month, day=day)
+    else:
+        date = datetime.today()
+    
+    return date.strftime(fmt)
+
 # endregion

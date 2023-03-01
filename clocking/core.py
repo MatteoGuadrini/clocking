@@ -25,8 +25,7 @@
 # region import
 import sqlite3
 import os.path
-from datetime import datetime
-from .util import datestring_to_datetime
+from .util import build_dateid
 from .exception import WorkingDayError
 
 # endregion
@@ -308,17 +307,6 @@ def insert_working_hours(database,
     :param empty_value: empty value if worked hours is 0
     :return: bool
     """
-    # Build date
-    if date and (year or month or day):
-        print('warning: date arguments is selected first')
-    if date:
-        date = datestring_to_datetime(date)
-    elif year and month and day:
-        year, month, day = [int(i) for i in (year, month, day) if i]
-        date = datetime(year=year, month=month, day=day)
-    else:
-        date = datetime.today()
-
     # Create the database connection
     with sqlite3.connect(database) as conn:
         # Create cursor
@@ -330,7 +318,7 @@ def insert_working_hours(database,
             create_working_hours_table(database, user)
 
         # Get date_id
-        date_id = date.strftime('%Y%m%d')
+        date_id = build_dateid(date, year, month, day)
 
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
@@ -370,24 +358,13 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
     :param empty_value: fill empty value
     :return: 
     """
-    # Build date
-    if date and (year or month or day):
-        print('warning: date arguments is selected first')
-    if date:
-        date = datestring_to_datetime(date)
-    elif year and month and day:
-        year, month, day = [int(i) for i in (year, month, day) if i]
-        date = datetime(year=year, month=month, day=day)
-    else:
-        date = datetime.today()
-
     # Create the database connection
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
 
         # Get date_id
-        date_id = date.strftime('%Y%m%d')
+        date_id = build_dateid(date, year, month, day)
 
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
