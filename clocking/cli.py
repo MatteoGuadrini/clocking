@@ -208,22 +208,19 @@ def get_args():
                                     help="remove values",
                                     aliases=['del', 'd'])
     deleting_group = deleting.add_mutually_exclusive_group(required=True)
-    deleting_group.add_argument('-I', '--id',
-                                help="remove specific id",
-                                metavar='ID')
     deleting_group.add_argument('-D', '--date',
-                                help="remove specific date",
+                                help="delete specific date",
                                 metavar='DATE')
     deleting_group.add_argument('-Y', '--year',
-                                help="remove whole year",
+                                help="delete whole year",
                                 type=int,
                                 metavar='YEAR')
     deleting_group.add_argument('-M', '--month',
-                                help="remove whole month",
+                                help="delete whole month",
                                 type=int,
                                 metavar='MONTH')
     deleting_group.add_argument('-U', '--user',
-                                help="remove whole user data",
+                                help="delete whole user data",
                                 type=str,
                                 metavar='USER')
     deleting_group.add_argument('-C', '--clear',
