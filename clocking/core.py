@@ -261,6 +261,7 @@ def create_working_hours_table(database, user):
                     r"date_id INTEGER PRIMARY KEY,"
                     r"hours FLOAT NOT NULL,"
                     r"description TEXT,"
+                    r"location TEXT,"
                     r"extraordinary FLOAT,"
                     r"permit_hour FLOAT,"
                     r"other_hours FLOAT ,"
@@ -279,6 +280,7 @@ def insert_working_hours(database,
                          user,
                          hours=0,
                          description=None,
+                         location=None,
                          extraordinary=0,
                          permit_hour=0,
                          other_hours=0,
@@ -295,6 +297,7 @@ def insert_working_hours(database,
     :param hours: number of working hours
     :param user: user in configuration table
     :param description: description of working day
+    :param location: name of location
     :param extraordinary: extraordinary hours
     :param permit_hour: permit hours
     :param other_hours: other working hours
@@ -326,19 +329,19 @@ def insert_working_hours(database,
 
             # Insert into database
             cur.execute(rf"INSERT INTO {user}("
-                        r"date_id, hours, description, extraordinary, permit_hour, other_hours, holiday,"
+                        r"date_id, hours, description, location, extraordinary, permit_hour, other_hours, holiday,"
                         r"disease, empty) "
-                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                        (date_id, hours, description, extraordinary, permit_hour,
+                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                        (date_id, hours, description, location, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value))
         else:
 
             # Update into database
             cur.execute(rf"UPDATE {user} "
-                        r"SET hours = ?, description = ?, extraordinary = ?, permit_hour = ?, "
+                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hour = ?, "
                         r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
                         r"WHERE date_id = ?;",
-                        (hours, description, extraordinary, permit_hour,
+                        (hours, description, location, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value, date_id))
         result = bool(cur.rowcount)
 
@@ -372,9 +375,9 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
 
             # Update empty day into database
             cur.execute(rf"UPDATE {user} "
-                        r"SET hours = ?, description = ?, extraordinary = ?, permit_hour = ?, "
+                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hour = ?, "
                         r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
-                        r"WHERE date_id = ?;", (0, None, 0, 0, 0, None, None, empty_value, date_id))
+                        r"WHERE date_id = ?;", (0, None, None, 0, 0, 0, None, None, empty_value, date_id))
 
         else:
             raise WorkingDayError(f'date_id {date_id} not exists from table "{user}" into database {database}')

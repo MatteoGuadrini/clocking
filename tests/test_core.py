@@ -132,7 +132,7 @@ def test_insert_daily_value():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023/02/08')
     assert insert_working_hours(TEMP_DB, user, 8, date='08-02-2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='08/02/2023')
-    assert insert_working_hours(TEMP_DB, user, 8, date='20230208')
+    assert insert_working_hours(TEMP_DB, user, 8, date='20230208', location=location)
     assert insert_working_hours(TEMP_DB, user, 8, day='08',
                                 month='02', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
