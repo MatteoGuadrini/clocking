@@ -3,9 +3,9 @@
 # vim: se ts=4 et syn=python:
 
 # created by: matteo.guadrini
-# __info__ -- clocking
+# exception -- clocking
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -20,9 +20,8 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Information variable used by modules on this package."""
+"""clocking module that contains some exception classes"""
 
-__version__ = '0.0.4'
-__author__ = 'Matteo Guadrini'
-__email__ = 'matteo.guadrini@hotmail.it'
-__homepage__ = 'https://github.com/MatteoGuadrini/clocking'
+
+class WorkingDayError(ValueError): 
+    pass
