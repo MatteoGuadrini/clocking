@@ -50,7 +50,7 @@ def datestring_to_datetime(date):
     raise ValueError(f'{date} is not a valid date format')
 
 
-def build_dateid(date, year=None, month=None, day=None, fmt='%Y%m%d'):
+def build_dateid(date=None, year=None, month=None, day=None, fmt='%Y%m%d'):
     """Build date_id for database
     
     :param date: datetime object
