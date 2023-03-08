@@ -172,7 +172,7 @@ def add_configuration(database,
                      holiday, currency, hour_reward, extraordinary_reward,
                      food_ticket, other_hours, other_reward))
 
-        result = cur.lastrowid
+        result = False if cur.rowcount <= 0 else True
 
     return result
 
@@ -188,19 +188,28 @@ def enable_configuration(database, row_id):
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
-
-        # Update active into configuration table
-        cur.execute(r"UPDATE configuration "
-                    r"SET active = ? "
-                    r"WHERE id = ?;", (True, row_id))
-        # Disable other configuration for user
-        cur.execute(r"SELECT user FROM configuration "
+        
+        # Check if configuration is already enabled
+        cur.execute(r"SELECT active FROM configuration "
                     r"WHERE id = ?;", (row_id,))
-        user = cur.fetchone()[0]
-        cur.execute(r"UPDATE configuration "
-                    r"SET active = ? "
-                    r"WHERE user = ? AND id != ?;", (False, user, row_id))
-        result = bool(cur.rowcount) if cur.rowcount != 0 else True
+        active = cur.fetchone()[0]
+        if not active:
+
+            # Update active into configuration table
+            cur.execute(r"UPDATE configuration "
+                        r"SET active = ? "
+                        r"WHERE id = ?;", (True, row_id))
+            # Disable other configuration for user
+            cur.execute(r"SELECT user FROM configuration "
+                        r"WHERE id = ?;", (row_id,))
+            user = cur.fetchone()[0]
+            cur.execute(r"UPDATE configuration "
+                        r"SET active = ? "
+                        r"WHERE user = ? AND id != ?;", (False, user, row_id))
+            
+            result = False if cur.rowcount <= 0 else True
+        else:
+            result = True
 
     return result
 
@@ -218,7 +227,8 @@ def reset_configuration(database):
 
         # Delete all rows from table
         cur.execute('DELETE FROM configuration;')
-        result = bool(cur.rowcount)
+        
+        result = False if cur.rowcount <= 0 else True
 
     return result
 
@@ -343,7 +353,8 @@ def insert_working_hours(database,
                         r"WHERE date_id = ?;",
                         (hours, description, location, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value, date_id))
-        result = bool(cur.rowcount)
+        
+        result = False if cur.rowcount <= 0 else True
 
     return result
 
@@ -382,7 +393,7 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
         else:
             raise WorkingDayError(f'date_id {date_id} not exists from table "{user}" into database {database}')
         
-        result = bool(cur.rowcount)
+        result = False if cur.rowcount <= 0 else True
 
     return result
 
