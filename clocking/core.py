@@ -359,7 +359,7 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
     :param month: month of the date
     :param year: year of the date
     :param empty_value: fill empty value
-    :return: 
+    :return: bool
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
@@ -384,6 +384,39 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
         
         result = bool(cur.rowcount)
 
+    return result
+
+
+def delete_working_hours(database, user, date=None, day=None, month=None, year=None):
+    """Delete working day into database
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :param date: date for inset values
+    :param date: date for inset values
+    :param day: day of the date
+    :param month: month of the date
+    :param year: year of the date
+    :return: bool
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get date_id
+        date_id = build_dateid(date)
+
+        # Check if date_id exists
+        cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
+        if cur.fetchone():
+
+            # Delete day into database
+            cur.execute(rf"DELETE FROM {user} "
+                        r"WHERE date_id = ?;", (date_id,))
+
+        result = False if cur.rowcount <= 0 else True
+        
     return result
 
 # endregion
