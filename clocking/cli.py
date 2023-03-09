@@ -141,6 +141,8 @@ def get_args():
     selection_group.add_argument('-i', '--select-id', help="load configuration selecting id", type=int, metavar='ID')
     reset_group = config.add_argument_group('reset')
     reset_group.add_argument('-r', '--reset', help="reset with default values", action='store_true')
+    delete_group = config.add_argument_group('delete')
+    delete_group.add_argument('-d', '--delete-id', help="delete configuration selecting id", type=int, metavar='ID')
 
     # Set subparser
     setting = subparser.add_parser('set', help="setting values", aliases=['st', 's'])
