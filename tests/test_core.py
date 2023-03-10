@@ -105,7 +105,7 @@ def test_configuration():
                              other_hours=0,
                              other_reward=8.0
                              )
-    assert delete_configuration(TEMP_DB, row_id=2)
+    assert delete_configuration(TEMP_DB, row_id=1)
 
 
 # --------------------------------------------------

@@ -188,7 +188,7 @@ def enable_configuration(database, row_id):
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
-        
+
         # Check if configuration is already enabled
         cur.execute(r"SELECT active FROM configuration "
                     r"WHERE id = ?;", (row_id,))
@@ -206,7 +206,7 @@ def enable_configuration(database, row_id):
             cur.execute(r"UPDATE configuration "
                         r"SET active = ? "
                         r"WHERE user = ? AND id != ?;", (False, user, row_id))
-            
+
             result = False if cur.rowcount <= 0 else True
         else:
             result = True
@@ -227,7 +227,7 @@ def reset_configuration(database):
 
         # Delete all rows from table
         cur.execute('DELETE FROM configuration;')
-        
+
         result = False if cur.rowcount <= 0 else True
 
     return result
@@ -252,6 +252,27 @@ def get_current_configuration(database, user):
         result = cur.fetchone()
 
         return result if result else ()
+
+
+def delete_configuration(database, row_id):
+    """Delete specific configuration
+    
+    :param database: database file path
+    :param row_id: row id
+    :return: bool 
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+        
+        # Delete specific configuration
+        cur.execute(r"DELETE FROM configuration "
+                    r"WHERE id = ?;", (row_id,))
+
+        result = False if cur.rowcount <= 0 else True
+    
+    return result
 
 
 def create_working_hours_table(database, user):
@@ -353,7 +374,7 @@ def insert_working_hours(database,
                         r"WHERE date_id = ?;",
                         (hours, description, location, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value, date_id))
-        
+
         result = False if cur.rowcount <= 0 else True
 
     return result
@@ -392,7 +413,7 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
 
         else:
             raise WorkingDayError(f'date_id {date_id} not exists from table "{user}" into database {database}')
-        
+
         result = False if cur.rowcount <= 0 else True
 
     return result
@@ -416,18 +437,17 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
         cur = conn.cursor()
 
         # Get date_id
-        date_id = build_dateid(date)
+        date_id = build_dateid(date, year, month, day)
 
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if cur.fetchone():
-
             # Delete day into database
             cur.execute(rf"DELETE FROM {user} "
                         r"WHERE date_id = ?;", (date_id,))
 
         result = False if cur.rowcount <= 0 else True
-        
+
     return result
 
 # endregion
