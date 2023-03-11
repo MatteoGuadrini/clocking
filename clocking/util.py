@@ -73,4 +73,16 @@ def build_dateid(date=None, year=None, month=None, day=None, fmt='%Y%m%d'):
     
     return date.strftime(fmt)
 
+
+def split_dateid(date_id, fmt='%Y%m%d'):
+    """Split date_id to year, month and day 
+    
+    :param date_id: string date_id object
+    :param fmt: date_id string format
+    :return: tuple
+    """
+    date = datetime.strptime(date_id, fmt).date().timetuple()
+    return date.tm_year, date.tm_mon, date.tm_mday
+    
+
 # endregion
