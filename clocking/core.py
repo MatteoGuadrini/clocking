@@ -25,7 +25,7 @@
 # region import
 import sqlite3
 import os.path
-from .util import build_dateid
+from .util import build_dateid, split_dateid
 from .exception import WorkingDayError
 
 # endregion
@@ -290,6 +290,9 @@ def create_working_hours_table(database, user):
         # Create user table
         cur.execute(rf"CREATE TABLE IF NOT EXISTS {user} ("
                     r"date_id INTEGER PRIMARY KEY,"
+                    r"year INTEGER NOT NULL,"
+                    r"month INTEGER NOT NULL,"
+                    r"day INTEGER NOT NULL,"
                     r"hours FLOAT NOT NULL,"
                     r"description TEXT,"
                     r"location TEXT,"
@@ -353,27 +356,29 @@ def insert_working_hours(database,
 
         # Get date_id
         date_id = build_dateid(date, year, month, day)
+        year, month, day = split_dateid(date_id)
 
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if not cur.fetchone():
 
             # Insert into database
-            cur.execute(rf"INSERT INTO {user}("
-                        r"date_id, hours, description, location, extraordinary, permit_hour, other_hours, holiday,"
-                        r"disease, empty) "
-                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                        (date_id, hours, description, location, extraordinary, permit_hour,
+            cur.execute(rf"INSERT INTO {user} ("
+                        r"date_id, year, month, day, hours, description, location, "
+                        r"extraordinary, permit_hour, other_hours, holiday, disease, empty) "
+                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                        (date_id, year, month, day, hours, description, location, extraordinary, permit_hour,
                          other_hours, holiday, disease, empty_value))
         else:
 
             # Update into database
             cur.execute(rf"UPDATE {user} "
-                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hour = ?, "
+                        r"SET year = ?, month = ?, day = ?, hours = ?, description = ?, "
+                        r"location = ?, extraordinary = ?, permit_hour = ?, "
                         r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
                         r"WHERE date_id = ?;",
-                        (hours, description, location, extraordinary, permit_hour,
-                         other_hours, holiday, disease, empty_value, date_id))
+                        (year, month, day, hours, description, location, extraordinary, 
+                         permit_hour, other_hours, holiday, disease, empty_value, date_id))
 
         result = False if cur.rowcount <= 0 else True
 
