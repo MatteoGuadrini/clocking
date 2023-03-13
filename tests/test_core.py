@@ -111,6 +111,7 @@ def test_configuration():
 # --------------------------------------------------
 def test_insert_daily_value():
     """Setting value on a user table value"""
+    assert create_configuration_table(TEMP_DB)
     assert add_configuration(TEMP_DB,
                              active=True,
                              user='test',
@@ -150,11 +151,11 @@ def test_insert_daily_value():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023/08/02')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-08-02')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023/02/08')
-    assert insert_working_hours(TEMP_DB, user, 8, date='08-02-2023')
-    assert insert_working_hours(TEMP_DB, user, 8, date='08/02/2023')
+    assert insert_working_hours(TEMP_DB, user, 8, date='8-2-2023')
+    assert insert_working_hours(TEMP_DB, user, 8, date='8/2/2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='20230208', location=location)
-    assert insert_working_hours(TEMP_DB, user, 8, day='08',
-                                month='02', year='2023')
+    assert insert_working_hours(TEMP_DB, user, 8, day='8',
+                                month='2', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
 
 
@@ -173,14 +174,14 @@ def test_remove_daily_value():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert remove_working_hours(TEMP_DB, user, date='2023/02/08')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
-    assert remove_working_hours(TEMP_DB, user, date='08-02-2023')
+    assert remove_working_hours(TEMP_DB, user, date='8-2-2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
-    assert remove_working_hours(TEMP_DB, user, date='08/02/2023')
+    assert remove_working_hours(TEMP_DB, user, date='8/2/2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert remove_working_hours(TEMP_DB, user, date='20230208')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
-    assert remove_working_hours(TEMP_DB, user, day='08',
-                                month='02', year='2023')
+    assert remove_working_hours(TEMP_DB, user, day='8',
+                                month='2', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert remove_working_hours(TEMP_DB, user, day=8, month=2, year=2023)
     with raises(WorkingDayError):
@@ -194,5 +195,5 @@ def test_delete_values():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert delete_working_hours(TEMP_DB, user, date='2023-02-08')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
-    assert delete_working_hours(TEMP_DB, user, day='08',
-                                month='02', year='2023')
+    assert delete_working_hours(TEMP_DB, user, day='8',
+                                month='2', year='2023')

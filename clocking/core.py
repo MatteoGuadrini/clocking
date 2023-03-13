@@ -373,11 +373,11 @@ def insert_working_hours(database,
 
             # Update into database
             cur.execute(rf"UPDATE {user} "
-                        r"SET year = ?, month = ?, day = ?, hours = ?, description = ?, "
+                        r"SET hours = ?, description = ?, "
                         r"location = ?, extraordinary = ?, permit_hour = ?, "
                         r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
                         r"WHERE date_id = ?;",
-                        (year, month, day, hours, description, location, extraordinary, 
+                        (hours, description, location, extraordinary, 
                          permit_hour, other_hours, holiday, disease, empty_value, date_id))
 
         result = False if cur.rowcount <= 0 else True
