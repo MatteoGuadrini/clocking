@@ -34,19 +34,26 @@ def datestring_to_datetime(date):
     
     :param date: date in string format
     :return: datetime
+    :raise: ValueError
     """
     all_date_format = (
-        '%Y%m%d', '%m%Y%d', '%m%d%Y', '%d%Y%m', '%Y%d%m', '%d%m%Y',
-        '%y%m%d', '%m%y%d', '%m%d%y', '%d%y%m', '%y%d%m', '%d%m%y'
+        '%d{0}%m{0}%Y', '%d{0}%Y{0}%m', '%m{0}%Y{0}%d', 
+        '%m{0}%d{0}%Y', '%Y{0}%d{0}%m', '%Y{0}%m{0}%d',
+        '%d{0}%m{0}%y', '%d{0}%y{0}%m', '%m{0}%y{0}%d', 
+        '%m{0}%d{0}%y', '%y{0}%d{0}%m', '%y{0}%m{0}%d',
+        '%Y%d%m', '%Y%m%d', '%d%m%Y', '%d%Y%m', '%m%Y%d', '%m%d%Y', 
+        '%y%d%m', '%y%m%d', '%d%m%y', '%d%y%m', '%m%y%d', '%m%d%y'
     )
-    # Remove separator date chars
-    date = ''.join([char for char in date if char not in r'\/-.:;'])
-    for fmt in all_date_format:
-        try:
-            date = datetime.strptime(date, fmt)
-            return date
-        except ValueError:
-            pass
+    # Try converts string into datetime object
+    for sep in r'-\/ .:;':
+        for fmt in all_date_format:
+            # Add separator into format
+            fmt = fmt.format(sep)
+            try:
+                date = datetime.strptime(date, fmt)
+                return date
+            except ValueError:
+                pass
     raise ValueError(f'{date} is not a valid date format')
 
 
