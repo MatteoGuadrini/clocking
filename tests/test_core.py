@@ -37,7 +37,10 @@ from clocking.core import (database_exists,
                            create_working_hours_table,
                            insert_working_hours,
                            remove_working_hours,
-                           delete_working_hours
+                           delete_working_hours,
+                           delete_whole_year,
+                           delete_whole_month,
+                           delete_user
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -197,3 +200,33 @@ def test_delete_values():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert delete_working_hours(TEMP_DB, user, day='8',
                                 month='2', year='2023')
+    
+    
+# --------------------------------------------------
+def test_delete_more_values():
+    """Delete whole year and month values on user table"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    # Delete whole year
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_whole_year(TEMP_DB, user, year=2023)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_whole_year(TEMP_DB, user, '2023')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_whole_year(TEMP_DB, user, 2023)
+    # Delete whole month of current year
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_whole_month(TEMP_DB, user, year=2023, month=8)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_whole_month(TEMP_DB, user, '2023', '8')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_whole_month(TEMP_DB, user, 2023, 8)
+    # Delete all user data
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert delete_user(TEMP_DB, user)
