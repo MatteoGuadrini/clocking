@@ -391,7 +391,6 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
     :param database: database file path
     :param user: user in configuration table
     :param date: date for inset values
-    :param date: date for inset values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -430,7 +429,6 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
     :param database: database file path
     :param user: user in configuration table
     :param date: date for inset values
-    :param date: date for inset values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -450,6 +448,28 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
             # Delete day into database
             cur.execute(rf"DELETE FROM {user} "
                         r"WHERE date_id = ?;", (date_id,))
+
+        result = False if cur.rowcount <= 0 else True
+
+    return result
+
+
+def delete_whole_year(database, user, year):
+    """
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :param year: year of the date
+    :return: bool
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Delete whole year into database
+        cur.execute(rf"DELETE FROM {user} "
+                    r"WHERE year = ?;", (year,))
 
         result = False if cur.rowcount <= 0 else True
 
