@@ -499,4 +499,24 @@ def delete_whole_month(database, user, year, month):
 
     return result
 
+
+def delete_user(database, user):
+    """Delete all user data
+    
+    :param database: 
+    :param user: 
+    :return: 
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Delete whole month into database
+        cur.execute(rf"DELETE FROM {user};")
+
+        result = False if cur.rowcount <= 0 else True
+
+    return result
+
 # endregion
