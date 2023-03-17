@@ -455,7 +455,7 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
 
 
 def delete_whole_year(database, user, year):
-    """
+    """Delete whole year values into database
     
     :param database: database file path
     :param user: user in configuration table
@@ -470,6 +470,30 @@ def delete_whole_year(database, user, year):
         # Delete whole year into database
         cur.execute(rf"DELETE FROM {user} "
                     r"WHERE year = ?;", (year,))
+
+        result = False if cur.rowcount <= 0 else True
+
+    return result
+
+
+def delete_whole_month(database, user, year, month):
+    """Delete whole month values into database
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :param year: year of the date
+    :param month: month of the date
+    :return: bool
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Delete whole month into database
+        cur.execute(rf"DELETE FROM {user} "
+                    r"WHERE year = ? "
+                    r"AND month = ?;", (year, month))
 
         result = False if cur.rowcount <= 0 else True
 
