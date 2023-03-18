@@ -76,6 +76,26 @@ def make_database(database):
         cur.execute("SELECT version_id FROM version")
         if not cur.fetchone():
             cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
+            
+            
+def delete_database(database):
+    """Delete all data into database
+    
+    :param database: database file path
+    :return: None
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get all tables into database
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        tables = [row[0] for row in cur.fetchall()]
+        
+        # Drop all tables
+        for table in tables:
+            cur.execute(f"DROP TABLE IF EXISTS {table};")
 
 
 def create_configuration_table(database):

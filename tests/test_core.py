@@ -40,7 +40,8 @@ from clocking.core import (database_exists,
                            delete_working_hours,
                            delete_whole_year,
                            delete_whole_month,
-                           delete_user
+                           delete_user,
+                           delete_database
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -230,3 +231,5 @@ def test_delete_more_values():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
     assert delete_user(TEMP_DB, user)
+    # Delete all
+    assert delete_database(TEMP_DB) is None
