@@ -29,6 +29,7 @@ from clocking.exception import WorkingDayError
 from clocking.core import (database_exists,
                            make_database,
                            create_configuration_table,
+                           update_version,
                            add_configuration,
                            enable_configuration,
                            reset_configuration,
@@ -51,6 +52,12 @@ TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
 def test_create_database():
     """Check database creation"""
     assert make_database(TEMP_DB) is None
+    
+    
+# --------------------------------------------------
+def test_update_version():
+    """Update version clocking database"""
+    assert update_version(TEMP_DB)
 
 
 # --------------------------------------------------
