@@ -31,7 +31,7 @@ from .exception import WorkingDayError
 # endregion
 
 # region globals
-__version__ = '0.0.1'
+__version__ = '0.0.4'
 
 
 # endregion
@@ -96,6 +96,29 @@ def delete_database(database):
         # Drop all tables
         for table in tables:
             cur.execute(f"DROP TABLE IF EXISTS {table};")
+            
+            
+def update_version(database):
+    """Update clocking version into database
+
+    :param database: database file path
+    :return: bool
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Delete version table
+        cur.execute("DROP TABLE IF EXISTS version;")
+        # Create new version table
+        cur.execute("CREATE TABLE IF NOT EXISTS version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
+        # Insert version into properly table
+        cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
+
+        result = False if cur.rowcount <= 0 else True
+    
+    return result
 
 
 def create_configuration_table(database):
