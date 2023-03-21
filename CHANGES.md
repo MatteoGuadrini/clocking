@@ -1,5 +1,19 @@
 # Release notes
 
+## 0.0.5
+Mar 21, 2023
+
+- Add _delete_working_hours_ function
+- Add _delete-id_ argument
+- Add _delete_configuration_ function
+- Add _split_dateid_ function on **util** module
+- Add _delete_whole_year_ function
+- Add _delete_user_ function
+- Add _delete_database_ function
+- Add _update_version_ function
+- Fix various separator format into _datestring_to_datetime_ function
+- Fix check if _row_id_ is already active in **enable_configuration** function
+
 ## 0.0.4
 Mar 4, 2023
 
