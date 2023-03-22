@@ -24,6 +24,7 @@
 
 import os
 from pytest import raises
+from sqlite3 import Cursor
 from tempfile import gettempdir
 from clocking.exception import WorkingDayError
 from clocking.core import (database_exists,
@@ -42,7 +43,8 @@ from clocking.core import (database_exists,
                            delete_whole_year,
                            delete_whole_month,
                            delete_user,
-                           delete_database
+                           delete_database,
+                           get_working_hours
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -52,8 +54,8 @@ TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
 def test_create_database():
     """Check database creation"""
     assert make_database(TEMP_DB) is None
-    
-    
+
+
 # --------------------------------------------------
 def test_update_version():
     """Update version clocking database"""
@@ -168,6 +170,16 @@ def test_insert_daily_value():
     assert insert_working_hours(TEMP_DB, user, 8, day='8',
                                 month='2', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
+    
+
+# --------------------------------------------------
+def test_get_values():
+    """Get values from database"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    # Delete whole year
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
+    assert isinstance(get_working_hours(TEMP_DB, user, date='2023 22 08'), Cursor)
 
 
 # --------------------------------------------------
@@ -197,8 +209,8 @@ def test_remove_daily_value():
     assert remove_working_hours(TEMP_DB, user, day=8, month=2, year=2023)
     with raises(WorkingDayError):
         assert remove_working_hours(TEMP_DB, user, day=5, month=2, year=2023)
-        
-        
+
+
 # --------------------------------------------------
 def test_delete_values():
     """Delete values on user table"""
@@ -208,8 +220,8 @@ def test_delete_values():
     assert insert_working_hours(TEMP_DB, user, 8, date='2023-02-08')
     assert delete_working_hours(TEMP_DB, user, day='8',
                                 month='2', year='2023')
-    
-    
+
+
 # --------------------------------------------------
 def test_delete_more_values():
     """Delete whole year and month values on user table"""
