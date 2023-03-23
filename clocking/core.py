@@ -76,8 +76,8 @@ def make_database(database):
         cur.execute("SELECT version_id FROM version")
         if not cur.fetchone():
             cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
-            
-            
+
+
 def delete_database(database):
     """Delete all data into database
     
@@ -92,12 +92,12 @@ def delete_database(database):
         # Get all tables into database
         cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
         tables = [row[0] for row in cur.fetchall()]
-        
+
         # Drop all tables
         for table in tables:
             cur.execute(f"DROP TABLE IF EXISTS {table};")
-            
-            
+
+
 def update_version(database):
     """Update clocking version into database
 
@@ -117,7 +117,7 @@ def update_version(database):
         cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
 
         result = False if cur.rowcount <= 0 else True
-    
+
     return result
 
 
@@ -308,13 +308,13 @@ def delete_configuration(database, row_id):
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
-        
+
         # Delete specific configuration
         cur.execute(r"DELETE FROM configuration "
                     r"WHERE id = ?;", (row_id,))
 
         result = False if cur.rowcount <= 0 else True
-    
+
     return result
 
 
@@ -380,7 +380,7 @@ def insert_working_hours(database,
     :param other_hours: other working hours
     :param holiday: holiday value
     :param disease: disease value
-    :param date: date for inset values
+    :param date: date for insert values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -420,7 +420,7 @@ def insert_working_hours(database,
                         r"location = ?, extraordinary = ?, permit_hour = ?, "
                         r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
                         r"WHERE date_id = ?;",
-                        (hours, description, location, extraordinary, 
+                        (hours, description, location, extraordinary,
                          permit_hour, other_hours, holiday, disease, empty_value, date_id))
 
         result = False if cur.rowcount <= 0 else True
@@ -428,12 +428,37 @@ def insert_working_hours(database,
     return result
 
 
+def get_working_hours(database, user, date=None, day=None, month=None, year=None, ):
+    """Get working day from database
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :param date: date for insert values
+    :param day: day of the date
+    :param month: month of the date
+    :param year: year of the date
+    :return: cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get date_id
+        date_id = build_dateid(date, year, month, day)
+
+        # Get working day
+        cur.execute(f"SELECT * FROM {user} WHERE date_id='{date_id}'")
+
+    return cur
+
+
 def remove_working_hours(database, user, date=None, day=None, month=None, year=None, empty_value=None):
     """Remove working day into database
     
     :param database: database file path
     :param user: user in configuration table
-    :param date: date for inset values
+    :param date: date for insert values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -471,7 +496,7 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
     
     :param database: database file path
     :param user: user in configuration table
-    :param date: date for inset values
+    :param date: date for insert values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
