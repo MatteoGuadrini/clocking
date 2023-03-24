@@ -44,7 +44,8 @@ from clocking.core import (database_exists,
                            delete_whole_month,
                            delete_user,
                            delete_database,
-                           get_working_hours
+                           get_working_hours,
+                           print_working_table
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -170,16 +171,32 @@ def test_insert_daily_value():
     assert insert_working_hours(TEMP_DB, user, 8, day='8',
                                 month='2', year='2023')
     assert insert_working_hours(TEMP_DB, user, 8, day=8, month=2, year=2023)
-    
+
 
 # --------------------------------------------------
 def test_get_values():
     """Get values from database"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
-    # Delete whole year
-    assert insert_working_hours(TEMP_DB, user, 8, date='2023 22 08')
-    assert insert_working_hours(TEMP_DB, user, 8, date='2023 23 08')
-    assert isinstance(get_working_hours(TEMP_DB, user, date='2023 22 08'), Cursor)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
+    assert isinstance(get_working_hours(TEMP_DB, user, date='2023.22.08'), Cursor)
+
+
+def test_print_table(capsys):
+    """Print tables"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
+    # Print date
+    print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'))
+    captured = capsys.readouterr()
+    print(captured.out)
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+-------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease | empty |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+-------+
+| 20230822 | 2023 |   8   |  22 |  8.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+-------+
+"""
 
 
 # --------------------------------------------------
