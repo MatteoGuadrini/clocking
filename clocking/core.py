@@ -25,6 +25,7 @@
 # region import
 import sqlite3
 import os.path
+from prettytable import from_db_cursor
 from .util import build_dateid, split_dateid
 from .exception import WorkingDayError
 
@@ -437,7 +438,7 @@ def get_working_hours(database, user, date=None, day=None, month=None, year=None
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
-    :return: cursor
+    :return: Cursor
     """
     # Create the database connection
     with sqlite3.connect(database) as conn:
@@ -586,5 +587,15 @@ def delete_user(database, user):
         result = False if cur.rowcount <= 0 else True
 
     return result
+
+
+def print_working_table(cursor):
+    """Print in stdout the working hours table 
+    
+    :param cursor: sqlite3 Cursor object
+    :return: None
+    """
+    working_table = from_db_cursor(cursor)
+    print(working_table)
 
 # endregion
