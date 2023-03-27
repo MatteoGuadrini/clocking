@@ -298,6 +298,25 @@ def get_current_configuration(database, user):
         return result if result else ()
 
 
+def get_whole_year(database, user, year):
+    """Get whole year's working days from database
+
+    :param database: database file path
+    :param user: user in configuration table
+    :param year: year of the date
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get working day from whole year
+        cur.execute(f"SELECT * FROM {user} WHERE year = ?;", (year,))
+
+    return cur
+
+
 def delete_configuration(database, row_id):
     """Delete specific configuration
     
