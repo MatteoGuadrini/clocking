@@ -21,12 +21,13 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Unit testing module for core logic"""
-
+import datetime
 import os
 from pytest import raises
 from sqlite3 import Cursor
 from tempfile import gettempdir
 from clocking.exception import WorkingDayError
+from clocking.util import build_dateid
 from clocking.core import (database_exists,
                            make_database,
                            create_configuration_table,
@@ -47,6 +48,7 @@ from clocking.core import (database_exists,
                            get_working_hours,
                            get_whole_year,
                            get_whole_month,
+                           get_all_days,
                            print_working_table
                            )
 
@@ -200,11 +202,16 @@ def test_print_table(capsys):
 """
     print_working_table(get_whole_year(TEMP_DB, user, year=2023))
     captured = capsys.readouterr()
-    assert captured.out == """+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+    today = datetime.datetime.now()
+    today_bid = build_dateid()
+    today_year = today.year
+    today_month = today.month
+    today_day = today.day
+    assert captured.out == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease | empty |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
-| 20230325 | 2023 |   3   |  25 |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
@@ -215,6 +222,18 @@ def test_print_table(capsys):
     assert captured.out == """+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease | empty |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+| 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
++----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+"""
+    print_working_table(get_all_days(TEMP_DB, user))
+    captured = capsys.readouterr()
+    assert captured.out == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+| date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease | empty |
++----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+| 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |

@@ -339,6 +339,24 @@ def get_whole_month(database, user, year, month):
     return cur
 
 
+def get_all_days(database, user):
+    """Get all days from database
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get all working days
+        cur.execute(rf"SELECT * FROM {user};")
+
+    return cur
+
+
 def delete_configuration(database, row_id):
     """Delete specific configuration
     
