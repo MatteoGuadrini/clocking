@@ -648,13 +648,16 @@ def delete_user(database, user):
     return result
 
 
-def print_working_table(cursor):
+def print_working_table(cursor, sort=False):
     """Print in stdout the working hours table 
     
     :param cursor: sqlite3 Cursor object
+    :param sort: sort by date_id
     :return: None
     """
     working_table = from_db_cursor(cursor)
+    if sort:
+        working_table.sortby = 'date_id'
     print(working_table)
 
 # endregion

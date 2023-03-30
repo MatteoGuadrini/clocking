@@ -200,6 +200,7 @@ def test_print_table(capsys):
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+-------+
 """
+    # Print whole year
     print_working_table(get_whole_year(TEMP_DB, user, year=2023))
     captured = capsys.readouterr()
     today = datetime.datetime.now()
@@ -217,6 +218,7 @@ def test_print_table(capsys):
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
 """
+    # Print whole month
     print_working_table(get_whole_month(TEMP_DB, user, year=2023, month=8))
     captured = capsys.readouterr()
     assert captured.out == """+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
@@ -227,8 +229,23 @@ def test_print_table(capsys):
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
 """
+    # Print all
     print_working_table(get_all_days(TEMP_DB, user))
     captured = capsys.readouterr()
+    assert captured.out == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+| date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease | empty |
++----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+| 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
+| 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |  None |
++----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
+"""
+    # Print all, but sorted by date
+    print_working_table(get_all_days(TEMP_DB, user), sort=True)
+    captured = capsys.readouterr()
+    print(captured.out)
     assert captured.out == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease | empty |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+-------+
