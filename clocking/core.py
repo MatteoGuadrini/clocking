@@ -403,8 +403,7 @@ def create_working_hours_table(database, user):
                     r"permit_hour FLOAT,"
                     r"other_hours FLOAT ,"
                     r"holiday TEXT,"
-                    r"disease TEXT,"
-                    r"empty TEXT"
+                    r"disease TEXT"
                     r");")
 
         # Return boolean if user table was created
@@ -461,6 +460,9 @@ def insert_working_hours(database,
         date_id = build_dateid(date, year, month, day)
         year, month, day = split_dateid(date_id)
 
+        # Check empty hours
+        hours = hours if hours else empty_value if empty_value else 0
+
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if not cur.fetchone():
@@ -468,20 +470,20 @@ def insert_working_hours(database,
             # Insert into database
             cur.execute(rf"INSERT INTO {user} ("
                         r"date_id, year, month, day, hours, description, location, "
-                        r"extraordinary, permit_hour, other_hours, holiday, disease, empty) "
-                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                        r"extraordinary, permit_hour, other_hours, holiday, disease) "
+                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
                         (date_id, year, month, day, hours, description, location, extraordinary, permit_hour,
-                         other_hours, holiday, disease, empty_value))
+                         other_hours, holiday, disease))
         else:
 
             # Update into database
             cur.execute(rf"UPDATE {user} "
                         r"SET hours = ?, description = ?, "
                         r"location = ?, extraordinary = ?, permit_hour = ?, "
-                        r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
+                        r"other_hours = ?, holiday = ?, disease = ? "
                         r"WHERE date_id = ?;",
                         (hours, description, location, extraordinary,
-                         permit_hour, other_hours, holiday, disease, empty_value, date_id))
+                         permit_hour, other_hours, holiday, disease, date_id))
 
         result = False if cur.rowcount <= 0 else True
 
@@ -533,6 +535,9 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
         # Get date_id
         date_id = build_dateid(date, year, month, day)
 
+        # Check empty value
+        hours = empty_value if empty_value else 0
+
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if cur.fetchone():
@@ -540,8 +545,9 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
             # Update empty day into database
             cur.execute(rf"UPDATE {user} "
                         r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hour = ?, "
-                        r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
-                        r"WHERE date_id = ?;", (0, None, None, 0, 0, 0, None, None, empty_value, date_id))
+                        r"other_hours = ?, holiday = ?, disease = ? "
+                        r"WHERE date_id = ?;", (hours, None, None, 0, 0, 
+                                                0, None, None, date_id))
 
         else:
             raise WorkingDayError(f'date_id {date_id} not exists from table "{user}" into database {database}')
