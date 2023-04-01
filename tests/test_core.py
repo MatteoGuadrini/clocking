@@ -212,7 +212,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day}  |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
@@ -236,7 +236,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day}  |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
@@ -249,11 +249,23 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day}  |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
+"""
+    # Print only holidays
+    assert insert_working_hours(TEMP_DB, user, date='2023:09:16', holiday='Oktoberfest')
+    assert insert_working_hours(TEMP_DB, user, date='2023:08:15', holiday='All at the beach!')
+    print_working_table(get_working_hours(TEMP_DB, user, 
+                                          date='2023:09:16', holiday=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours |   holiday   | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
+| 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     | Oktoberfest |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
 """
 
 

@@ -490,7 +490,7 @@ def insert_working_hours(database,
     return result
 
 
-def get_working_hours(database, user, date=None, day=None, month=None, year=None, ):
+def get_working_hours(database, user, date=None, day=None, month=None, year=None, holiday=False):
     """Get working day from database
     
     :param database: database file path
@@ -499,6 +499,7 @@ def get_working_hours(database, user, date=None, day=None, month=None, year=None
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
+    :param holiday: select only holiday
     :return: Cursor
     """
     # Create the database connection
@@ -510,7 +511,11 @@ def get_working_hours(database, user, date=None, day=None, month=None, year=None
         date_id = build_dateid(date, year, month, day)
 
         # Get working day
-        cur.execute(f"SELECT * FROM {user} WHERE date_id='{date_id}'")
+        query = f"SELECT * FROM {user} WHERE date_id='{date_id}'"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        cur.execute(query)
 
     return cur
 
