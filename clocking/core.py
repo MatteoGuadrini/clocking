@@ -298,12 +298,43 @@ def get_current_configuration(database, user):
         return result if result else ()
 
 
-def get_whole_year(database, user, year):
+def get_working_hours(database, user, date=None, day=None, month=None, year=None, holiday=False):
+    """Get working day from database
+
+    :param database: database file path
+    :param user: user in configuration table
+    :param date: date for insert values
+    :param day: day of the date
+    :param month: month of the date
+    :param year: year of the date
+    :param holiday: select only holiday
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get date_id
+        date_id = build_dateid(date, year, month, day)
+
+        # Get working day
+        query = f"SELECT * FROM {user} WHERE date_id='{date_id}'"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        cur.execute(query)
+
+    return cur
+
+
+def get_whole_year(database, user, year, holiday=False):
     """Get whole year's working days from database
 
     :param database: database file path
     :param user: user in configuration table
     :param year: year of the date
+    :param holiday: select only holiday
     :return: Cursor
     """
     # Create the database connection
@@ -312,7 +343,11 @@ def get_whole_year(database, user, year):
         cur = conn.cursor()
 
         # Get working day from whole year
-        cur.execute(f"SELECT * FROM {user} WHERE year = ?;", (year,))
+        query = f"SELECT * FROM {user} WHERE year = ?"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        cur.execute(query, (year,))
 
     return cur
 
@@ -488,36 +523,6 @@ def insert_working_hours(database,
         result = False if cur.rowcount <= 0 else True
 
     return result
-
-
-def get_working_hours(database, user, date=None, day=None, month=None, year=None, holiday=False):
-    """Get working day from database
-    
-    :param database: database file path
-    :param user: user in configuration table
-    :param date: date for insert values
-    :param day: day of the date
-    :param month: month of the date
-    :param year: year of the date
-    :param holiday: select only holiday
-    :return: Cursor
-    """
-    # Create the database connection
-    with sqlite3.connect(database) as conn:
-        # Create cursor
-        cur = conn.cursor()
-
-        # Get date_id
-        date_id = build_dateid(date, year, month, day)
-
-        # Get working day
-        query = f"SELECT * FROM {user} WHERE date_id='{date_id}'"
-        # Check if return only holiday
-        if holiday:
-            query += " AND holiday IS NOT NULL"
-        cur.execute(query)
-
-    return cur
 
 
 def remove_working_hours(database, user, date=None, day=None, month=None, year=None, empty_value=None):
