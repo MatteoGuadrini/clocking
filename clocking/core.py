@@ -352,13 +352,14 @@ def get_whole_year(database, user, year, holiday=False):
     return cur
 
 
-def get_whole_month(database, user, year, month):
+def get_whole_month(database, user, year, month, holiday=False):
     """Get whole month's working days from database
 
     :param database: database file path
     :param user: user in configuration table
     :param year: year of the date
     :param month: month of the date
+    :param holiday: select only holiday
     :return: Cursor
     """
     # Create the database connection
@@ -367,9 +368,11 @@ def get_whole_month(database, user, year, month):
         cur = conn.cursor()
 
         # Get working day from whole month
-        cur.execute(rf"SELECT * FROM {user} "
-                    r"WHERE year = ? "
-                    r"AND month = ?;", (year, month))
+        query = rf"SELECT * FROM {user} WHERE year = ? AND month = ?"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        cur.execute(query, (year, month))
 
     return cur
 

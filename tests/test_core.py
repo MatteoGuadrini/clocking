@@ -186,6 +186,7 @@ def test_get_values():
     assert isinstance(get_working_hours(TEMP_DB, user, date='2023.22.08'), Cursor)
 
 
+# --------------------------------------------------
 def test_print_table(capsys):
     """Print tables"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
@@ -277,6 +278,16 @@ def test_print_table(capsys):
 | 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------------+---------+
+"""
+    print_working_table(get_whole_month(TEMP_DB, user, year=2023, 
+                                        month=9, holiday=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours |   holiday   | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
+| 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     | Oktoberfest |   None  |
+| 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     | Oktoberfest |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
 """
 
 
