@@ -257,6 +257,7 @@ def test_print_table(capsys):
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 """
     # Print only holidays
+    assert insert_working_hours(TEMP_DB, user, date='2022:09:16', holiday='Oktoberfest')
     assert insert_working_hours(TEMP_DB, user, date='2023:09:16', holiday='Oktoberfest')
     assert insert_working_hours(TEMP_DB, user, date='2023:09:17', holiday='Oktoberfest')
     assert insert_working_hours(TEMP_DB, user, date='2023:08:15', holiday='All at the beach!')
@@ -288,6 +289,17 @@ def test_print_table(capsys):
 | 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     | Oktoberfest |   None  |
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     | Oktoberfest |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
+"""
+    print_working_table(get_all_days(TEMP_DB, user, holiday=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours |      holiday      | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------------+---------+
+| 20220916 | 2022 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
+| 20230815 | 2023 |   8   |  15 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     | All at the beach! |   None  |
+| 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
+| 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------------+---------+
 """
 
 
