@@ -280,7 +280,7 @@ def test_print_table(capsys):
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------------+---------+
 """
-    print_working_table(get_whole_month(TEMP_DB, user, year=2023, 
+    print_working_table(get_whole_month(TEMP_DB, user, year=2023,
                                         month=9, holiday=True))
     captured = capsys.readouterr()
     assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------+---------+
@@ -300,6 +300,26 @@ def test_print_table(capsys):
 | 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |    Oktoberfest    |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+-------------------+---------+
+"""
+
+
+# --------------------------------------------------
+def test_print_table_disease(capsys):
+    """Print tables with only disease"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    # Print only disease
+    assert insert_working_hours(TEMP_DB, user, date='2022/09/16', disease='disease')
+    assert insert_working_hours(TEMP_DB, user, date='2023/09/16', disease='fever!')
+    assert insert_working_hours(TEMP_DB, user, date='2023/09/17', disease='disease')
+    assert insert_working_hours(TEMP_DB, user, date='2023/08/15', disease='heachache')
+    print_working_table(get_working_hours(TEMP_DB, user,
+                                          date='2023:09:16', disease=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |  fever! |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
 """
 
 
