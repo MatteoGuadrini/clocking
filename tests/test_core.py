@@ -213,7 +213,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day}  |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
@@ -237,7 +237,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day}  |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
@@ -250,7 +250,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day}  |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
@@ -351,6 +351,30 @@ def test_print_table_disease(capsys):
 | 20230916 | 2023 |   9   |  16 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |   fever!  |
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |  disease  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+-----------+
+"""
+    
+    
+# --------------------------------------------------
+def test_print_table_extraordinary(capsys):
+    """Print tables with only extraordinary"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    # Print only extraordinary
+    assert insert_working_hours(TEMP_DB, user, 8, date='2022/09/16', extraordinary=0)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2022/09/16', extraordinary=0.5)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023/09/16', extraordinary=1)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023/09/17', extraordinary=2)
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023/08/15', extraordinary=1.5)
+    print_working_table(get_working_hours(TEMP_DB, user,
+                                          date='2023:09:16', extraordinary=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| 20220916 | 2022 |   9   |  16 |  8.0  |     None    |   None   |      0.5      |     0.0     |     0.0     |   None  |   None  |
+| 20230815 | 2023 |   8   |  15 |  8.0  |     None    |   None   |      1.5      |     0.0     |     0.0     |   None  |   None  |
+| 20230916 | 2023 |   9   |  16 |  8.0  |     None    |   None   |      1.0      |     0.0     |     0.0     |   None  |   None  |
+| 20230917 | 2023 |   9   |  17 |  8.0  |     None    |   None   |      2.0      |     0.0     |     0.0     |   None  |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
 """
 
 

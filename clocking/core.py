@@ -298,7 +298,15 @@ def get_current_configuration(database, user):
         return result if result else ()
 
 
-def get_working_hours(database, user, date=None, day=None, month=None, year=None, holiday=False, disease=False):
+def get_working_hours(database, 
+                      user, 
+                      date=None, 
+                      day=None, 
+                      month=None, 
+                      year=None, 
+                      holiday=False, 
+                      disease=False,
+                      extraordinary=False):
     """Get working day from database
 
     :param database: database file path
@@ -309,6 +317,7 @@ def get_working_hours(database, user, date=None, day=None, month=None, year=None
     :param year: year of the date
     :param holiday: select only holiday values
     :param disease: select only disease values
+    :param extraordinary: select only extraordinary values
     :return: Cursor
     """
     # Create the database connection
@@ -326,6 +335,8 @@ def get_working_hours(database, user, date=None, day=None, month=None, year=None
             query += " AND holiday IS NOT NULL"
         elif disease:
             query += " AND disease IS NOT NULL"
+        elif extraordinary:
+            query += " AND extraordinary IS NOT NULL OR extraordinary IS NOT 0"
         cur.execute(query)
 
     return cur
