@@ -336,7 +336,7 @@ def get_working_hours(database,
         elif disease:
             query += " AND disease IS NOT NULL"
         elif extraordinary:
-            query += " AND extraordinary IS NOT NULL OR extraordinary IS NOT 0"
+            query += " AND (extraordinary IS NOT NULL OR extraordinary IS NOT 0)"
         cur.execute(query)
 
     return cur
