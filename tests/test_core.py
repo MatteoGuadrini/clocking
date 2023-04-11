@@ -331,7 +331,7 @@ def test_print_table_disease(capsys):
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |  disease  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+-----------+
 """
-    print_working_table(get_whole_month(TEMP_DB, user, 
+    print_working_table(get_whole_month(TEMP_DB, user,
                                         year=2023, month=9, disease=True))
     captured = capsys.readouterr()
     assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
@@ -352,8 +352,8 @@ def test_print_table_disease(capsys):
 | 20230917 | 2023 |   9   |  17 |  0.0  |     None    |   None   |      0.0      |     0.0     |     0.0     |   None  |  disease  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+-----------+
 """
-    
-    
+
+
 # --------------------------------------------------
 def test_print_table_extraordinary(capsys):
     """Print tables with only extraordinary"""
@@ -371,6 +371,17 @@ def test_print_table_extraordinary(capsys):
 | date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
 | 20230916 | 2023 |   9   |  16 |  8.0  |     None    |   None   |      1.0      |     0.0     |     0.0     |   None  |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+"""
+    print_working_table(get_whole_year(TEMP_DB, user,
+                                       year=2023, extraordinary=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| 20230815 | 2023 |   8   |  15 |  8.0  |     None    |   None   |      1.5      |     0.0     |     0.0     |   None  |   None  |
+| 20230916 | 2023 |   9   |  16 |  8.0  |     None    |   None   |      1.0      |     0.0     |     0.0     |   None  |   None  |
+| 20230917 | 2023 |   9   |  17 |  8.0  |     None    |   None   |      2.0      |     0.0     |     0.0     |   None  |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
 """
 
