@@ -256,6 +256,12 @@ def test_print_table(capsys):
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0     |     0.0     |   None  |   None  |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+-------------+-------------+---------+---------+
 """
+
+
+# --------------------------------------------------
+def test_print_table_holiday(capsys):
+    """Print tables with only disease days"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
     # Print only holidays
     assert insert_working_hours(TEMP_DB, user, date='2022:09:16', holiday='Oktoberfest')
     assert insert_working_hours(TEMP_DB, user, date='2023:09:16', holiday='Oktoberfest')
