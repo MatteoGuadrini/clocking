@@ -305,7 +305,7 @@ def test_print_table(capsys):
 
 # --------------------------------------------------
 def test_print_table_disease(capsys):
-    """Print tables with only disease"""
+    """Print tables with only disease days"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
     # Print only disease
     assert insert_working_hours(TEMP_DB, user, date='2022/09/16', disease='disease')
@@ -356,7 +356,7 @@ def test_print_table_disease(capsys):
 
 # --------------------------------------------------
 def test_print_table_extraordinary(capsys):
-    """Print tables with only extraordinary"""
+    """Print tables with only extraordinary hours"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
     # Print only extraordinary
     assert insert_working_hours(TEMP_DB, user, 8, date='2022/09/16', extraordinary=0)
@@ -403,6 +403,27 @@ def test_print_table_extraordinary(capsys):
 | 20230815 | 2023 |   8   |  15 |  8.0  |     None    |   None   |      1.5      |     0.0     |     0.0     |   None  |   None  |
 | 20230916 | 2023 |   9   |  16 |  8.0  |     None    |   None   |      1.0      |     0.0     |     0.0     |   None  |   None  |
 | 20230917 | 2023 |   9   |  17 |  8.0  |     None    |   None   |      2.0      |     0.0     |     0.0     |   None  |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+"""
+
+
+# --------------------------------------------------
+def test_print_table_permit(capsys):
+    """Print tables with only permit hours"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    # Print only extraordinary
+    assert insert_working_hours(TEMP_DB, user, 8, date='2022/09/16', permit_hour=0)
+    assert insert_working_hours(TEMP_DB, user, 7.5, date='2022/09/16', permit_hour=0.5)
+    assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', permit_hour=1)
+    assert insert_working_hours(TEMP_DB, user, 6, date='2023/09/17', permit_hour=2)
+    assert insert_working_hours(TEMP_DB, user, 6.5, date='2023/08/15', permit_hour=1.5)
+    print_working_table(get_working_hours(TEMP_DB, user,
+                                          date='2023:09:16', permit_hour=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| 20230916 | 2023 |   9   |  16 |  7.0  |     None    |   None   |      0.0      |     1.0     |     0.0     |   None  |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
 """
 

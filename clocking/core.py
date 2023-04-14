@@ -306,7 +306,8 @@ def get_working_hours(database,
                       year=None, 
                       holiday=False, 
                       disease=False,
-                      extraordinary=False):
+                      extraordinary=False,
+                      permit_hour=False):
     """Get working day from database
 
     :param database: database file path
@@ -318,6 +319,7 @@ def get_working_hours(database,
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
+    :param permit_hour: select only permit hour values
     :return: Cursor
     """
     # Create the database connection
@@ -337,6 +339,8 @@ def get_working_hours(database,
             query += " AND disease IS NOT NULL"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hour:
+            query += " AND (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
         cur.execute(query)
 
     return cur
