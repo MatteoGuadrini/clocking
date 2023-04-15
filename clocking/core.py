@@ -346,7 +346,7 @@ def get_working_hours(database,
     return cur
 
 
-def get_whole_year(database, user, year, holiday=False, disease=False, extraordinary=False):
+def get_whole_year(database, user, year, holiday=False, disease=False, extraordinary=False, permit_hour=False):
     """Get whole year's working days from database
 
     :param database: database file path
@@ -355,6 +355,7 @@ def get_whole_year(database, user, year, holiday=False, disease=False, extraordi
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
+    :param permit_hour: select only permit hour values
     :return: Cursor
     """
     # Create the database connection
@@ -371,6 +372,8 @@ def get_whole_year(database, user, year, holiday=False, disease=False, extraordi
             query += " AND disease IS NOT NULL"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hour:
+            query += " AND (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
         cur.execute(query, (year,))
 
     return cur
