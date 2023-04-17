@@ -420,7 +420,7 @@ def get_whole_month(database,
     return cur
 
 
-def get_all_days(database, user, holiday=False, disease=False, extraordinary=False):
+def get_all_days(database, user, holiday=False, disease=False, extraordinary=False, permit_hour=False):
     """Get all days from database
     
     :param database: database file path
@@ -428,6 +428,7 @@ def get_all_days(database, user, holiday=False, disease=False, extraordinary=Fal
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
+    :param permit_hour: select only permit hour values
     :return: Cursor
     """
     # Create the database connection
@@ -444,6 +445,8 @@ def get_all_days(database, user, holiday=False, disease=False, extraordinary=Fal
             query += " WHERE disease IS NOT NULL"
         elif extraordinary:
             query += " WHERE (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hour:
+            query += " WHERE (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
         cur.execute(query)
 
     return cur
