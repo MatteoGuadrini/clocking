@@ -143,7 +143,7 @@ def create_configuration_table(database):
                     r"daily_hours FLOAT NOT NULL,"
                     r"working_days TEXT NOT NULL,"
                     r"extraordinary FLOAT NOT NULL,"
-                    r"permit_hour FLOAT NOT NULL,"
+                    r"permit_hours FLOAT NOT NULL,"
                     r"disease TEXT NOT NULL,"
                     r"holiday TEXT NOT NULL,"
                     r"currency TEXT NOT NULL,"
@@ -169,7 +169,7 @@ def add_configuration(database,
                       daily_hours,
                       working_days,
                       extraordinary,
-                      permit_hour,
+                      permit_hours,
                       disease,
                       holiday,
                       currency,
@@ -189,7 +189,7 @@ def add_configuration(database,
     :param daily_hours: daily hours value
     :param working_days: working name's days
     :param extraordinary: minimum extraordinary value
-    :param permit_hour: minimum permit value
+    :param permit_hours: minimum permit value
     :param disease: disease string name
     :param holiday: holiday string name
     :param currency: currency char value
@@ -208,11 +208,11 @@ def add_configuration(database,
         # Insert values into configuration table
         cur.execute("INSERT INTO configuration("
                     "active, user, location, empty_value, daily_hours, working_days, extraordinary,"
-                    "permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
+                    "permit_hours, disease, holiday, currency, hour_reward, extraordinary_reward,"
                     "food_ticket, other_hours, other_reward) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
                     (active, user, location, empty_value, daily_hours,
-                     working_days, extraordinary, permit_hour, disease,
+                     working_days, extraordinary, permit_hours, disease,
                      holiday, currency, hour_reward, extraordinary_reward,
                      food_ticket, other_hours, other_reward))
 
@@ -307,7 +307,7 @@ def get_working_hours(database,
                       holiday=False, 
                       disease=False,
                       extraordinary=False,
-                      permit_hour=False,
+                      permit_hours=False,
                       other_hours=False):
     """Get working day from database
 
@@ -320,7 +320,7 @@ def get_working_hours(database,
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
-    :param permit_hour: select only permit hour values
+    :param permit_hours: select only permit hour values
     :param other_hours: select only other hour values
     :return: Cursor
     """
@@ -341,8 +341,8 @@ def get_working_hours(database,
             query += " AND disease IS NOT NULL"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
-        elif permit_hour:
-            query += " AND (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
+        elif permit_hours:
+            query += " AND (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
         elif other_hours:
             query += " AND (other_hours IS NOT 0 AND other_hours IS NOT NULL)"
         cur.execute(query)
@@ -350,7 +350,7 @@ def get_working_hours(database,
     return cur
 
 
-def get_whole_year(database, user, year, holiday=False, disease=False, extraordinary=False, permit_hour=False):
+def get_whole_year(database, user, year, holiday=False, disease=False, extraordinary=False, permit_hours=False):
     """Get whole year's working days from database
 
     :param database: database file path
@@ -359,7 +359,7 @@ def get_whole_year(database, user, year, holiday=False, disease=False, extraordi
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
-    :param permit_hour: select only permit hour values
+    :param permit_hours: select only permit hour values
     :return: Cursor
     """
     # Create the database connection
@@ -376,8 +376,8 @@ def get_whole_year(database, user, year, holiday=False, disease=False, extraordi
             query += " AND disease IS NOT NULL"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
-        elif permit_hour:
-            query += " AND (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
+        elif permit_hours:
+            query += " AND (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
         cur.execute(query, (year,))
 
     return cur
@@ -390,7 +390,7 @@ def get_whole_month(database,
                     holiday=False, 
                     disease=False, 
                     extraordinary=False,
-                    permit_hour=False):
+                    permit_hours=False):
     """Get whole month's working days from database
 
     :param database: database file path
@@ -400,7 +400,7 @@ def get_whole_month(database,
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
-    :param permit_hour: select only permit hour values
+    :param permit_hours: select only permit hour values
     :return: Cursor
     """
     # Create the database connection
@@ -417,14 +417,14 @@ def get_whole_month(database,
             query += " AND disease IS NOT NULL"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
-        elif permit_hour:
-            query += " AND (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
+        elif permit_hours:
+            query += " AND (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
         cur.execute(query, (year, month))
 
     return cur
 
 
-def get_all_days(database, user, holiday=False, disease=False, extraordinary=False, permit_hour=False):
+def get_all_days(database, user, holiday=False, disease=False, extraordinary=False, permit_hours=False):
     """Get all days from database
     
     :param database: database file path
@@ -432,7 +432,7 @@ def get_all_days(database, user, holiday=False, disease=False, extraordinary=Fal
     :param holiday: select only holiday values
     :param disease: select only disease values
     :param extraordinary: select only extraordinary values
-    :param permit_hour: select only permit hour values
+    :param permit_hours: select only permit hour values
     :return: Cursor
     """
     # Create the database connection
@@ -449,8 +449,8 @@ def get_all_days(database, user, holiday=False, disease=False, extraordinary=Fal
             query += " WHERE disease IS NOT NULL"
         elif extraordinary:
             query += " WHERE (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
-        elif permit_hour:
-            query += " WHERE (permit_hour IS NOT 0 AND permit_hour IS NOT NULL)"
+        elif permit_hours:
+            query += " WHERE (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
         cur.execute(query)
 
     return cur
@@ -499,7 +499,7 @@ def create_working_hours_table(database, user):
                     r"description TEXT,"
                     r"location TEXT,"
                     r"extraordinary FLOAT,"
-                    r"permit_hour FLOAT,"
+                    r"permit_hours FLOAT,"
                     r"other_hours FLOAT ,"
                     r"holiday TEXT,"
                     r"disease TEXT"
@@ -517,7 +517,7 @@ def insert_working_hours(database,
                          description=None,
                          location=None,
                          extraordinary=0,
-                         permit_hour=0,
+                         permit_hours=0,
                          other_hours=0,
                          holiday=None,
                          disease=None,
@@ -534,7 +534,7 @@ def insert_working_hours(database,
     :param description: description of working day
     :param location: name of location
     :param extraordinary: extraordinary hours
-    :param permit_hour: permit hours
+    :param permit_hours: permit hours
     :param other_hours: other working hours
     :param holiday: holiday value
     :param disease: disease value
@@ -569,20 +569,20 @@ def insert_working_hours(database,
             # Insert into database
             cur.execute(rf"INSERT INTO {user} ("
                         r"date_id, year, month, day, hours, description, location, "
-                        r"extraordinary, permit_hour, other_hours, holiday, disease) "
+                        r"extraordinary, permit_hours, other_hours, holiday, disease) "
                         r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                        (date_id, year, month, day, hours, description, location, extraordinary, permit_hour,
+                        (date_id, year, month, day, hours, description, location, extraordinary, permit_hours,
                          other_hours, holiday, disease))
         else:
 
             # Update into database
             cur.execute(rf"UPDATE {user} "
                         r"SET hours = ?, description = ?, "
-                        r"location = ?, extraordinary = ?, permit_hour = ?, "
+                        r"location = ?, extraordinary = ?, permit_hours = ?, "
                         r"other_hours = ?, holiday = ?, disease = ? "
                         r"WHERE date_id = ?;",
                         (hours, description, location, extraordinary,
-                         permit_hour, other_hours, holiday, disease, date_id))
+                         permit_hours, other_hours, holiday, disease, date_id))
 
         result = False if cur.rowcount <= 0 else True
 
@@ -618,7 +618,7 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
 
             # Update empty day into database
             cur.execute(rf"UPDATE {user} "
-                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hour = ?, "
+                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hours = ?, "
                         r"other_hours = ?, holiday = ?, disease = ? "
                         r"WHERE date_id = ?;", (hours, None, None, 0, 0, 
                                                 0, None, None, date_id))
