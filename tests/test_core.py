@@ -417,7 +417,7 @@ def test_print_table_extraordinary(capsys):
 def test_print_table_permit(capsys):
     """Print tables with only permit hours"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
-    # Print only extraordinary
+    # Print only permit hour
     assert insert_working_hours(TEMP_DB, user, 8, date='2022/09/16', permit_hour=0)
     assert insert_working_hours(TEMP_DB, user, 7.5, date='2022/09/16', permit_hour=0.5)
     assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', permit_hour=1)
@@ -465,6 +465,26 @@ def test_print_table_permit(capsys):
 +----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
 """
 
+
+# --------------------------------------------------
+def test_print_table_other(capsys):
+    """Print tables with only other hours"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    # Print only other hour
+    assert insert_working_hours(TEMP_DB, user, 8, date='2022/09/16', other_hours=0)
+    assert insert_working_hours(TEMP_DB, user, 7.5, date='2022/09/16', other_hours=0.5)
+    assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
+    assert insert_working_hours(TEMP_DB, user, 6, date='2023/09/17', other_hours=2)
+    assert insert_working_hours(TEMP_DB, user, 6.5, date='2023/08/15', other_hours=1.5)
+    print_working_table(get_working_hours(TEMP_DB, user,
+                                          date='2023:09:16', other_hours=True))
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hour | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+| 20230916 | 2023 |   9   |  16 |  7.0  |     None    |   None   |      0.0      |     0.0     |     1.0     |   None  |   None  |
++----------+------+-------+-----+-------+-------------+----------+---------------+-------------+-------------+---------+---------+
+"""
 
 # --------------------------------------------------
 def test_remove_daily_value():
