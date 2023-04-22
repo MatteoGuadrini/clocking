@@ -49,7 +49,8 @@ from clocking.core import (database_exists,
                            get_whole_year,
                            get_whole_month,
                            get_all_days,
-                           print_working_table
+                           print_working_table,
+                           save_working_table
                            )
 
 TEMP_DB = os.path.join(gettempdir(), 'test_database.db')
@@ -515,6 +516,19 @@ def test_print_table_other(capsys):
 | 20230917 | 2023 |   9   |  17 |  6.0  |     None    |   None   |      0.0      |     0.0      |     2.0     |   None  |   None  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
 """
+
+
+# --------------------------------------------------
+def test_save_table():
+    """Save table into file"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
+    assert insert_working_hours(TEMP_DB, user, date='2023:09:17', holiday='Oktoberfest')
+    assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
+    my_working_file = os.path.join(gettempdir(), 'myhours.txt')
+    assert save_working_table(my_working_file) is None
+    assert os.path.exists(my_working_file)
 
 
 # --------------------------------------------------
