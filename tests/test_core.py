@@ -527,7 +527,8 @@ def test_save_table():
     assert insert_working_hours(TEMP_DB, user, date='2023:09:17', holiday='Oktoberfest')
     assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
     my_working_file = os.path.join(gettempdir(), 'myhours.txt')
-    assert save_working_table(my_working_file) is None
+    assert save_working_table(get_working_hours(TEMP_DB, user,
+                                                date='2023:09:16', other_hours=True), my_working_file) is None
     assert os.path.exists(my_working_file)
 
 

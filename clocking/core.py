@@ -762,5 +762,21 @@ def print_working_table(cursor, sort=False):
     if sort:
         working_table.sortby = 'date_id'
     print(working_table)
-
+    
+    
+def save_working_table(cursor, file, sort=False):
+    """Save into file the working hours table
+    
+    :param cursor: sqlite3 Cursor object
+    :param file: file path where to save stdout
+    :param sort: sort by date_id
+    :return: None
+    """
+    working_table = from_db_cursor(cursor)
+    if sort:
+        working_table.sortby = 'date_id'
+    # Write stdout into file
+    with open(file, 'wt') as fh:
+        fh.write(working_table.get_string())
+        
 # endregion
