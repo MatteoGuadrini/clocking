@@ -530,6 +530,18 @@ def test_save_table():
     assert save_working_table(get_working_hours(TEMP_DB, user,
                                                 date='2023:09:16', other_hours=True), my_working_file) is None
     assert os.path.exists(my_working_file)
+    my_working_file = os.path.join(gettempdir(), 'myhours.txt')
+    assert save_working_table(get_working_hours(TEMP_DB, user,
+                                                date='2023:09:16', other_hours=True), my_working_file) is None
+    assert os.path.exists(my_working_file)
+    assert save_working_table(get_whole_year(TEMP_DB, user, year=2023), 
+                              my_working_file) is None
+    assert os.path.exists(my_working_file)
+    assert save_working_table(get_whole_month(TEMP_DB, user, year=2023, month=9),
+                              my_working_file) is None
+    assert save_working_table(get_all_days(TEMP_DB, user),
+                              my_working_file) is None
+    assert os.path.exists(my_working_file)
 
 
 # --------------------------------------------------
