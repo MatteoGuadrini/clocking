@@ -751,17 +751,23 @@ def delete_user(database, user):
     return result
 
 
-def print_working_table(cursor, sort=False):
+def print_working_table(cursor, sort=False, csv=False):
     """Print in stdout the working hours table 
-    
+     
     :param cursor: sqlite3 Cursor object
     :param sort: sort by date_id
+    :param csv: CSV format
     :return: None
     """
     working_table = from_db_cursor(cursor)
+    # Sort form date_id
     if sort:
         working_table.sortby = 'date_id'
-    print(working_table)
+    # Check format to print
+    if csv:
+        print(working_table.get_csv_string())
+    else:
+        print(working_table)
     
     
 def save_working_table(cursor, file, sort=False):
@@ -773,6 +779,7 @@ def save_working_table(cursor, file, sort=False):
     :return: None
     """
     working_table = from_db_cursor(cursor)
+    # Sort form date_id
     if sort:
         working_table.sortby = 'date_id'
     # Write stdout into file
