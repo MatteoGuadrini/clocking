@@ -527,8 +527,49 @@ def test_print_csv_table(capsys):
     # Print date
     print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'), csv=True)
     captured = capsys.readouterr()
-    print(captured.out)
     assert captured.out == """date_id,year,month,day,hours,description,location,extraordinary,permit_hours,other_hours,holiday,disease\r\n20230822,2023,8,22,8.0,,,0.0,0.0,0.0,,\r\n
+"""
+    
+
+# --------------------------------------------------
+def test_print_json_table(capsys):
+    """Print tables in csv format"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
+    # Print date
+    print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'), json=True)
+    captured = capsys.readouterr()
+    assert captured.out == """[
+    [
+        "date_id",
+        "year",
+        "month",
+        "day",
+        "hours",
+        "description",
+        "location",
+        "extraordinary",
+        "permit_hours",
+        "other_hours",
+        "holiday",
+        "disease"
+    ],
+    {
+        "date_id": 20230822,
+        "day": 22,
+        "description": null,
+        "disease": null,
+        "extraordinary": 0.0,
+        "holiday": null,
+        "hours": 8.0,
+        "location": null,
+        "month": 8,
+        "other_hours": 0.0,
+        "permit_hours": 0.0,
+        "year": 2023
+    }
+]
 """
     
 
