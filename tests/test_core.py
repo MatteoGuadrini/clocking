@@ -533,7 +533,7 @@ def test_print_csv_table(capsys):
 
 # --------------------------------------------------
 def test_print_json_table(capsys):
-    """Print tables in csv format"""
+    """Print tables in json format"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
     assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
@@ -608,6 +608,18 @@ def test_save_csv_table():
     assert save_working_table(get_working_hours(TEMP_DB, user,
                                                 date='2023:09:16', other_hours=True), 
                               my_working_file, csv=True) is None
+    assert os.path.exists(my_working_file)
+    
+
+# --------------------------------------------------
+def test_save_json_table():
+    """Save table into file in json format"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
+    my_working_file = os.path.join(gettempdir(), 'myhours.csv')
+    assert save_working_table(get_working_hours(TEMP_DB, user,
+                                                date='2023:09:16', other_hours=True), 
+                              my_working_file, json=True) is None
     assert os.path.exists(my_working_file)
 
 
