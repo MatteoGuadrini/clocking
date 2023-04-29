@@ -253,6 +253,9 @@ def get_args():
     printing_fmt_group.add_argument('-j', '--json',
                                     help="print in json format",
                                     action='store_true')
+    printing_fmt_group.add_argument('-m', '--html',
+                                    help="print in html format",
+                                    action='store_true')
     printing_selection_group = printing.add_mutually_exclusive_group()
     printing_selection_group.add_argument('-H', '--holiday',
                                           help="print only holidays",
