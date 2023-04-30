@@ -751,13 +751,14 @@ def delete_user(database, user):
     return result
 
 
-def print_working_table(cursor, sort=False, csv=False, json=False):
+def print_working_table(cursor, sort=False, csv=False, json=False, html=False):
     """Print in stdout the working hours table 
      
     :param cursor: sqlite3 Cursor object
     :param sort: sort by date_id
     :param csv: CSV format
     :param json: Json format
+    :param html: HTML format
     :return: None
     """
     working_table = from_db_cursor(cursor)
@@ -769,6 +770,8 @@ def print_working_table(cursor, sort=False, csv=False, json=False):
         print(working_table.get_csv_string())
     elif json:
         print(working_table.get_json_string())
+    elif html:
+        print(working_table.get_html_string())
     else:
         print(working_table)
     

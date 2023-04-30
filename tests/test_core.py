@@ -214,7 +214,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day}{' ' if today_day < 10 else ''} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
@@ -238,7 +238,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day}{' ' if today_day < 10 else ''} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
@@ -251,7 +251,7 @@ def test_print_table(capsys):
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
+| {today_bid} | {today_year} |   {today_month}   |  {today_day}{' ' if today_day < 10 else ''} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
@@ -574,6 +574,52 @@ def test_print_json_table(capsys):
     
 
 # --------------------------------------------------
+def test_print_html_table(capsys):
+    """Print tables in html format"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
+    # Print date
+    print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'), html=True)
+    captured = capsys.readouterr()
+    assert captured.out == """<table>
+    <thead>
+        <tr>
+            <th>date_id</th>
+            <th>year</th>
+            <th>month</th>
+            <th>day</th>
+            <th>hours</th>
+            <th>description</th>
+            <th>location</th>
+            <th>extraordinary</th>
+            <th>permit_hours</th>
+            <th>other_hours</th>
+            <th>holiday</th>
+            <th>disease</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>20230822</td>
+            <td>2023</td>
+            <td>8</td>
+            <td>22</td>
+            <td>8.0</td>
+            <td>None</td>
+            <td>None</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>None</td>
+            <td>None</td>
+        </tr>
+    </tbody>
+</table>
+"""
+    
+
+# --------------------------------------------------
 def test_save_table():
     """Save table into file"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
@@ -616,7 +662,7 @@ def test_save_json_table():
     """Save table into file in json format"""
     user = get_current_configuration(TEMP_DB, 'test')[2]
     assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
-    my_working_file = os.path.join(gettempdir(), 'myhours.csv')
+    my_working_file = os.path.join(gettempdir(), 'myhours.json')
     assert save_working_table(get_working_hours(TEMP_DB, user,
                                                 date='2023:09:16', other_hours=True), 
                               my_working_file, json=True) is None
