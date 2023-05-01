@@ -774,16 +774,17 @@ def print_working_table(cursor, sort=False, csv=False, json=False, html=False):
         print(working_table.get_html_string())
     else:
         print(working_table)
-    
-    
-def save_working_table(cursor, file, sort=False, csv=False, json=False):
+
+
+def save_working_table(cursor, file, sort=False, csv=False, json=False, html=False):
     """Save into file the working hours table
-    
+
     :param cursor: sqlite3 Cursor object
     :param file: file path where to save stdout
     :param sort: sort by date_id
     :param csv: CSV format
     :param json: Json format
+    :param html: HTML format
     :return: None
     """
     working_table = from_db_cursor(cursor)
@@ -797,6 +798,8 @@ def save_working_table(cursor, file, sort=False, csv=False, json=False):
             fh.write(working_table.get_csv_string())
         elif json:
             fh.write(working_table.get_json_string())
+        elif html:
+            fh.write(working_table.get_html_string())
         else:
             fh.write(working_table.get_string())
         
