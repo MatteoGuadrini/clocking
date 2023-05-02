@@ -529,7 +529,7 @@ def test_print_csv_table(capsys):
     captured = capsys.readouterr()
     assert captured.out == """date_id,year,month,day,hours,description,location,extraordinary,permit_hours,other_hours,holiday,disease\r\n20230822,2023,8,22,8.0,,,0.0,0.0,0.0,,\r\n
 """
-    
+
 
 # --------------------------------------------------
 def test_print_json_table(capsys):
@@ -571,7 +571,7 @@ def test_print_json_table(capsys):
     }
 ]
 """
-    
+
 
 # --------------------------------------------------
 def test_print_html_table(capsys):
@@ -617,7 +617,26 @@ def test_print_html_table(capsys):
     </tbody>
 </table>
 """
-    
+
+
+# --------------------------------------------------
+def test_print_rewards(capsys):
+    """Print rewards for a table"""
+    user = get_current_configuration(TEMP_DB, 'test')[2]
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
+    assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
+    # Print date
+    print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'), rewards=True)
+    captured = capsys.readouterr()
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+--------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease | reward |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+--------+
+| 20230822 | 2023 |   8   |  22 |  8.0  |     None    |   None   |      0.0      |     0.0      |     1.0     |   None  |   None  |   60   |
+| 20230823 | 2023 |   8   |  23 |  8.0  |     None    |   None   |      0.0      |     0.0      |     2.0     |   None  |   None  |   60   |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+--------+
+REWARDS: 120€
+"""
+
 
 # --------------------------------------------------
 def test_save_table():
@@ -635,7 +654,7 @@ def test_save_table():
     assert save_working_table(get_working_hours(TEMP_DB, user,
                                                 date='2023:09:16', other_hours=True), my_working_file) is None
     assert os.path.exists(my_working_file)
-    assert save_working_table(get_whole_year(TEMP_DB, user, year=2023), 
+    assert save_working_table(get_whole_year(TEMP_DB, user, year=2023),
                               my_working_file) is None
     assert os.path.exists(my_working_file)
     assert save_working_table(get_whole_month(TEMP_DB, user, year=2023, month=9),
@@ -643,7 +662,7 @@ def test_save_table():
     assert save_working_table(get_all_days(TEMP_DB, user),
                               my_working_file) is None
     assert os.path.exists(my_working_file)
-    
+
 
 # --------------------------------------------------
 def test_save_csv_table():
@@ -652,10 +671,10 @@ def test_save_csv_table():
     assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
     my_working_file = os.path.join(gettempdir(), 'myhours.csv')
     assert save_working_table(get_working_hours(TEMP_DB, user,
-                                                date='2023:09:16', other_hours=True), 
+                                                date='2023:09:16', other_hours=True),
                               my_working_file, csv=True) is None
     assert os.path.exists(my_working_file)
-    
+
 
 # --------------------------------------------------
 def test_save_json_table():
@@ -664,7 +683,7 @@ def test_save_json_table():
     assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
     my_working_file = os.path.join(gettempdir(), 'myhours.json')
     assert save_working_table(get_working_hours(TEMP_DB, user,
-                                                date='2023:09:16', other_hours=True), 
+                                                date='2023:09:16', other_hours=True),
                               my_working_file, json=True) is None
     assert os.path.exists(my_working_file)
 
@@ -676,7 +695,7 @@ def test_save_html_table():
     assert insert_working_hours(TEMP_DB, user, 7, date='2023/09/16', other_hours=1)
     my_working_file = os.path.join(gettempdir(), 'myhours.html')
     assert save_working_table(get_working_hours(TEMP_DB, user,
-                                                date='2023:09:16', other_hours=True), 
+                                                date='2023:09:16', other_hours=True),
                               my_working_file, html=True) is None
     assert os.path.exists(my_working_file)
 
