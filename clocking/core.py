@@ -26,6 +26,7 @@
 import sqlite3
 import os.path
 from prettytable import from_db_cursor
+from collections import namedtuple
 from .util import build_dateid, split_dateid
 from .exception import WorkingDayError
 
@@ -33,6 +34,13 @@ from .exception import WorkingDayError
 
 # region globals
 __version__ = '0.0.5'
+UserConfiguration = namedtuple('UserConfiguration', [
+    'rowid', 'active', 'user', 'location', 'empty_value',
+    'daily_hours', 'working_days', 'extraordinary',
+    'permit_hours', 'disease', 'holiday', 'currency',
+    'hour_reward', 'extraordinary_reward', 'food_ticket',
+    'other_hours', 'other_reward'
+])
 
 
 # endregion
@@ -295,16 +303,16 @@ def get_current_configuration(database, user):
                     (user,))
         result = cur.fetchone()
 
-        return result if result else ()
+        return UserConfiguration(*result) if result else ()
 
 
-def get_working_hours(database, 
-                      user, 
-                      date=None, 
-                      day=None, 
-                      month=None, 
-                      year=None, 
-                      holiday=False, 
+def get_working_hours(database,
+                      user,
+                      date=None,
+                      day=None,
+                      month=None,
+                      year=None,
+                      holiday=False,
                       disease=False,
                       extraordinary=False,
                       permit_hours=False,
@@ -350,12 +358,12 @@ def get_working_hours(database,
     return cur
 
 
-def get_whole_year(database, 
-                   user, 
-                   year, 
-                   holiday=False, 
-                   disease=False, 
-                   extraordinary=False, 
+def get_whole_year(database,
+                   user,
+                   year,
+                   holiday=False,
+                   disease=False,
+                   extraordinary=False,
                    permit_hours=False,
                    other_hours=False):
     """Get whole year's working days from database
@@ -393,12 +401,12 @@ def get_whole_year(database,
     return cur
 
 
-def get_whole_month(database, 
-                    user, 
-                    year, 
-                    month, 
-                    holiday=False, 
-                    disease=False, 
+def get_whole_month(database,
+                    user,
+                    year,
+                    month,
+                    holiday=False,
+                    disease=False,
                     extraordinary=False,
                     permit_hours=False,
                     other_hours=False):
@@ -438,12 +446,12 @@ def get_whole_month(database,
     return cur
 
 
-def get_all_days(database, 
-                 user, 
-                 holiday=False, 
-                 disease=False, 
-                 extraordinary=False, 
-                 permit_hours=False, 
+def get_all_days(database,
+                 user,
+                 holiday=False,
+                 disease=False,
+                 extraordinary=False,
+                 permit_hours=False,
                  other_hours=False):
     """Get all days from database
     
@@ -643,7 +651,7 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
             cur.execute(rf"UPDATE {user} "
                         r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hours = ?, "
                         r"other_hours = ?, holiday = ?, disease = ? "
-                        r"WHERE date_id = ?;", (hours, None, None, 0, 0, 
+                        r"WHERE date_id = ?;", (hours, None, None, 0, 0,
                                                 0, None, None, date_id))
 
         else:
@@ -802,5 +810,5 @@ def save_working_table(cursor, file, sort=False, csv=False, json=False, html=Fal
             fh.write(working_table.get_html_string())
         else:
             fh.write(working_table.get_string())
-        
+
 # endregion
