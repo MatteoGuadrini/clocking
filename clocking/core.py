@@ -25,7 +25,7 @@
 # region import
 import sqlite3
 import os.path
-from prettytable import from_db_cursor
+from prettytable import from_db_cursor, PrettyTable
 from collections import namedtuple
 from .util import build_dateid, split_dateid
 from .exception import WorkingDayError
@@ -759,7 +759,7 @@ def delete_user(database, user):
     return result
 
 
-def print_working_table(cursor, sort=False, csv=False, json=False, html=False):
+def print_working_table(cursor, sort=False, csv=False, json=False, html=False, rewards=None):
     """Print in stdout the working hours table 
      
     :param cursor: sqlite3 Cursor object
@@ -767,9 +767,26 @@ def print_working_table(cursor, sort=False, csv=False, json=False, html=False):
     :param csv: CSV format
     :param json: Json format
     :param html: HTML format
+    :param rewards: UserConfiguration tuple
     :return: None
     """
-    working_table = from_db_cursor(cursor)
+    # Create table
+    working_data = cursor.fetchall()
+    working_table = PrettyTable([col[0] for col in cursor.description])
+    working_table.add_rows(working_data)
+    # Add rewards column to printed table
+    if rewards:
+        # Calculate rewards
+        daily_rewards = [str(
+            sum([
+                row[4] * rewards.hour_reward,
+                row[7] * rewards.extraordinary_reward,
+                row[8] * rewards.hour_reward,
+                row[9] * rewards.other_reward,
+            ]) + rewards.food_ticket if row[4] > 0 else 0
+        ) + rewards.currency for row in working_data]
+        # Add reward column
+        working_table.add_column('rewards', daily_rewards)
     # Sort form date_id
     if sort:
         working_table.sortby = 'date_id'

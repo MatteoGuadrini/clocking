@@ -626,15 +626,14 @@ def test_print_rewards(capsys):
     assert insert_working_hours(TEMP_DB, user, 8, date='2023.22.08')
     assert insert_working_hours(TEMP_DB, user, 8, date='2023.23.08')
     # Print date
-    print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'), rewards=True)
+    print_working_table(get_working_hours(TEMP_DB, user, date='2023.22.08'), 
+                        rewards=get_current_configuration(TEMP_DB, 'test'))
     captured = capsys.readouterr()
-    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+--------+
-| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease | reward |
-+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+--------+
-| 20230822 | 2023 |   8   |  22 |  8.0  |     None    |   None   |      0.0      |     0.0      |     1.0     |   None  |   None  |   60   |
-| 20230823 | 2023 |   8   |  23 |  8.0  |     None    |   None   |      0.0      |     0.0      |     2.0     |   None  |   None  |   60   |
-+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+--------+
-REWARDS: 120€
+    assert captured.out == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease | rewards |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+| 20230822 | 2023 |   8   |  22 |  8.0  |     None    |   None   |      0.0      |     0.0      |     0.0     |   None  |   None  |  60.0€  |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
 """
 
 
