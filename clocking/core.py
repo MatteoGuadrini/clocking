@@ -28,7 +28,7 @@ import os.path
 from prettytable import PrettyTable
 from collections import namedtuple
 from .util import build_dateid, split_dateid
-from .exception import WorkingDayError
+from .exception import WorkingDayError, UserConfigurationError
 
 # endregion
 
@@ -776,6 +776,8 @@ def print_working_table(cursor, sort=False, csv=False, json=False, html=False, r
     working_table.add_rows(working_data)
     # Add rewards column to printed table
     if rewards:
+        if not isinstance(rewards, UserConfiguration):
+            raise UserConfigurationError(f"{type(rewards)} is not an UserConfiguration object")
         # Calculate rewards
         daily_rewards = [str(
             sum([
@@ -819,6 +821,8 @@ def save_working_table(cursor, file, sort=False, csv=False, json=False, html=Fal
     working_table.add_rows(working_data)
     # Add rewards column to printed table
     if rewards:
+        if not isinstance(rewards, UserConfiguration):
+            raise UserConfigurationError(f"{type(rewards)} is not an UserConfiguration object")
         # Calculate rewards
         daily_rewards = [str(
             sum([
