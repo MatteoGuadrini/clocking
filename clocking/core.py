@@ -27,7 +27,7 @@ import sqlite3
 import os.path
 from prettytable import PrettyTable
 from collections import namedtuple
-from .util import build_dateid, split_dateid
+from .util import build_dateid, split_dateid, make_printable_table
 from .exception import WorkingDayError, UserConfigurationError
 
 # endregion
@@ -771,9 +771,9 @@ def print_working_table(cursor, sort=False, csv=False, json=False, html=False, r
     :return: None
     """
     # Create table
-    working_data = cursor.fetchall()
-    working_table = PrettyTable([col[0] for col in cursor.description])
-    working_table.add_rows(working_data)
+    data_table = make_printable_table(cursor)
+    working_data = data_table.data
+    working_table = data_table.table
     # Add rewards column to printed table
     if rewards:
         if not isinstance(rewards, UserConfiguration):

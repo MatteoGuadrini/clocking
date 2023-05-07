@@ -24,7 +24,9 @@
 
 # region imports
 from datetime import datetime
-
+from sqlite3 import Cursor
+from prettytable import PrettyTable
+from collections import namedtuple
 
 # endregion
 
@@ -90,6 +92,21 @@ def split_dateid(date_id, fmt='%Y%m%d'):
     """
     date = datetime.strptime(date_id, fmt).date().timetuple()
     return date.tm_year, date.tm_mon, date.tm_mday
+
+
+def make_printable_table(cursor: Cursor):
+    """Create a PrettyTable object from sqlite3 Cursor object
+    
+    :param cursor: sqlite3 Cursor object
+    :return: DataTable
+    """
+    # Create a return tuple object
+    DataTable = namedtuple('DataTable', ['data', 'table'])
+    # Create table
+    working_data = cursor.fetchall()
+    working_table = PrettyTable([col[0] for col in cursor.description])
+    working_table.add_rows(working_data)
+    return DataTable(data=working_data, table=working_table)
     
 
 # endregion
