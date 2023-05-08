@@ -27,6 +27,20 @@ from datetime import datetime
 from sqlite3 import Cursor
 from prettytable import PrettyTable
 from collections import namedtuple
+from .exception import UserConfigurationError
+
+
+# endregion
+
+# region globals
+UserConfiguration = namedtuple('UserConfiguration', [
+    'rowid', 'active', 'user', 'location', 'empty_value',
+    'daily_hours', 'working_days', 'extraordinary',
+    'permit_hours', 'disease', 'holiday', 'currency',
+    'hour_reward', 'extraordinary_reward', 'food_ticket',
+    'other_hours', 'other_reward'
+])
+DataTable = namedtuple('DataTable', ['data', 'table'])
 
 # endregion
 
@@ -39,11 +53,11 @@ def datestring_to_datetime(date):
     :raise: ValueError
     """
     all_date_format = (
-        '%d{0}%m{0}%Y', '%d{0}%Y{0}%m', '%m{0}%Y{0}%d', 
+        '%d{0}%m{0}%Y', '%d{0}%Y{0}%m', '%m{0}%Y{0}%d',
         '%m{0}%d{0}%Y', '%Y{0}%d{0}%m', '%Y{0}%m{0}%d',
-        '%d{0}%m{0}%y', '%d{0}%y{0}%m', '%m{0}%y{0}%d', 
+        '%d{0}%m{0}%y', '%d{0}%y{0}%m', '%m{0}%y{0}%d',
         '%m{0}%d{0}%y', '%y{0}%d{0}%m', '%y{0}%m{0}%d',
-        '%Y%d%m', '%Y%m%d', '%d%m%Y', '%d%Y%m', '%m%Y%d', '%m%d%Y', 
+        '%Y%d%m', '%Y%m%d', '%d%m%Y', '%d%Y%m', '%m%Y%d', '%m%d%Y',
         '%y%d%m', '%y%m%d', '%d%m%y', '%d%y%m', '%m%y%d', '%m%d%y'
     )
     # Try converts string into datetime object
@@ -79,7 +93,7 @@ def build_dateid(date=None, year=None, month=None, day=None, fmt='%Y%m%d'):
         date = datetime(year=year, month=month, day=day)
     else:
         date = datetime.today()
-    
+
     return date.strftime(fmt)
 
 
@@ -100,13 +114,34 @@ def make_printable_table(cursor: Cursor):
     :param cursor: sqlite3 Cursor object
     :return: DataTable
     """
-    # Create a return tuple object
-    DataTable = namedtuple('DataTable', ['data', 'table'])
     # Create table
     working_data = cursor.fetchall()
     working_table = PrettyTable([col[0] for col in cursor.description])
     working_table.add_rows(working_data)
     return DataTable(data=working_data, table=working_table)
+
+
+def sum_rewards(data, configuration: UserConfiguration):
+    """Sum working hours rewards
     
+    :param data: tuple of working hours
+    :param configuration: UserConfiguration object
+    :return: float
+    """
+    # Check configuration
+    if not isinstance(configuration, UserConfiguration):
+        raise UserConfigurationError(f"{type(configuration)} is not an UserConfiguration object")
+    # Calculate rewards
+    rewards = [str(
+        sum([
+            row[4] * configuration.hour_reward,
+            row[7] * configuration.extraordinary_reward,
+            row[8] * configuration.hour_reward,
+            row[9] * configuration.other_reward,
+        ]) + configuration.food_ticket if row[4] > 0 else 0
+    ) + configuration.currency for row in data]
+    
+    return rewards
+
 
 # endregion

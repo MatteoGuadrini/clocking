@@ -25,22 +25,13 @@
 # region import
 import sqlite3
 import os.path
-from prettytable import PrettyTable
-from collections import namedtuple
-from .util import build_dateid, split_dateid, make_printable_table
-from .exception import WorkingDayError, UserConfigurationError
+from .util import build_dateid, split_dateid, make_printable_table, sum_rewards, UserConfiguration
+from .exception import WorkingDayError
 
 # endregion
 
 # region globals
 __version__ = '0.0.5'
-UserConfiguration = namedtuple('UserConfiguration', [
-    'rowid', 'active', 'user', 'location', 'empty_value',
-    'daily_hours', 'working_days', 'extraordinary',
-    'permit_hours', 'disease', 'holiday', 'currency',
-    'hour_reward', 'extraordinary_reward', 'food_ticket',
-    'other_hours', 'other_reward'
-])
 
 
 # endregion
@@ -765,7 +756,7 @@ def print_working_table(cursor, sort=False, csv=False, json=False, html=False, r
     :param cursor: sqlite3 Cursor object
     :param sort: sort by date_id
     :param csv: CSV format
-    :param json: Json format
+    :param json: JSON format
     :param html: HTML format
     :param rewards: UserConfiguration tuple
     :return: None
@@ -776,19 +767,10 @@ def print_working_table(cursor, sort=False, csv=False, json=False, html=False, r
     working_table = data_table.table
     # Add rewards column to printed table
     if rewards:
-        if not isinstance(rewards, UserConfiguration):
-            raise UserConfigurationError(f"{type(rewards)} is not an UserConfiguration object")
-        # Calculate rewards
-        daily_rewards = [str(
-            sum([
-                row[4] * rewards.hour_reward,
-                row[7] * rewards.extraordinary_reward,
-                row[8] * rewards.hour_reward,
-                row[9] * rewards.other_reward,
-            ]) + rewards.food_ticket if row[4] > 0 else 0
-        ) + rewards.currency for row in working_data]
+        # Calculate total rewards
+        total_rewards = sum_rewards(working_data, rewards)
         # Add reward column
-        working_table.add_column('rewards', daily_rewards)
+        working_table.add_column('rewards', total_rewards)
     # Sort form date_id
     if sort:
         working_table.sortby = 'date_id'
@@ -810,30 +792,21 @@ def save_working_table(cursor, file, sort=False, csv=False, json=False, html=Fal
     :param file: file path where to save stdout
     :param sort: sort by date_id
     :param csv: CSV format
-    :param json: Json format
+    :param json: JSON format
     :param html: HTML format
     :param rewards: UserConfiguration tuple
     :return: None
     """
     # Create table
-    working_data = cursor.fetchall()
-    working_table = PrettyTable([col[0] for col in cursor.description])
-    working_table.add_rows(working_data)
+    data_table = make_printable_table(cursor)
+    working_data = data_table.data
+    working_table = data_table.table
     # Add rewards column to printed table
     if rewards:
-        if not isinstance(rewards, UserConfiguration):
-            raise UserConfigurationError(f"{type(rewards)} is not an UserConfiguration object")
-        # Calculate rewards
-        daily_rewards = [str(
-            sum([
-                row[4] * rewards.hour_reward,
-                row[7] * rewards.extraordinary_reward,
-                row[8] * rewards.hour_reward,
-                row[9] * rewards.other_reward,
-            ]) + rewards.food_ticket if row[4] > 0 else 0
-        ) + rewards.currency for row in working_data]
+        # Calculate total rewards
+        total_rewards = sum_rewards(working_data, rewards)
         # Add reward column
-        working_table.add_column('rewards', daily_rewards)
+        working_table.add_column('rewards', total_rewards)
     # Sort form date_id
     if sort:
         working_table.sortby = 'date_id'
