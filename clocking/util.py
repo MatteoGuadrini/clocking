@@ -29,7 +29,6 @@ from prettytable import PrettyTable
 from collections import namedtuple
 from .exception import UserConfigurationError
 
-
 # endregion
 
 # region globals
@@ -41,6 +40,7 @@ UserConfiguration = namedtuple('UserConfiguration', [
     'other_hours', 'other_reward'
 ])
 DataTable = namedtuple('DataTable', ['data', 'table'])
+
 
 # endregion
 
@@ -128,6 +128,10 @@ def sum_rewards(data, configuration: UserConfiguration):
     :param configuration: UserConfiguration object
     :return: float
     """
+    # Check data contains numbers
+    if not all(isinstance(row[4], (int, float))
+               for row in data):
+        raise ValueError('not all hours contains numbers')
     # Check configuration
     if not isinstance(configuration, UserConfiguration):
         raise UserConfigurationError(f"{type(configuration)} is not an UserConfiguration object")
@@ -140,8 +144,7 @@ def sum_rewards(data, configuration: UserConfiguration):
             row[9] * configuration.other_reward,
         ]) + configuration.food_ticket if row[4] > 0 else 0
     ) + configuration.currency for row in data]
-    
-    return rewards
 
+    return rewards
 
 # endregion
