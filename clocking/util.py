@@ -127,11 +127,12 @@ def sum_rewards(data, configuration: UserConfiguration):
     :param data: tuple of working hours
     :param configuration: UserConfiguration object
     :return: float
+    :raises: ValueError, UserConfigurationError
     """
     # Check data contains numbers
     if not all(isinstance(row[4], (int, float))
                for row in data):
-        raise ValueError('not all hours contains numbers')
+        raise ValueError("all element of data doesn't contain a numbers")
     # Check configuration
     if not isinstance(configuration, UserConfiguration):
         raise UserConfigurationError(f"{type(configuration)} is not an UserConfiguration object")
