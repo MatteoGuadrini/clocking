@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@2.0.3
+
+jobs:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - python/install-packages:
+          args: pytest
+          pkg-manager: pip
+          pypi-cache: false
+      - python/install-packages:
+          args: prettytable
+          pkg-manager: pip
+          pypi-cache: false
+      - run: sudo chmod -R 777 /tmp
+      - run:
+          name: Run tests
+          command: python -m pytest tests
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
