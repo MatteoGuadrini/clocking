@@ -8,14 +8,12 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/install-packages:
-          args: pytest
-          pkg-manager: pip
-          pypi-cache: false
-      - python/install-packages:
-          args: prettytable
-          pkg-manager: pip
-          pypi-cache: false
+      - run:
+          name: Install pytest
+          command: pip install pytest
+      - run:
+          name: Install prettytable
+          command: pip install prettytable
       - run: sudo chmod -R 777 /tmp
       - run:
           name: Run tests
