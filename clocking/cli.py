@@ -22,11 +22,7 @@
 
 # region imports
 import argparse
-
-# endregion
-
-# region globals
-__version__ = '0.0.1'
+from clocking import __version__
 
 
 # endregion
@@ -203,7 +199,7 @@ def get_args():
                          help="set description",
                          type=str)
     # Delete subparser
-    deleting = subparser.add_parser('delete', 
+    deleting = subparser.add_parser('delete',
                                     help="remove values",
                                     aliases=['del', 'd'])
     deleting_group = deleting.add_mutually_exclusive_group(required=True)
