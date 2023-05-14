@@ -6,6 +6,8 @@
 
 ## Testing
 
+[![CircleCI](https://circleci.com/gh/MatteoGuadrini/clocking.svg?style=svg)](https://circleci.com/gh/MatteoGuadrini/clocking)
+
 To test package before use it, follow this:
 
 ```commandline
@@ -13,6 +15,84 @@ pip install -U pytest
 git clone https://github.com/MatteoGuadrini/clocking.git
 cd clocking
 pytest tests 
+```
+
+## Usage
+
+`clocking` was born to be a python library that offers a command line utility.
+
+### As a command line
+
+Use the command line to track and take daily hours worked on projects or not.
+
+```console
+$ clocking -h
+usage: clocking [-h] [-v] [-V] [-d FILE] {config,cfg,c,set,st,s,delete,del,d,print,prt,p} ...
+
+tracking or monitoring worked hours
+
+positional arguments:
+  {config,cfg,c,set,st,s,delete,del,d,print,prt,p}
+                        commands to run
+    config (cfg, c)     default's configuration
+    set (st, s)         setting values
+    delete (del, d)     remove values
+    print (prt, p)      print values
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         enable verbosity (default: False)
+  -V, --version         print version
+  -d FILE, --database FILE
+                        select database file (default: None)
+```
+
+### As a python module
+
+All useful functions to create scripts or software to track time on projects or days worked, are found in the core module: `clocking.core`
+
+I create a simple script that tracks hours worked daily.
+
+```python
+from sys import argv
+from clocking.core import *
+
+mydb = 'mydb.db'
+user = 'myuser'
+
+# Create configuration if not was created
+if not get_current_configuration(mydb, user):
+    # Update version
+    update_version(mydb)
+    # Create default configuration
+    create_configuration_table(mydb)
+    add_configuration(mydb,
+                      active=True,
+                      user=user,
+                      location='Italy Office',
+                      empty_value='not work!',
+                      daily_hours=8.0,
+                      working_days="Mon Tue Wed Thu Fri",
+                      extraordinary=0.5,
+                      permit_hours=1.0,
+                      disease='disease',
+                      holiday='holiday',
+                      currency='€',
+                      hour_reward=7.5,
+                      extraordinary_reward=8.5,
+                      food_ticket=0,
+                      other_hours=0,
+                      other_reward=8.0
+                      )
+    enable_configuration(mydb, row_id=1)
+    # Prepare table for insert hours
+    create_working_hours_table(mydb, user)
+    
+# Insert daily hours...
+insert_working_hours(mydb, user, argv[1])
+
+# ...and print it!
+print_working_table(get_working_hours(mydb, user))
 ```
 
 ## Open source
