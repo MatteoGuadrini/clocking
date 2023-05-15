@@ -1,5 +1,30 @@
 # Release notes
 
+## 0.0.6
+May 12, 2023
+
+- Add _get_working_hours_ function
+- Add _print_working_table_ function
+- Add _get_whole_year_ function
+- Add _get_whole_month_ function
+- Add _get_all_days_ function
+- Add **holiday** argument on all get functions
+- Add **disease** argument on all get functions
+- Add **extraordinary** argument on all get functions
+- Add **permit_hours** argument on all get functions
+- Add **other_hours** argument on all get functions
+- Add _save_working_table_ function
+- Add **html** argument on print group
+- Add **json** argument on save_working_table and print_working_table function
+- Add **csv** argument on save_working_table and print_working_table function
+- Add **html** argument on save_working_table and print_working_table function
+- Add **UserConfiguration** namedtuple
+- Add **DataTable** namedtuple
+- Add **UserConfigurationError** class
+- Add _make_printable_table_ function
+- Add _sum_rewards_ function
+- Fix **empty** column to user table
+
 ## 0.0.5
 Mar 21, 2023
 

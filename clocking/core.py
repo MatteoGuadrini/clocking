@@ -25,7 +25,7 @@
 # region import
 import sqlite3
 import os.path
-from .util import build_dateid, split_dateid
+from .util import build_dateid, split_dateid, make_printable_table, sum_rewards, UserConfiguration
 from .exception import WorkingDayError
 
 # endregion
@@ -76,8 +76,8 @@ def make_database(database):
         cur.execute("SELECT version_id FROM version")
         if not cur.fetchone():
             cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
-            
-            
+
+
 def delete_database(database):
     """Delete all data into database
     
@@ -92,12 +92,12 @@ def delete_database(database):
         # Get all tables into database
         cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
         tables = [row[0] for row in cur.fetchall()]
-        
+
         # Drop all tables
         for table in tables:
             cur.execute(f"DROP TABLE IF EXISTS {table};")
-            
-            
+
+
 def update_version(database):
     """Update clocking version into database
 
@@ -117,7 +117,7 @@ def update_version(database):
         cur.execute(f"INSERT INTO version (version_id, name) VALUES ('{__version__}', 'clocking');")
 
         result = False if cur.rowcount <= 0 else True
-    
+
     return result
 
 
@@ -142,7 +142,7 @@ def create_configuration_table(database):
                     r"daily_hours FLOAT NOT NULL,"
                     r"working_days TEXT NOT NULL,"
                     r"extraordinary FLOAT NOT NULL,"
-                    r"permit_hour FLOAT NOT NULL,"
+                    r"permit_hours FLOAT NOT NULL,"
                     r"disease TEXT NOT NULL,"
                     r"holiday TEXT NOT NULL,"
                     r"currency TEXT NOT NULL,"
@@ -168,7 +168,7 @@ def add_configuration(database,
                       daily_hours,
                       working_days,
                       extraordinary,
-                      permit_hour,
+                      permit_hours,
                       disease,
                       holiday,
                       currency,
@@ -188,7 +188,7 @@ def add_configuration(database,
     :param daily_hours: daily hours value
     :param working_days: working name's days
     :param extraordinary: minimum extraordinary value
-    :param permit_hour: minimum permit value
+    :param permit_hours: minimum permit value
     :param disease: disease string name
     :param holiday: holiday string name
     :param currency: currency char value
@@ -207,11 +207,11 @@ def add_configuration(database,
         # Insert values into configuration table
         cur.execute("INSERT INTO configuration("
                     "active, user, location, empty_value, daily_hours, working_days, extraordinary,"
-                    "permit_hour, disease, holiday, currency, hour_reward, extraordinary_reward,"
+                    "permit_hours, disease, holiday, currency, hour_reward, extraordinary_reward,"
                     "food_ticket, other_hours, other_reward) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
                     (active, user, location, empty_value, daily_hours,
-                     working_days, extraordinary, permit_hour, disease,
+                     working_days, extraordinary, permit_hours, disease,
                      holiday, currency, hour_reward, extraordinary_reward,
                      food_ticket, other_hours, other_reward))
 
@@ -294,7 +294,188 @@ def get_current_configuration(database, user):
                     (user,))
         result = cur.fetchone()
 
-        return result if result else ()
+        return UserConfiguration(*result) if result else ()
+
+
+def get_working_hours(database,
+                      user,
+                      date=None,
+                      day=None,
+                      month=None,
+                      year=None,
+                      holiday=False,
+                      disease=False,
+                      extraordinary=False,
+                      permit_hours=False,
+                      other_hours=False):
+    """Get working day from database
+
+    :param database: database file path
+    :param user: user in configuration table
+    :param date: date for insert values
+    :param day: day of the date
+    :param month: month of the date
+    :param year: year of the date
+    :param holiday: select only holiday values
+    :param disease: select only disease values
+    :param extraordinary: select only extraordinary values
+    :param permit_hours: select only permit hour values
+    :param other_hours: select only other hour values
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get date_id
+        date_id = build_dateid(date, year, month, day)
+
+        # Get working day
+        query = f"SELECT * FROM {user} WHERE date_id='{date_id}'"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        elif disease:
+            query += " AND disease IS NOT NULL"
+        elif extraordinary:
+            query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hours:
+            query += " AND (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
+        elif other_hours:
+            query += " AND (other_hours IS NOT 0 AND other_hours IS NOT NULL)"
+        cur.execute(query)
+
+    return cur
+
+
+def get_whole_year(database,
+                   user,
+                   year,
+                   holiday=False,
+                   disease=False,
+                   extraordinary=False,
+                   permit_hours=False,
+                   other_hours=False):
+    """Get whole year's working days from database
+
+    :param database: database file path
+    :param user: user in configuration table
+    :param year: year of the date
+    :param holiday: select only holiday values
+    :param disease: select only disease values
+    :param extraordinary: select only extraordinary values
+    :param permit_hours: select only permit hour values
+    :param other_hours: select only other hour values
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get working day from whole year
+        query = f"SELECT * FROM {user} WHERE year = ?"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        elif disease:
+            query += " AND disease IS NOT NULL"
+        elif extraordinary:
+            query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hours:
+            query += " AND (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
+        elif other_hours:
+            query += " AND (other_hours IS NOT 0 AND other_hours IS NOT NULL)"
+        cur.execute(query, (year,))
+
+    return cur
+
+
+def get_whole_month(database,
+                    user,
+                    year,
+                    month,
+                    holiday=False,
+                    disease=False,
+                    extraordinary=False,
+                    permit_hours=False,
+                    other_hours=False):
+    """Get whole month's working days from database
+
+    :param database: database file path
+    :param user: user in configuration table
+    :param year: year of the date
+    :param month: month of the date
+    :param holiday: select only holiday values
+    :param disease: select only disease values
+    :param extraordinary: select only extraordinary values
+    :param permit_hours: select only permit hour values
+    :param other_hours: select only other hour values
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get working day from whole month
+        query = rf"SELECT * FROM {user} WHERE year = ? AND month = ?"
+        # Check if return only holiday
+        if holiday:
+            query += " AND holiday IS NOT NULL"
+        elif disease:
+            query += " AND disease IS NOT NULL"
+        elif extraordinary:
+            query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hours:
+            query += " AND (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
+        elif other_hours:
+            query += " AND (other_hours IS NOT 0 AND other_hours IS NOT NULL)"
+        cur.execute(query, (year, month))
+
+    return cur
+
+
+def get_all_days(database,
+                 user,
+                 holiday=False,
+                 disease=False,
+                 extraordinary=False,
+                 permit_hours=False,
+                 other_hours=False):
+    """Get all days from database
+    
+    :param database: database file path
+    :param user: user in configuration table
+    :param holiday: select only holiday values
+    :param disease: select only disease values
+    :param extraordinary: select only extraordinary values
+    :param permit_hours: select only permit hour values
+    :param other_hours: select only other hour values
+    :return: Cursor
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get all working days
+        query = rf"SELECT * FROM {user}"
+        # Check if return only holiday
+        if holiday:
+            query += " WHERE holiday IS NOT NULL"
+        elif disease:
+            query += " WHERE disease IS NOT NULL"
+        elif extraordinary:
+            query += " WHERE (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
+        elif permit_hours:
+            query += " WHERE (permit_hours IS NOT 0 AND permit_hours IS NOT NULL)"
+        elif other_hours:
+            query += " WHERE (other_hours IS NOT 0 AND other_hours IS NOT NULL)"
+        cur.execute(query)
+
+    return cur
 
 
 def delete_configuration(database, row_id):
@@ -308,13 +489,13 @@ def delete_configuration(database, row_id):
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
-        
+
         # Delete specific configuration
         cur.execute(r"DELETE FROM configuration "
                     r"WHERE id = ?;", (row_id,))
 
         result = False if cur.rowcount <= 0 else True
-    
+
     return result
 
 
@@ -340,11 +521,10 @@ def create_working_hours_table(database, user):
                     r"description TEXT,"
                     r"location TEXT,"
                     r"extraordinary FLOAT,"
-                    r"permit_hour FLOAT,"
+                    r"permit_hours FLOAT,"
                     r"other_hours FLOAT ,"
                     r"holiday TEXT,"
-                    r"disease TEXT,"
-                    r"empty TEXT"
+                    r"disease TEXT"
                     r");")
 
         # Return boolean if user table was created
@@ -359,7 +539,7 @@ def insert_working_hours(database,
                          description=None,
                          location=None,
                          extraordinary=0,
-                         permit_hour=0,
+                         permit_hours=0,
                          other_hours=0,
                          holiday=None,
                          disease=None,
@@ -376,11 +556,11 @@ def insert_working_hours(database,
     :param description: description of working day
     :param location: name of location
     :param extraordinary: extraordinary hours
-    :param permit_hour: permit hours
+    :param permit_hours: permit hours
     :param other_hours: other working hours
     :param holiday: holiday value
     :param disease: disease value
-    :param date: date for inset values
+    :param date: date for insert values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -401,6 +581,9 @@ def insert_working_hours(database,
         date_id = build_dateid(date, year, month, day)
         year, month, day = split_dateid(date_id)
 
+        # Check empty hours
+        hours = hours if hours else empty_value if empty_value else 0
+
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if not cur.fetchone():
@@ -408,20 +591,20 @@ def insert_working_hours(database,
             # Insert into database
             cur.execute(rf"INSERT INTO {user} ("
                         r"date_id, year, month, day, hours, description, location, "
-                        r"extraordinary, permit_hour, other_hours, holiday, disease, empty) "
-                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                        (date_id, year, month, day, hours, description, location, extraordinary, permit_hour,
-                         other_hours, holiday, disease, empty_value))
+                        r"extraordinary, permit_hours, other_hours, holiday, disease) "
+                        r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                        (date_id, year, month, day, hours, description, location, extraordinary, permit_hours,
+                         other_hours, holiday, disease))
         else:
 
             # Update into database
             cur.execute(rf"UPDATE {user} "
                         r"SET hours = ?, description = ?, "
-                        r"location = ?, extraordinary = ?, permit_hour = ?, "
-                        r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
+                        r"location = ?, extraordinary = ?, permit_hours = ?, "
+                        r"other_hours = ?, holiday = ?, disease = ? "
                         r"WHERE date_id = ?;",
-                        (hours, description, location, extraordinary, 
-                         permit_hour, other_hours, holiday, disease, empty_value, date_id))
+                        (hours, description, location, extraordinary,
+                         permit_hours, other_hours, holiday, disease, date_id))
 
         result = False if cur.rowcount <= 0 else True
 
@@ -433,7 +616,7 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
     
     :param database: database file path
     :param user: user in configuration table
-    :param date: date for inset values
+    :param date: date for insert values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -448,15 +631,19 @@ def remove_working_hours(database, user, date=None, day=None, month=None, year=N
         # Get date_id
         date_id = build_dateid(date, year, month, day)
 
+        # Check empty value
+        hours = empty_value if empty_value else 0
+
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
         if cur.fetchone():
 
             # Update empty day into database
             cur.execute(rf"UPDATE {user} "
-                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hour = ?, "
-                        r"other_hours = ?, holiday = ?, disease = ?, empty = ? "
-                        r"WHERE date_id = ?;", (0, None, None, 0, 0, 0, None, None, empty_value, date_id))
+                        r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hours = ?, "
+                        r"other_hours = ?, holiday = ?, disease = ? "
+                        r"WHERE date_id = ?;", (hours, None, None, 0, 0,
+                                                0, None, None, date_id))
 
         else:
             raise WorkingDayError(f'date_id {date_id} not exists from table "{user}" into database {database}')
@@ -471,7 +658,7 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
     
     :param database: database file path
     :param user: user in configuration table
-    :param date: date for inset values
+    :param date: date for insert values
     :param day: day of the date
     :param month: month of the date
     :param year: year of the date
@@ -561,5 +748,78 @@ def delete_user(database, user):
         result = False if cur.rowcount <= 0 else True
 
     return result
+
+
+def print_working_table(cursor, sort=False, csv=False, json=False, html=False, rewards=None):
+    """Print in stdout the working hours table 
+     
+    :param cursor: sqlite3 Cursor object
+    :param sort: sort by date_id
+    :param csv: CSV format
+    :param json: JSON format
+    :param html: HTML format
+    :param rewards: UserConfiguration tuple
+    :return: None
+    """
+    # Create table
+    data_table = make_printable_table(cursor)
+    working_data = data_table.data
+    working_table = data_table.table
+    # Add rewards column to printed table
+    if rewards:
+        # Calculate total rewards
+        total_rewards = sum_rewards(working_data, rewards)
+        # Add reward column
+        working_table.add_column('rewards', total_rewards)
+    # Sort form date_id
+    if sort:
+        working_table.sortby = 'date_id'
+    # Check format to print
+    if csv:
+        print(working_table.get_csv_string())
+    elif json:
+        print(working_table.get_json_string())
+    elif html:
+        print(working_table.get_html_string())
+    else:
+        print(working_table)
+
+
+def save_working_table(cursor, file, sort=False, csv=False, json=False, html=False, rewards=None):
+    """Save into file the working hours table
+
+    :param cursor: sqlite3 Cursor object
+    :param file: file path where to save stdout
+    :param sort: sort by date_id
+    :param csv: CSV format
+    :param json: JSON format
+    :param html: HTML format
+    :param rewards: UserConfiguration tuple
+    :return: None
+    """
+    # Create table
+    data_table = make_printable_table(cursor)
+    working_data = data_table.data
+    working_table = data_table.table
+    # Add rewards column to printed table
+    if rewards:
+        # Calculate total rewards
+        total_rewards = sum_rewards(working_data, rewards)
+        # Add reward column
+        working_table.add_column('rewards', total_rewards)
+    # Sort form date_id
+    if sort:
+        working_table.sortby = 'date_id'
+    # Write stdout into file
+    with open(file, 'wt') as fh:
+        # Check format to print
+        if csv:
+            fh.write(working_table.get_csv_string())
+        elif json:
+            fh.write(working_table.get_json_string())
+        elif html:
+            fh.write(working_table.get_html_string())
+        else:
+            fh.write(working_table.get_string())
 
 # endregion

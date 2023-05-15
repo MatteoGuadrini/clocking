@@ -25,3 +25,7 @@
 
 class WorkingDayError(ValueError): 
     pass
+
+
+class UserConfigurationError(ValueError):
+    pass

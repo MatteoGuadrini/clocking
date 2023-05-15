@@ -22,11 +22,7 @@
 
 # region imports
 import argparse
-
-# endregion
-
-# region globals
-__version__ = '0.0.1'
+from __init__ import __version__
 
 
 # endregion
@@ -157,9 +153,6 @@ def get_args():
     daily_value_group.add_argument('-H', '--holiday',
                                    help="set holiday day",
                                    action='store_true')
-    daily_value_group.add_argument('-u', '--uptime',
-                                   help="calculate hours from uptime",
-                                   action='store_true')
     daily_value_group.add_argument('-G', '--holidays-range',
                                    help="set holiday days",
                                    metavar='DAYS')
@@ -206,7 +199,7 @@ def get_args():
                          help="set description",
                          type=str)
     # Delete subparser
-    deleting = subparser.add_parser('delete', 
+    deleting = subparser.add_parser('delete',
                                     help="remove values",
                                     aliases=['del', 'd'])
     deleting_group = deleting.add_mutually_exclusive_group(required=True)
@@ -252,6 +245,9 @@ def get_args():
                                     action='store_true')
     printing_fmt_group.add_argument('-j', '--json',
                                     help="print in json format",
+                                    action='store_true')
+    printing_fmt_group.add_argument('-m', '--html',
+                                    help="print in html format",
                                     action='store_true')
     printing_selection_group = printing.add_mutually_exclusive_group()
     printing_selection_group.add_argument('-H', '--holiday',
