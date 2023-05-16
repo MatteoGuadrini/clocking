@@ -57,7 +57,7 @@ def test_config_usage():
 
 # --------------------------------------------------
 def test_set_usage():
-    """config usage"""
+    """set usage"""
 
     for flag in ['-h', '--help']:
         rv, out = getstatusoutput(f'python3 {prg} set {flag}')
@@ -67,7 +67,7 @@ def test_set_usage():
 
 # --------------------------------------------------
 def test_delete_usage():
-    """config usage"""
+    """delete usage"""
 
     for flag in ['-h', '--help']:
         rv, out = getstatusoutput(f'python3 {prg} delete {flag}')
@@ -77,7 +77,7 @@ def test_delete_usage():
 
 # --------------------------------------------------
 def test_print_usage():
-    """config usage"""
+    """print usage"""
 
     for flag in ['-h', '--help']:
         rv, out = getstatusoutput(f'python3 {prg} print {flag}')
