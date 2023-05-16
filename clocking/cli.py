@@ -271,13 +271,29 @@ def get_args():
     return parser.parse_args()
 
 
+def vprint(*messages, verbose=False):
+    """Print verbose messages
+    
+    :param messages: messages to print
+    :param verbose: verbosity boolean
+    :return: None
+    """
+    # Set level message
+    level = 'debug:'
+    # Print level and all messages
+    if verbose:
+        print(level, *messages)
+
+
 def main():
     """main function"""
     # Check if database is created
     # Check if configuration is created
     # Check subcommand
     # Check optional arguments
-    get_args()
+    args = get_args()
+    verbosity = args.verbose
+    vprint(f'clocking version {__version__}', verbose=verbosity)
 
 
 # endregion
