@@ -22,6 +22,9 @@
 
 # region imports
 import argparse
+import os.path
+
+from clocking.core import database_exists, make_database
 from __init__ import __version__
 
 
@@ -293,6 +296,11 @@ def main():
     # Check optional arguments
     args = get_args()
     verbosity = args.verbose
+    db = args.database if args.database else os.path.expanduser('~/.clocking.db')
+    # Check database status
+    if not database_exists(db):
+        make_database(db)
+    # Update version
     vprint(f'clocking version {__version__}', verbose=verbosity)
 
 
