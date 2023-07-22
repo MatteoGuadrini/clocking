@@ -12,6 +12,9 @@ jobs:
       - run:
           name: Install prettytable
           command: pip install prettytable
+      - run:
+          name: Install clocking
+          command: pip install .
       - run: sudo chmod -R 777 /tmp
       - run:
           name: Run tests
