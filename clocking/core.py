@@ -25,13 +25,9 @@
 # region import
 import sqlite3
 import os.path
+from clocking import __version__
 from .util import build_dateid, split_dateid, make_printable_table, sum_rewards, UserConfiguration
 from .exception import WorkingDayError
-
-# endregion
-
-# region globals
-__version__ = '0.0.5'
 
 
 # endregion
@@ -96,6 +92,25 @@ def delete_database(database):
         # Drop all tables
         for table in tables:
             cur.execute(f"DROP TABLE IF EXISTS {table};")
+
+
+def get_current_version(database):
+    """get clocking version from database
+
+    :param database: database file path
+    :return: string
+    """
+    # Create the database connection
+    with sqlite3.connect(database) as conn:
+        # Create cursor
+        cur = conn.cursor()
+
+        # Get clocking version
+        cur.execute("SELECT version_id FROM version;")
+
+        result = cur.fetchone()[0]
+
+    return result
 
 
 def update_version(database):

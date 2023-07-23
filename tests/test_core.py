@@ -23,6 +23,7 @@
 """Unit testing module for core logic"""
 import datetime
 import os
+import clocking
 from pytest import raises
 from sqlite3 import Cursor
 from tempfile import gettempdir
@@ -31,6 +32,7 @@ from clocking.util import build_dateid
 from clocking.core import (database_exists,
                            make_database,
                            create_configuration_table,
+                           get_current_version,
                            update_version,
                            add_configuration,
                            enable_configuration,
@@ -66,6 +68,7 @@ def test_create_database():
 def test_update_version():
     """Update version clocking database"""
     assert update_version(TEMP_DB)
+    assert get_current_version(TEMP_DB) == clocking.__version__
 
 
 # --------------------------------------------------
