@@ -95,7 +95,7 @@ def delete_database(database):
 
 
 def get_current_version(database):
-    """get clocking version from database
+    """Get clocking version from database
 
     :param database: database file path
     :return: string
@@ -123,9 +123,6 @@ def update_version(database):
     with sqlite3.connect(database) as conn:
         # Create cursor
         cur = conn.cursor()
-
-        # Delete version table
-        cur.execute("DROP TABLE IF EXISTS version;")
         # Create new version table
         cur.execute("CREATE TABLE IF NOT EXISTS version (version_id TEXT PRIMARY KEY, name TEXT NOT NULL);")
         # Insert version into properly table

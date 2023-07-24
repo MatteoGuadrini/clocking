@@ -67,7 +67,8 @@ def test_create_database():
 # --------------------------------------------------
 def test_update_version():
     """Update version clocking database"""
-    assert update_version(TEMP_DB)
+    if get_current_version(TEMP_DB) != clocking.__version__:
+        assert update_version(TEMP_DB)
     assert get_current_version(TEMP_DB) == clocking.__version__
 
 
