@@ -24,7 +24,7 @@
 import argparse
 import os.path
 
-from clocking.core import database_exists, make_database
+from clocking.core import database_exists, make_database, get_current_version, update_version
 from __init__ import __version__
 
 
@@ -290,7 +290,6 @@ def vprint(*messages, verbose=False):
 
 def main():
     """main function"""
-    # Check if database is created
     # Check if configuration is created
     # Check subcommand
     # Check optional arguments
@@ -300,7 +299,10 @@ def main():
     # Check database status
     if not database_exists(db):
         make_database(db)
-    # Update version
+        vprint(f'database {db} created', verbose=verbosity)
+    # Check update version
+    if get_current_version(db) != __version__:
+        update_version(db)
     vprint(f'clocking version {__version__}', verbose=verbosity)
 
 
