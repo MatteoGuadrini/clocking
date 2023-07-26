@@ -288,6 +288,23 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
+def cli_select_command(command):
+    """
+    Select command
+
+    :param command: Sub-parser command
+    :return: function
+    """
+    # Define action dictionary
+    commands = {
+        'config': None,
+        'set': None,
+        'delete': None,
+        'print': None
+    }
+    return commands.get(command, 'No command available')
+
+
 def main():
     """main function"""
     # Check if configuration is created
@@ -304,6 +321,8 @@ def main():
     if get_current_version(db) != __version__:
         update_version(db)
     vprint(f'clocking version {__version__}', verbose=verbosity)
+    # Select action
+    cli_select_command(args.command)
 
 
 # endregion
