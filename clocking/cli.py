@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # cli -- clocking
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -351,11 +351,12 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
-def cli_select_command(command):
+def cli_select_command(command, options):
     """
     Select command
 
     :param command: Sub-parser command
+    :param options: options dictionary
     :return: function
     """
     # Define action dictionary
@@ -380,7 +381,7 @@ def main():
         update_version(db)
     vprint(f"clocking version {__version__}", verbose=verbosity)
     # Select action
-    cli_select_command(args.command)
+    cli_select_command(args.command, vars(args))
 
 
 # endregion
