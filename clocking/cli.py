@@ -30,6 +30,7 @@ from clocking.core import (
     make_database,
     get_current_version,
     update_version,
+    create_configuration_table,
 )
 
 
@@ -351,6 +352,18 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
+def configuration(**options):
+    """Configuration function
+
+    :param options: options dictionary
+    :return:
+    """
+    db = options.get("database")
+    verbosity = options.get("verbose")
+    vprint("create configuration table", verbose=verbosity)
+    create_configuration_table(db)
+
+
 def cli_select_command(command, options):
     """
     Select command
@@ -360,8 +373,13 @@ def cli_select_command(command, options):
     :return: function
     """
     # Define action dictionary
-    commands = {"config": None, "set": None, "delete": None, "print": None}
-    return commands.get(command, "No command available")
+    commands = {
+        "config": configuration,
+        "set": None,
+        "delete": None,
+        "print": None,
+    }
+    return commands.get(command, "No command available")(**options)
 
 
 def main():
@@ -381,7 +399,9 @@ def main():
         update_version(db)
     vprint(f"clocking version {__version__}", verbose=verbosity)
     # Select action
-    cli_select_command(args.command, vars(args))
+    options = vars(args)
+    options["database"] = db
+    cli_select_command(args.command, options)
 
 
 # endregion
