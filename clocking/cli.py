@@ -48,12 +48,20 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prog="clocking",
     )
-    parser.add_argument("-v", "--verbose", help="enable verbosity", action="store_true")
-    parser.add_argument(
+    common_parser = argparse.ArgumentParser(add_help=False)
+    common_parser.add_argument(
+        "-v", "--verbose", help="enable verbosity", action="store_true"
+    )
+    common_parser.add_argument(
         "-V", "--version", help="print version", action="version", version=__version__
     )
-    parser.add_argument(
-        "-d", "--database", help="select database file", metavar="FILE", type=str
+    common_parser.add_argument(
+        "-B",
+        "--database",
+        help="select database file",
+        metavar="FILE",
+        type=str,
+        default=os.path.expanduser("~/.clocking.db"),
     )
     subparser = parser.add_subparsers(
         dest="command", help="commands to run", required=True
@@ -61,7 +69,10 @@ def get_args():
 
     # Config subparser
     config = subparser.add_parser(
-        "config", help="default's configuration", aliases=["cfg", "c"]
+        "config",
+        help="default's configuration",
+        aliases=["cfg", "c"],
+        parents=[common_parser],
     )
     print_group = config.add_argument_group("print")
     print_group.add_argument(
@@ -210,7 +221,9 @@ def get_args():
     )
 
     # Set subparser
-    setting = subparser.add_parser("set", help="setting values", aliases=["st", "s"])
+    setting = subparser.add_parser(
+        "set", help="setting values", aliases=["st", "s"], parents=[common_parser]
+    )
     daily_value_group = setting.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument(
         "-w", "--hours", help="set worked hours", default=None, type=float
@@ -265,7 +278,7 @@ def get_args():
     setting.add_argument("-t", "--description", help="set description", type=str)
     # Delete subparser
     deleting = subparser.add_parser(
-        "delete", help="remove values", aliases=["del", "d"]
+        "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
     )
     deleting_group = deleting.add_mutually_exclusive_group(required=True)
     deleting_group.add_argument(
@@ -284,7 +297,9 @@ def get_args():
         "-C", "--clear", help="clear all data", action="store_true"
     )
     # Print subparser
-    printing = subparser.add_parser("print", help="print values", aliases=["prt", "p"])
+    printing = subparser.add_parser(
+        "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
+    )
     printing_group = printing.add_mutually_exclusive_group(required=True)
     printing_group.add_argument(
         "-D", "--date", help="print specific date", metavar="DATE"
@@ -364,12 +379,11 @@ def configuration(**options):
     create_configuration_table(db)
 
 
-def cli_select_command(command, options):
+def cli_select_command(command):
     """
     Select command
 
     :param command: Sub-parser command
-    :param options: options dictionary
     :return: function
     """
     # Define action dictionary
@@ -379,7 +393,7 @@ def cli_select_command(command, options):
         "delete": None,
         "print": None,
     }
-    return commands.get(command, "No command available")(**options)
+    return commands.get(command)
 
 
 def main():
@@ -389,7 +403,7 @@ def main():
     # Check optional arguments
     args = get_args()
     verbosity = args.verbose
-    db = args.database if args.database else os.path.expanduser("~/.clocking.db")
+    db = args.database
     # Check database status
     if not database_exists(db):
         make_database(db)
@@ -400,8 +414,9 @@ def main():
     vprint(f"clocking version {__version__}", verbose=verbosity)
     # Select action
     options = vars(args)
-    options["database"] = db
-    cli_select_command(args.command, options)
+    cmd = cli_select_command(args.command)
+    if cmd:
+        cmd(**options)
 
 
 # endregion
