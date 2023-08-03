@@ -856,6 +856,17 @@ def delete_user(database, user):
     return result
 
 
+def print_configurations(cursor):
+    """Print in stdout the configuration table
+
+    :param cursor: sqlite3 Cursor object
+    :return: None
+    """
+    # Create table
+    data_table = make_printable_table(cursor)
+    print(data_table.table)
+
+
 def print_working_table(
     cursor, sort=False, csv=False, json=False, html=False, rewards=None
 ):
