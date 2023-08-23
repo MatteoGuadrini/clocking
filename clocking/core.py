@@ -22,8 +22,8 @@
 
 """Module that contains business logic of clocking command line tool"""
 
-import os.path
 # region import
+import os.path
 import sqlite3
 
 from clocking import __version__

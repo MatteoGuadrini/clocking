@@ -31,6 +31,7 @@ from clocking.core import (
     get_current_version,
     update_version,
     create_configuration_table,
+    add_configuration,
 )
 
 
@@ -195,7 +196,7 @@ def get_args():
         "-e",
         "--empty-value",
         help="fill empty date with value",
-        default="not worked",
+        default="Not worked",
         metavar="VALUE",
     )
     set_group.add_argument("-u", "--user", help="change user", metavar="USER")
@@ -350,7 +351,8 @@ def get_args():
     )
     printing.add_argument("-r", "--rewards", help="print rewards", action="store_true")
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    return args
 
 
 def vprint(*messages, verbose=False):
@@ -377,6 +379,25 @@ def configuration(**options):
     verbosity = options.get("verbose")
     vprint("create configuration table", verbose=verbosity)
     create_configuration_table(db)
+    add_configuration(
+        db,
+        False,
+        options.get("user"),
+        options.get("location"),
+        options.get("empty_value"),
+        options.get("daily_hours"),
+        " ".join(day for day in options.get("working_days")),
+        options.get("extraordinary"),
+        options.get("permit_hours"),
+        options.get("disease"),
+        options.get("holiday"),
+        options.get("currency"),
+        options.get("hour_reward"),
+        options.get("extraordinary_reward"),
+        options.get("food_ticket"),
+        options.get("other_hours"),
+        options.get("other_reward"),
+    )
 
 
 def cli_select_command(command):
