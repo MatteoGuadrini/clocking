@@ -23,6 +23,7 @@
 # region imports
 import argparse
 import os.path
+from getpass import getuser
 
 from __init__ import __version__
 from clocking.core import (
@@ -32,6 +33,8 @@ from clocking.core import (
     update_version,
     create_configuration_table,
     add_configuration,
+    get_current_configuration,
+    enable_configuration,
 )
 
 
@@ -90,7 +93,7 @@ def get_args():
         "-D",
         "--daily-hours",
         help="daily work hours",
-        default=8.0,
+        default=None,
         type=float,
         metavar="HOURS",
     )
@@ -199,7 +202,9 @@ def get_args():
         default="Not worked",
         metavar="VALUE",
     )
-    set_group.add_argument("-u", "--user", help="change user", metavar="USER")
+    set_group.add_argument(
+        "-u", "--user", help="change user", metavar="USER", default=getuser()
+    )
     selection_group = config.add_argument_group("selection")
     selection_group.add_argument(
         "-i",
@@ -377,27 +382,43 @@ def configuration(**options):
     """
     db = options.get("database")
     verbosity = options.get("verbose")
+    user = options.get("user")
     vprint("create configuration table", verbose=verbosity)
     create_configuration_table(db)
-    add_configuration(
-        db,
-        False,
-        options.get("user"),
-        options.get("location"),
-        options.get("empty_value"),
-        options.get("daily_hours"),
-        " ".join(day for day in options.get("working_days")),
-        options.get("extraordinary"),
-        options.get("permit_hours"),
-        options.get("disease"),
-        options.get("holiday"),
-        options.get("currency"),
-        options.get("hour_reward"),
-        options.get("extraordinary_reward"),
-        options.get("food_ticket"),
-        options.get("other_hours"),
-        options.get("other_reward"),
-    )
+    # Create new configuration
+    if options.get("daily_hours"):
+        vprint("create new configuration", verbose=verbosity)
+        add_configuration(
+            db,
+            False,
+            user,
+            options.get("location"),
+            options.get("empty_value"),
+            options.get("daily_hours"),
+            " ".join(day for day in options.get("working_days")),
+            options.get("extraordinary"),
+            options.get("permit_hours"),
+            options.get("disease"),
+            options.get("holiday"),
+            options.get("currency"),
+            options.get("hour_reward"),
+            options.get("extraordinary_reward"),
+            options.get("food_ticket"),
+            options.get("other_hours"),
+            options.get("other_reward"),
+        )
+    # Enable configuration
+    if options.get("select_id"):
+        vprint(
+            f"enable configuration with id {options.get('select_id')}",
+            verbose=verbosity,
+        )
+        if get_current_configuration(db, user)[0] == options.get("select_id"):
+            print(
+                f"warning: configuration id {options.get('select_id')} already enabled"
+            )
+        else:
+            enable_configuration(db, options.get("select_id"))
 
 
 def cli_select_command(command):
