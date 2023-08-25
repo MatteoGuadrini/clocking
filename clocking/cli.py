@@ -35,6 +35,7 @@ from clocking.core import (
     add_configuration,
     get_current_configuration,
     enable_configuration,
+    reset_configuration,
 )
 
 
@@ -419,6 +420,9 @@ def configuration(**options):
             )
         else:
             enable_configuration(db, options.get("select_id"))
+    # Reset configuration
+    if options.get("reset"):
+        reset_configuration(db)
 
 
 def cli_select_command(command):
