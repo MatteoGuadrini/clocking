@@ -36,6 +36,7 @@ from clocking.core import (
     get_current_configuration,
     enable_configuration,
     reset_configuration,
+    delete_configuration,
 )
 
 
@@ -386,6 +387,14 @@ def configuration(**options):
     user = options.get("user")
     vprint("create configuration table", verbose=verbosity)
     create_configuration_table(db)
+    # Reset configurations
+    if options.get("reset"):
+        vprint("reset configuration table", verbose=verbosity)
+        reset_configuration(db)
+    # Delete configuration
+    if options.get("delete_id"):
+        vprint(f"delete configuration id {options.get('delete_id')}", verbose=verbosity)
+        delete_configuration(db, options.get("delete_id"))
     # Create new configuration
     if options.get("daily_hours"):
         vprint("create new configuration", verbose=verbosity)
@@ -420,9 +429,6 @@ def configuration(**options):
             )
         else:
             enable_configuration(db, options.get("select_id"))
-    # Reset configuration
-    if options.get("reset"):
-        reset_configuration(db)
 
 
 def cli_select_command(command):
