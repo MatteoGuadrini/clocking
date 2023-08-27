@@ -37,6 +37,8 @@ from clocking.core import (
     enable_configuration,
     reset_configuration,
     delete_configuration,
+    get_configurations,
+    print_configurations,
 )
 
 
@@ -429,6 +431,10 @@ def configuration(**options):
             )
         else:
             enable_configuration(db, options.get("select_id"))
+    # Print configuration
+    if options.get("print"):
+        print(f"print current enabled configuration for user: {user}")
+        print_configurations(get_configurations(db, user))
 
 
 def cli_select_command(command):

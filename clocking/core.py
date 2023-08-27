@@ -356,7 +356,7 @@ def get_current_configuration(database, user):
 
         # Get active configuration for user
         cur.execute(
-            r"SELECT * FROM configuration " r"WHERE user = ? AND active = 1;", (user,)
+            r"SELECT * FROM configuration WHERE user = ? AND active = 1;", (user,)
         )
         result = cur.fetchone()
 
