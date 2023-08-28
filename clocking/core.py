@@ -324,11 +324,12 @@ def reset_configuration(database):
     return result
 
 
-def get_configurations(database, user):
+def get_configurations(database, user=None, enabled=False):
     """Get all configurations for user
 
     :param database: database file path
     :param user: user in configuration table
+    :param enabled: only enabled user
     :return: Cursor
     """
     # Create the database connection
@@ -336,8 +337,17 @@ def get_configurations(database, user):
         # Create cursor
         cur = conn.cursor()
 
-        # Get active configuration for user
-        cur.execute(r"SELECT * FROM configuration WHERE user = ?;", (user,))
+        if user:
+            # Get all configurations for user
+            cur.execute(r"SELECT * FROM configuration WHERE user = ?;", (user,))
+        elif user and enabled:
+            # Get active configuration for user
+            cur.execute(
+                r"SELECT * FROM configuration WHERE user = ? AND active = 1;", (user,)
+            )
+        else:
+            # Get all configurations
+            cur.execute(r"SELECT * FROM configuration;")
 
         return cur
 
