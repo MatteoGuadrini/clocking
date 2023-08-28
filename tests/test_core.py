@@ -21,7 +21,6 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Unit testing module for core logic"""
-import datetime
 import os
 from sqlite3 import Cursor
 from tempfile import gettempdir
@@ -58,7 +57,6 @@ from clocking.core import (
     save_working_table,
 )
 from clocking.exception import WorkingDayError
-from clocking.util import build_dateid
 
 TEMP_DB = os.path.join(gettempdir(), "test_database.db")
 
@@ -176,7 +174,6 @@ def test_print_configurations(capsys):
     )
     print_configurations(get_configurations(TEMP_DB, "test"))
     capture = capsys.readouterr()
-    print(capture.out)
     assert (
         capture.out
         == """+----+--------+------+--------------+-------------+-------------+---------------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
@@ -232,15 +229,17 @@ def test_insert_daily_value():
         other_reward,
     ) = get_current_configuration(TEMP_DB, "test")
     assert create_working_hours_table(TEMP_DB, user)
-    # Today inserting
-    assert insert_working_hours(TEMP_DB, user, 8)
-    assert insert_working_hours(TEMP_DB, user, 8, extraordinary=2)
-    assert insert_working_hours(TEMP_DB, user, holiday=holiday)
-    assert insert_working_hours(TEMP_DB, user, disease=disease)
-    assert insert_working_hours(TEMP_DB, user, 6, permit_hours=2)
-    assert insert_working_hours(TEMP_DB, user, 7, permit_hours=permit_hours)
-    assert insert_working_hours(TEMP_DB, user, 8, other_hours=4.5)
-    assert insert_working_hours(TEMP_DB, user, empty_value)
+    # Other inserting
+    assert insert_working_hours(TEMP_DB, user, 8, date="20230208")
+    assert insert_working_hours(TEMP_DB, user, 8, extraordinary=2, date="20230208")
+    assert insert_working_hours(TEMP_DB, user, holiday=holiday, date="20230208")
+    assert insert_working_hours(TEMP_DB, user, disease=disease, date="20230208")
+    assert insert_working_hours(TEMP_DB, user, 6, permit_hours=2, date="20230208")
+    assert insert_working_hours(
+        TEMP_DB, user, 7, permit_hours=permit_hours, date="20230208"
+    )
+    assert insert_working_hours(TEMP_DB, user, 8, other_hours=4.5, date="20230208")
+    assert insert_working_hours(TEMP_DB, user, empty_value, date="20230208")
     # Selecting date
     assert insert_working_hours(TEMP_DB, user, 8, date="2023-02-08")
     assert insert_working_hours(TEMP_DB, user, 8, date="2023/08/02")
@@ -283,18 +282,12 @@ def test_print_table(capsys):
     # Print whole year
     print_working_table(get_whole_year(TEMP_DB, user, year=2023))
     captured = capsys.readouterr()
-    today = datetime.datetime.now()
-    today_bid = build_dateid()
-    today_year = today.year
-    today_month = today.month
-    today_day = today.day
     assert (
         captured.out
-        == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
+        == """+----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day}{' ' if today_day < 10 else ''} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
@@ -320,11 +313,10 @@ def test_print_table(capsys):
     captured = capsys.readouterr()
     assert (
         captured.out
-        == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
+        == """+----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day}{' ' if today_day < 10 else ''} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
@@ -336,11 +328,10 @@ def test_print_table(capsys):
     captured = capsys.readouterr()
     assert (
         captured.out
-        == f"""+----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
+        == """+----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | date_id  | year | month | day | hours | description |   location   | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+--------------+---------------+--------------+-------------+---------+---------+
 | 20230208 | 2023 |   2   |  8  |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
-| {today_bid} | {today_year} |   {today_month}   |  {today_day}{' ' if today_day < 10 else ''} |   X   |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230802 | 2023 |   8   |  2  |  8.0  |     None    | Italy Office |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230822 | 2023 |   8   |  22 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
 | 20230823 | 2023 |   8   |  23 |  8.0  |     None    |     None     |      0.0      |     0.0      |     0.0     |   None  |   None  |
