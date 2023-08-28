@@ -87,10 +87,10 @@ def get_args():
         "-p", "--print", help="print current configuration", action="store_true"
     )
     print_group.add_argument(
-        "-a", "--print-all", help="print all configurations", action="store_true"
+        "-t", "--print-user", help="print all user configurations", action="store_true"
     )
     print_group.add_argument(
-        "-t", "--print-user", help="print all user configurations", action="store_true"
+        "-a", "--print-all", help="print all configurations", action="store_true"
     )
     set_group = config.add_argument_group("set")
     set_group.add_argument(
@@ -434,7 +434,13 @@ def configuration(**options):
     # Print configuration
     if options.get("print"):
         print(f"print current enabled configuration for user: {user}")
+        print_configurations(get_configurations(db, user, enabled=True))
+    if options.get("print_user"):
+        print(f"print all configurations for user: {user}")
         print_configurations(get_configurations(db, user))
+    if options.get("print_all"):
+        print(f"print all configurations for user: {user}")
+        print_configurations(get_configurations(db))
 
 
 def cli_select_command(command):
