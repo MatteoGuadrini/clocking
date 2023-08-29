@@ -171,7 +171,7 @@ def get_args():
         "-F",
         "--food-ticket",
         help="food ticket reward",
-        default=7.0,
+        default=0,
         type=float,
         metavar="NUMBER",
     )
@@ -187,7 +187,7 @@ def get_args():
         "-O",
         "--other-reward",
         help="other reward",
-        default=5.0,
+        default=0,
         type=float,
         metavar="NUMBER",
     )
@@ -387,7 +387,7 @@ def configuration(**options):
     db = options.get("database")
     verbosity = options.get("verbose")
     user = options.get("user")
-    vprint("create configuration table", verbose=verbosity)
+    vprint("check configuration table", verbose=verbosity)
     create_configuration_table(db)
     # Reset configurations
     if options.get("reset"):
