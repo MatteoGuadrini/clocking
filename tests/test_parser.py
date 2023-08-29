@@ -24,8 +24,10 @@
 
 import os
 from subprocess import getstatusoutput
+from tempfile import gettempdir
 
-prg = 'clocking/cli.py'
+prg = "clocking/cli.py"
+TEMP_DB = os.path.join(gettempdir(), "test_database_cli.db")
 
 
 # --------------------------------------------------
@@ -39,47 +41,65 @@ def test_exists():
 def test_usage():
     """usage"""
 
-    for flag in ['-h', '--help']:
-        rv, out = getstatusoutput(f'python3 {prg} {flag}')
+    for flag in ["-h", "--help"]:
+        rv, out = getstatusoutput(f"python3 {prg} {flag}")
         assert rv == 0
-        assert out.lower().startswith('usage')
+        assert out.lower().startswith("usage")
 
 
 # --------------------------------------------------
 def test_config_usage():
     """config usage"""
 
-    for flag in ['-h', '--help']:
-        rv, out = getstatusoutput(f'python3 {prg} config {flag}')
+    for flag in ["-h", "--help"]:
+        rv, out = getstatusoutput(f"python3 {prg} config {flag}")
         assert rv == 0
-        assert out.lower().startswith('usage: clocking config')
+        assert out.lower().startswith("usage: clocking config")
+
+
+# --------------------------------------------------
+def test_add_configuration():
+    """Add configuration"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} config "
+        f"--database {TEMP_DB} "
+        "--daily-hours 8 "
+        "--working-days Mon Tue Wed "
+        "--hour-reward 8 "
+        "--extraordinary-reward 10 "
+        "--food-ticket 7 "
+        "--location Milan "
+        "--currency €"
+    )
+    assert rv == 0
 
 
 # --------------------------------------------------
 def test_set_usage():
     """set usage"""
 
-    for flag in ['-h', '--help']:
-        rv, out = getstatusoutput(f'python3 {prg} set {flag}')
+    for flag in ["-h", "--help"]:
+        rv, out = getstatusoutput(f"python3 {prg} set {flag}")
         assert rv == 0
-        assert out.lower().startswith('usage: clocking set')
+        assert out.lower().startswith("usage: clocking set")
 
 
 # --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
-    for flag in ['-h', '--help']:
-        rv, out = getstatusoutput(f'python3 {prg} delete {flag}')
+    for flag in ["-h", "--help"]:
+        rv, out = getstatusoutput(f"python3 {prg} delete {flag}")
         assert rv == 0
-        assert out.lower().startswith('usage: clocking delete')
+        assert out.lower().startswith("usage: clocking delete")
 
 
 # --------------------------------------------------
 def test_print_usage():
     """print usage"""
 
-    for flag in ['-h', '--help']:
-        rv, out = getstatusoutput(f'python3 {prg} print {flag}')
+    for flag in ["-h", "--help"]:
+        rv, out = getstatusoutput(f"python3 {prg} print {flag}")
         assert rv == 0
-        assert out.lower().startswith('usage: clocking print')
+        assert out.lower().startswith("usage: clocking print")
