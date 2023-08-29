@@ -433,13 +433,15 @@ def configuration(**options):
             enable_configuration(db, options.get("select_id"))
     # Print configuration
     if options.get("print"):
-        print(f"print current enabled configuration for user: {user}")
+        vprint(
+            f"print current enabled configuration for user: {user}", verbose=verbosity
+        )
         print_configurations(get_configurations(db, user, enabled=True))
     if options.get("print_user"):
-        print(f"print all configurations for user: {user}")
+        vprint(f"print all configurations for user: {user}", verbose=verbosity)
         print_configurations(get_configurations(db, user))
     if options.get("print_all"):
-        print(f"print all configurations for user: {user}")
+        vprint("print all configurations", verbose=verbosity)
         print_configurations(get_configurations(db))
 
 
