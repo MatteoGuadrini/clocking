@@ -425,7 +425,9 @@ def configuration(**options):
             f"enable configuration with id {options.get('select_id')}",
             verbose=verbosity,
         )
-        if get_current_configuration(db, user)[0] == options.get("select_id"):
+        if get_current_configuration(db, user) and get_current_configuration(db, user)[
+            0
+        ] == options.get("select_id"):
             print(
                 f"warning: configuration id {options.get('select_id')} already enabled"
             )
