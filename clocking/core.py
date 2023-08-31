@@ -279,26 +279,29 @@ def enable_configuration(database, row_id):
         cur = conn.cursor()
 
         # Check if configuration is already enabled
-        cur.execute(r"SELECT active FROM configuration " r"WHERE id = ?;", (row_id,))
-        active = cur.fetchone()[0]
+        cur.execute(r"SELECT active FROM configuration WHERE id = ?;", (row_id,))
+        # Check if id exists
+        result = cur.fetchone()
+        active = result[0] if result else None
         if not active:
 
             # Update active into configuration table
             cur.execute(
-                r"UPDATE configuration " r"SET active = ? " r"WHERE id = ?;",
+                r"UPDATE configuration SET active = ? WHERE id = ?;",
                 (True, row_id),
             )
+            result = True if cur.rowcount > 0 else False
             # Disable other configuration for user
-            cur.execute(r"SELECT user FROM configuration " r"WHERE id = ?;", (row_id,))
-            user = cur.fetchone()[0]
-            cur.execute(
-                r"UPDATE configuration "
-                r"SET active = ? "
-                r"WHERE user = ? AND id != ?;",
-                (False, user, row_id),
-            )
-
-            result = False if cur.rowcount <= 0 else True
+            cur.execute(r"SELECT user FROM configuration WHERE id = ?;", (row_id,))
+            result = cur.fetchone()
+            user = result[0] if result else None
+            if user:
+                cur.execute(
+                    r"UPDATE configuration "
+                    r"SET active = ? "
+                    r"WHERE user = ? AND id != ?;",
+                    (False, user, row_id),
+                )
         else:
             result = True
 
