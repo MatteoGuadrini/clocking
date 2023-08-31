@@ -432,7 +432,8 @@ def configuration(**options):
                 f"warning: configuration id {options.get('select_id')} already enabled"
             )
         else:
-            enable_configuration(db, options.get("select_id"))
+            if not enable_configuration(db, options.get("select_id")):
+                print(f"error: load configuration id {options.get('select_id')} failed")
     # Print configuration
     if options.get("print"):
         vprint(
