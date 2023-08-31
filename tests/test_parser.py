@@ -118,6 +118,26 @@ def test_print_configuration():
 
 
 # --------------------------------------------------
+def test_enable_configuration():
+    """Enable configuration"""
+
+    # Enable exists id
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --select-id 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+    # Enable non-existent id
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --select-id 2"
+    )
+    print(out)
+    assert rv == 0
+    assert out == "error: load configuration id 2 failed"
+
+
+# --------------------------------------------------
 def test_set_usage():
     """set usage"""
 
