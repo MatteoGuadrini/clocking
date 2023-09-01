@@ -63,6 +63,7 @@ def test_add_configuration():
 
     rv, out = getstatusoutput(
         f"python3 {prg} config "
+        "--user test "
         f"--database {TEMP_DB} "
         "--daily-hours 8 "
         "--working-days Mon Tue Wed "
@@ -81,39 +82,45 @@ def test_print_configuration():
     """Print configuration"""
 
     # Print enabled configuration
-    rv, out = getstatusoutput(f"python3 {prg} config --database {TEMP_DB} --print")
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --user test --print"
+    )
     assert rv == 0
     assert (
         out
-        == """+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| id | active |       user      | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
-+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| 1  |   0    | matteo.guadrini |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
-+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
+        == """+----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
+| id | active | user | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
++----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
+| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
++----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
     )
 
     # Print all user configurations
-    rv, out = getstatusoutput(f"python3 {prg} config --database {TEMP_DB} --print-user")
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --user test --print-user"
+    )
     assert rv == 0
     assert (
         out
-        == """+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| id | active |       user      | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
-+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| 1  |   0    | matteo.guadrini |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
-+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
+        == """+----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
+| id | active | user | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
++----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
+| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
++----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
     )
 
     # Print all configurations
-    rv, out = getstatusoutput(f"python3 {prg} config --database {TEMP_DB} --print-all")
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --user test --print-all"
+    )
     assert rv == 0
     assert (
         out
-        == """+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| id | active |       user      | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
-+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| 1  |   0    | matteo.guadrini |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
-+----+--------+-----------------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
+        == """+----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
+| id | active | user | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
++----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
+| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
++----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
     )
 
 
@@ -123,14 +130,14 @@ def test_enable_configuration():
 
     # Enable exists id
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --select-id 1"
+        f"python3 {prg} config --database {TEMP_DB} --user test --select-id 1"
     )
     assert rv == 0
     assert out == ""
 
     # Enable non-existent id
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --select-id 2"
+        f"python3 {prg} config --database {TEMP_DB} --user test --select-id 2"
     )
     print(out)
     assert rv == 0
