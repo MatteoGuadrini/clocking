@@ -155,6 +155,18 @@ def test_reset_configuration():
 
 
 # --------------------------------------------------
+def test_delete_configuration():
+    """Enable configuration"""
+
+    # Reset all configuration
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_set_usage():
     """set usage"""
 
