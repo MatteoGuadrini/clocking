@@ -145,22 +145,58 @@ def test_enable_configuration():
 
 
 # --------------------------------------------------
-def test_reset_configuration():
-    """Enable configuration"""
+def test_delete_configuration():
+    """Delete configuration"""
 
-    # Reset all configuration
+    # Delete configuration
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+    # Delete non-existent configuration
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 2"
+    )
+    assert rv == 0
+    assert out == "error: delete configuration id 2 failed"
+
+
+# --------------------------------------------------
+def test_reset_configuration():
+    """Reset configurations"""
+
+    # Reset all configurations
+    test_add_configuration()
     rv, out = getstatusoutput(f"python3 {prg} config --database {TEMP_DB} --reset")
     assert rv == 0
     assert out == ""
 
 
 # --------------------------------------------------
-def test_delete_configuration():
-    """Enable configuration"""
+def test_all_configuration():
+    """Set, enable, delete and clean"""
 
-    # Reset all configuration
+    # Add twice configuration for reset
+    test_add_configuration()
+    test_add_configuration()
+
+    # Test all options
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --delete-id 1"
+        f"python3 {prg} config "
+        "--user test "
+        f"--database {TEMP_DB} "
+        "--daily-hours 8 "
+        "--working-days Mon Tue Wed "
+        "--hour-reward 8 "
+        "--extraordinary-reward 10 "
+        "--food-ticket 7 "
+        "--location Milan "
+        "--currency € "
+        "--select-id 1 "
+        "--delete-id 1 "
+        "--reset "
     )
     assert rv == 0
     assert out == ""
