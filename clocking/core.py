@@ -293,8 +293,8 @@ def enable_configuration(database, row_id):
             result = True if cur.rowcount > 0 else False
             # Disable other configuration for user
             cur.execute(r"SELECT user FROM configuration WHERE id = ?;", (row_id,))
-            result = cur.fetchone()
-            user = result[0] if result else None
+            ret = cur.fetchone()
+            user = ret[0] if ret else None
             if user:
                 cur.execute(
                     r"UPDATE configuration "
@@ -322,7 +322,7 @@ def reset_configuration(database):
         # Delete all rows from table
         cur.execute("DELETE FROM configuration;")
 
-        result = False if cur.rowcount <= 0 else True
+        result = True if cur.rowcount > 0 else False
 
     return result
 
@@ -578,9 +578,9 @@ def delete_configuration(database, row_id):
         cur = conn.cursor()
 
         # Delete specific configuration
-        cur.execute(r"DELETE FROM configuration " r"WHERE id = ?;", (row_id,))
+        cur.execute(r"DELETE FROM configuration WHERE id = ?;", (row_id,))
 
-        result = False if cur.rowcount <= 0 else True
+        result = True if cur.rowcount > 0 else False
 
     return result
 
