@@ -389,14 +389,16 @@ def configuration(**options):
     user = options.get("user")
     vprint("check configuration table", verbose=verbosity)
     create_configuration_table(db)
-    # Reset configurations
-    if options.get("reset"):
-        vprint("reset configuration table", verbose=verbosity)
-        reset_configuration(db)
     # Delete configuration
     if options.get("delete_id"):
         vprint(f"delete configuration id {options.get('delete_id')}", verbose=verbosity)
-        delete_configuration(db, options.get("delete_id"))
+        if not delete_configuration(db, options.get("delete_id")):
+            print(f"error: delete configuration id {options.get('delete_id')} failed")
+    # Reset configurations
+    if options.get("reset"):
+        vprint("reset configuration table", verbose=verbosity)
+        if not reset_configuration(db):
+            print("error: reset configuration table failed or table is empty")
     # Create new configuration
     if options.get("daily_hours"):
         vprint("create new configuration", verbose=verbosity)
