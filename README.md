@@ -1,6 +1,7 @@
-# `clocking` 
+# `clocking`
 
-`clocking` is a command line utility to help you manage your worked hours, vacation, projects or whatever you need to consider tracking time.
+`clocking` is a command line utility to help you manage your worked hours, vacation, projects or whatever you need to
+consider tracking time.
 
 > This project is WIP!
 
@@ -47,9 +48,36 @@ options:
                         select database file (default: None)
 ```
 
+### Configuration
+
+`clocking` use configurations to apply automatically determine information when insert data into database; these
+configurations to creates in command line through `config` section.
+
+```console
+# Create configuration
+$> clocking config --daily-hours 8 --hour-reward 10 --extraordinary-reward 12 --location "Milan Office" --currency €
+# Print configuration
+$> clocking config --print
+...
+# Enable/load configuration
+$> clocking config --select-id 1
+# Or all in one
+$> clocking config --daily-hours 8 --hour-reward 10 --extraordinary-reward 12 --location "Milan Office" --currency € --select-id 1 --print
+```
+
+Use `config` action also to delete or clean configurations:
+
+```console
+# Delete configuration
+$> clocking config --delete-id 1
+# Clean all configurations
+$> clocking config --reset
+```
+
 ### As a python module
 
-All useful functions to create scripts or software to track time on projects or days worked, are found in the core module: `clocking.core`
+All useful functions to create scripts or software to track time on projects or days worked, are found in the core
+module: `clocking.core`
 
 I create a simple script that tracks hours worked daily.
 
@@ -87,7 +115,7 @@ if not get_current_configuration(mydb, user):
     enable_configuration(mydb, row_id=1)
     # Prepare table for insert hours
     create_working_hours_table(mydb, user)
-    
+
 # Insert daily hours...
 insert_working_hours(mydb, user, argv[1])
 
@@ -96,6 +124,7 @@ print_working_table(get_working_hours(mydb, user))
 ```
 
 ## Open source
+
 _clocking_ is an open source project. Any contribute, It's welcome.
 
 **A great thanks**.
@@ -108,21 +137,21 @@ For me
 
 For [Telethon](http://www.telethon.it/)
 
-The Telethon Foundation is a non-profit organization recognized by the Ministry of University and Scientific and Technological Research.
+The Telethon Foundation is a non-profit organization recognized by the Ministry of University and Scientific and
+Technological Research.
 They were born in 1990 to respond to the appeal of patients suffering from rare diseases.
 Come today, we are organized to dare to listen to them and answers, every day of the year.
 
 [Adopt the future](https://www.ioadottoilfuturo.it/)
 
+## Treeware
 
-## Treeware  
-
-This package is [Treeware](https://treeware.earth). If you use it in production, 
-then we ask that you [**buy the world a tree**](https://plant.treeware.earth/matteoguadrini/clocking) to thank us for our work. 
+This package is [Treeware](https://treeware.earth). If you use it in production,
+then we ask that you [**buy the world a tree**](https://plant.treeware.earth/matteoguadrini/clocking) to thank us for
+our work.
 By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
 [![Treeware](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Treeware&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://treeware.earth)
-
 
 ## Acknowledgments
 
@@ -132,7 +161,7 @@ Thanks to Kenneth Reitz and Tanya Schlusser for writing the _The Hitchhiker’s 
 
 Thanks to Dane Hillard for writing the _Practices of the Python Pro_ books.
 
-Special thanks go to my wife, who understood the hours of absence for this development. 
+Special thanks go to my wife, who understood the hours of absence for this development.
 Thanks to my children, for the daily inspiration they give me and to make me realize, that life must be simple.
 
 Thanks Python!
