@@ -1,11 +1,9 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@2.0.3
-
 jobs:
   build-and-test:
-    executor: python/default
+    docker:
+      - image: circleci/python
     steps:
       - checkout
       - run:
@@ -14,6 +12,9 @@ jobs:
       - run:
           name: Install prettytable
           command: pip install prettytable
+      - run:
+          name: Install clocking
+          command: pip install .
       - run: sudo chmod -R 777 /tmp
       - run:
           name: Run tests

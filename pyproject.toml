@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clocking"
+version = "0.0.7"
+readme = "README.md"
+license = { text = "GNU General Public License v3.0" }
+keywords = ['track', 'worked', 'time', 'stamp', 'mark']
+authors = [{ name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" }]
+maintainers = [
+    { name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" },
+]
+
+description = "Track the worked time."
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = ["prettytable"]
+
+[project.scripts]
+clk = "clocking.cli:main"
+clocking = "clocking.cli:main"
+
+[project.urls]
+homepage = "https://github.com/MatteoGuadrini/clocking"
+documentation = "https://clocking.readthedocs.io/en/latest/"
+repository = "https://github.com/MatteoGuadrini/clocking.git"
+changelog = "https://github.com/MatteoGuadrini/clocking/blob/master/CHANGES.md"

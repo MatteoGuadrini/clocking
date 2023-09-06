@@ -1,6 +1,22 @@
 # Release notes
 
+## 0.0.7
+
+Sep 06, 2023
+
+- Add _vprint_ function
+- Add **pyproject.toml** file
+- Add _get_current_version_ function
+- Add _cli_select_command_ function
+- Add _configuration_ function
+- Add _common_parser_ parser
+- Add _get_configurations_ function
+- Add _print_configurations_ function
+- Fix check **result** of _enable_configuration_ function
+- Fix default values into _config_ subparser
+
 ## 0.0.6
+
 May 12, 2023
 
 - Add _get_working_hours_ function
@@ -26,6 +42,7 @@ May 12, 2023
 - Fix **empty** column to user table
 
 ## 0.0.5
+
 Mar 21, 2023
 
 - Add _delete_working_hours_ function
@@ -40,6 +57,7 @@ Mar 21, 2023
 - Fix check if _row_id_ is already active in **enable_configuration** function
 
 ## 0.0.4
+
 Mar 4, 2023
 
 - Add _core_ module
@@ -58,6 +76,7 @@ Mar 4, 2023
 - Add _build_dateid_ function
 
 ## 0.0.3
+
 Dec 23, 2022
 
 - Add a mutually exclusive group for _daily_ value
@@ -68,6 +87,7 @@ Dec 23, 2022
 - Add aliases to all commands
 
 ## 0.0.2
+
 Nov 11, 2022
 
 - Add _init_ subparser
@@ -76,6 +96,7 @@ Nov 11, 2022
 - Add _delete_ argument and group
 
 ## 0.0.1
+
 Oct 10, 2022
 
 - Add _clocking_ package
