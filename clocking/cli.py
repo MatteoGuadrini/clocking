@@ -382,7 +382,7 @@ def configuration(**options):
     """Configuration function
 
     :param options: options dictionary
-    :return:
+    :return: None
     """
     db = options.get("database")
     verbosity = options.get("verbose")
@@ -450,6 +450,18 @@ def configuration(**options):
         print_configurations(get_configurations(db))
 
 
+def setting(**options):
+    """
+
+    :param options: options dictionary
+    :return: None
+    """
+    db = options.get("database")
+    verbosity = options.get("verbose")
+    user = options.get("user")
+    vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
+
+
 def cli_select_command(command):
     """
     Select command
@@ -460,7 +472,7 @@ def cli_select_command(command):
     # Define action dictionary
     commands = {
         "config": configuration,
-        "set": None,
+        "set": setting,
         "delete": None,
         "print": None,
     }
