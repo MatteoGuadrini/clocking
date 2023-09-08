@@ -231,10 +231,10 @@ def get_args():
     )
 
     # Set subparser
-    setting = subparser.add_parser(
+    set_parse = subparser.add_parser(
         "set", help="setting values", aliases=["st", "s"], parents=[common_parser]
     )
-    daily_value_group = setting.add_mutually_exclusive_group(required=True)
+    daily_value_group = set_parse.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument(
         "-w", "--hours", help="set worked hours", default=None, type=float
     )
@@ -262,30 +262,30 @@ def get_args():
     daily_value_group.add_argument(
         "-R", "--remove", help="remove values date", metavar="DATE"
     )
-    setting.add_argument("-D", "--date", help="set date", metavar="DATE")
-    setting.add_argument("-d", "--day", help="set day", metavar="DAY")
-    setting.add_argument("-m", "--month", help="set month", metavar="MONTH")
-    setting.add_argument("-y", "--year", help="set year", metavar="YEAR")
-    setting.add_argument(
+    set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
+    set_parse.add_argument("-d", "--day", help="set day", metavar="DAY")
+    set_parse.add_argument("-m", "--month", help="set month", metavar="MONTH")
+    set_parse.add_argument("-y", "--year", help="set year", metavar="YEAR")
+    set_parse.add_argument(
         "-e",
         "--extraordinary",
         help="set extraordinary hours",
         type=float,
         metavar="HOURS",
     )
-    setting.add_argument(
+    set_parse.add_argument(
         "-o", "--other", help="set other hours", type=float, metavar="HOURS"
     )
-    setting.add_argument("-l", "--location", help="set current location", type=str)
-    setting.add_argument("-U", "--user", help="set user to track time", type=str)
-    setting.add_argument(
+    set_parse.add_argument("-l", "--location", help="set current location", type=str)
+    set_parse.add_argument("-U", "--user", help="set user to track time", type=str)
+    set_parse.add_argument(
         "-p",
         "--permit-hour",
         help="set permit work hour value",
         type=float,
         metavar="HOURS",
     )
-    setting.add_argument("-t", "--description", help="set description", type=str)
+    set_parse.add_argument("-t", "--description", help="set description", type=str)
     # Delete subparser
     deleting = subparser.add_parser(
         "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
@@ -481,9 +481,6 @@ def cli_select_command(command):
 
 def main():
     """main function"""
-    # Check if configuration is created
-    # Check subcommand
-    # Check optional arguments
     args = get_args()
     verbosity = args.verbose
     db = args.database
