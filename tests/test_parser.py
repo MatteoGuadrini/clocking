@@ -213,6 +213,14 @@ def test_set_usage():
 
 
 # --------------------------------------------------
+def test_set_working_day():
+    """set working day"""
+
+    rv, out = getstatusoutput(f"python3 {prg} set --hours 8")
+    assert rv == 0
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
