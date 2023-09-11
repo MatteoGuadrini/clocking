@@ -221,6 +221,14 @@ def test_set_working_day():
 
 
 # --------------------------------------------------
+def test_set_disease():
+    """set disease"""
+
+    rv, out = getstatusoutput(f"python3 {prg} set --disease")
+    assert rv == 0
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
