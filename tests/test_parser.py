@@ -229,6 +229,14 @@ def test_set_disease():
 
 
 # --------------------------------------------------
+def test_set_holiday():
+    """set holiday"""
+
+    rv, out = getstatusoutput(f"python3 {prg} set --holiday")
+    assert rv == 0
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
