@@ -237,6 +237,14 @@ def test_set_holiday():
 
 
 # --------------------------------------------------
+def test_set_holiday_range():
+    """set holiday range days"""
+
+    rv, out = getstatusoutput(f"python3 {prg} set --holidays-range 1 2 3 4")
+    assert rv == 0
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 

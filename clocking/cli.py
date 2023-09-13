@@ -246,7 +246,12 @@ def get_args():
         "-H", "--holiday", help="set holiday day", action="store_true"
     )
     daily_value_group.add_argument(
-        "-G", "--holidays-range", help="set holiday days", metavar="DAYS"
+        "-G",
+        "--holidays-range",
+        help="set holiday days",
+        metavar="DAYS",
+        nargs="+",
+        type=list[int],
     )
     daily_value_group.add_argument(
         "-c",
@@ -461,23 +466,45 @@ def setting(**options):
     verbosity = options.get("verbose")
     user = options.get("user")
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
-    insert_working_hours(
-        database=db,
-        user=user,
-        hours=options.get("hours"),
-        description=options.get("description"),
-        location=options.get("location"),
-        extraordinary=options.get("extraordinary"),
-        permit_hours=options.get("permit_hours"),
-        other_hours=options.get("other_hours"),
-        holiday=options.get("holiday"),
-        disease=options.get("disease"),
-        date=options.get("date"),
-        day=options.get("day"),
-        month=options.get("month"),
-        year=options.get("year"),
-        empty_value=options.get("empty_value"),
-    )
+    # Insert day(s)
+    holiday_days = options.get("holidays_range")
+    if holiday_days:
+        for day in holiday_days:
+            insert_working_hours(
+                database=db,
+                user=user,
+                hours=options.get("hours"),
+                description=options.get("description"),
+                location=options.get("location"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
+                other_hours=options.get("other_hours"),
+                holiday=True,
+                disease=options.get("disease"),
+                date=options.get("date"),
+                day=day,
+                month=options.get("month"),
+                year=options.get("year"),
+                empty_value=options.get("empty_value"),
+            )
+    else:
+        insert_working_hours(
+            database=db,
+            user=user,
+            hours=options.get("hours"),
+            description=options.get("description"),
+            location=options.get("location"),
+            extraordinary=options.get("extraordinary"),
+            permit_hours=options.get("permit_hours"),
+            other_hours=options.get("other_hours"),
+            holiday=options.get("holiday"),
+            disease=options.get("disease"),
+            date=options.get("date"),
+            day=options.get("day"),
+            month=options.get("month"),
+            year=options.get("year"),
+            empty_value=options.get("empty_value"),
+        )
 
 
 def cli_select_command(command):
