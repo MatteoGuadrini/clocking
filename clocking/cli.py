@@ -72,6 +72,9 @@ def get_args():
         type=str,
         default=os.path.expanduser("~/.clocking.db"),
     )
+    common_parser.add_argument(
+        "-u", "--user", help="change user", metavar="USER", default=getuser()
+    )
     subparser = parser.add_subparsers(
         dest="command", help="commands to run", required=True
     )
@@ -207,9 +210,6 @@ def get_args():
         default="Not worked",
         metavar="VALUE",
     )
-    set_group.add_argument(
-        "-u", "--user", help="change user", metavar="USER", default=getuser()
-    )
     selection_group = config.add_argument_group("selection")
     selection_group.add_argument(
         "-i",
@@ -283,7 +283,6 @@ def get_args():
         "-o", "--other", help="set other hours", type=float, metavar="HOURS"
     )
     set_parse.add_argument("-l", "--location", help="set current location", type=str)
-    set_parse.add_argument("-U", "--user", help="set user to track time", type=str)
     set_parse.add_argument(
         "-p",
         "--permit-hour",
@@ -307,9 +306,6 @@ def get_args():
         "-M", "--month", help="delete whole month", type=int, metavar="MONTH"
     )
     deleting_group.add_argument(
-        "-U", "--user", help="delete whole user data", type=str, metavar="USER"
-    )
-    deleting_group.add_argument(
         "-C", "--clear", help="clear all data", action="store_true"
     )
     # Print subparser
@@ -327,7 +323,7 @@ def get_args():
         "-M", "--month", help="print whole month", type=int, metavar="MONTH"
     )
     printing_group.add_argument(
-        "-U", "--user", help="print whole user data", type=str, metavar="USER"
+        "-U", "--all", help="print whole user data", type=str, metavar="USER"
     )
     printing_fmt_group = printing.add_mutually_exclusive_group()
     printing_fmt_group.add_argument(

@@ -413,7 +413,7 @@ def get_working_hours(
         date_id = build_dateid(date, year, month, day)
 
         # Get working day
-        query = f"SELECT * FROM {user} WHERE date_id='{date_id}'"
+        query = f"SELECT * FROM '{user}' WHERE date_id='{date_id}'"
         # Check if return only holiday
         if holiday:
             query += " AND holiday IS NOT NULL"
@@ -458,7 +458,7 @@ def get_whole_year(
         cur = conn.cursor()
 
         # Get working day from whole year
-        query = f"SELECT * FROM {user} WHERE year = ?"
+        query = f"SELECT * FROM '{user}' WHERE year = ?"
         # Check if return only holiday
         if holiday:
             query += " AND holiday IS NOT NULL"
@@ -505,7 +505,7 @@ def get_whole_month(
         cur = conn.cursor()
 
         # Get working day from whole month
-        query = rf"SELECT * FROM {user} WHERE year = ? AND month = ?"
+        query = rf"SELECT * FROM '{user}' WHERE year = ? AND month = ?"
         # Check if return only holiday
         if holiday:
             query += " AND holiday IS NOT NULL"
@@ -548,7 +548,7 @@ def get_all_days(
         cur = conn.cursor()
 
         # Get all working days
-        query = rf"SELECT * FROM {user}"
+        query = rf"SELECT * FROM '{user}'"
         # Check if return only holiday
         if holiday:
             query += " WHERE holiday IS NOT NULL"
@@ -599,7 +599,7 @@ def create_working_hours_table(database, user):
 
         # Create user table
         cur.execute(
-            rf"CREATE TABLE IF NOT EXISTS {user} ("
+            rf"CREATE TABLE IF NOT EXISTS '{user}' ("
             r"date_id INTEGER PRIMARY KEY,"
             r"year INTEGER NOT NULL,"
             r"month INTEGER NOT NULL,"
@@ -675,12 +675,12 @@ def insert_working_hours(
         hours = hours if hours else empty_value if empty_value else 0
 
         # Check if date_id exists
-        cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
+        cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if not cur.fetchone():
 
             # Insert into database
             cur.execute(
-                rf"INSERT INTO {user} ("
+                rf"INSERT INTO '{user}' ("
                 r"date_id, year, month, day, hours, description, location, "
                 r"extraordinary, permit_hours, other_hours, holiday, disease) "
                 r"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
@@ -703,7 +703,7 @@ def insert_working_hours(
 
             # Update into database
             cur.execute(
-                rf"UPDATE {user} "
+                rf"UPDATE '{user}' "
                 r"SET hours = ?, description = ?, "
                 r"location = ?, extraordinary = ?, permit_hours = ?, "
                 r"other_hours = ?, holiday = ?, disease = ? "
@@ -752,12 +752,12 @@ def remove_working_hours(
         hours = empty_value if empty_value else 0
 
         # Check if date_id exists
-        cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
+        cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if cur.fetchone():
 
             # Update empty day into database
             cur.execute(
-                rf"UPDATE {user} "
+                rf"UPDATE '{user}' "
                 r"SET hours = ?, description = ?, location = ?, extraordinary = ?, permit_hours = ?, "
                 r"other_hours = ?, holiday = ?, disease = ? "
                 r"WHERE date_id = ?;",
@@ -794,10 +794,10 @@ def delete_working_hours(database, user, date=None, day=None, month=None, year=N
         date_id = build_dateid(date, year, month, day)
 
         # Check if date_id exists
-        cur.execute(f"SELECT date_id FROM {user} WHERE date_id='{date_id}'")
+        cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if cur.fetchone():
             # Delete day into database
-            cur.execute(rf"DELETE FROM {user} " r"WHERE date_id = ?;", (date_id,))
+            cur.execute(rf"DELETE FROM '{user}' " r"WHERE date_id = ?;", (date_id,))
 
         result = False if cur.rowcount <= 0 else True
 
@@ -818,7 +818,7 @@ def delete_whole_year(database, user, year):
         cur = conn.cursor()
 
         # Delete whole year into database
-        cur.execute(rf"DELETE FROM {user} " r"WHERE year = ?;", (year,))
+        cur.execute(rf"DELETE FROM '{user}' " r"WHERE year = ?;", (year,))
 
         result = False if cur.rowcount <= 0 else True
 
@@ -841,7 +841,8 @@ def delete_whole_month(database, user, year, month):
 
         # Delete whole month into database
         cur.execute(
-            rf"DELETE FROM {user} " r"WHERE year = ? " r"AND month = ?;", (year, month)
+            rf"DELETE FROM '{user}' " r"WHERE year = ? " r"AND month = ?;",
+            (year, month),
         )
 
         result = False if cur.rowcount <= 0 else True
@@ -862,7 +863,7 @@ def delete_user(database, user):
         cur = conn.cursor()
 
         # Delete whole month into database
-        cur.execute(rf"DELETE FROM {user};")
+        cur.execute(rf"DELETE FROM '{user}';")
 
         result = False if cur.rowcount <= 0 else True
 

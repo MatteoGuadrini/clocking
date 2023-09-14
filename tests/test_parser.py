@@ -216,7 +216,7 @@ def test_set_usage():
 def test_set_working_day():
     """set working day"""
 
-    rv, out = getstatusoutput(f"python3 {prg} set --hours 8")
+    rv, out = getstatusoutput(f"python3 {prg} set --database {TEMP_DB} --hours 8")
     assert rv == 0
 
 
@@ -224,7 +224,7 @@ def test_set_working_day():
 def test_set_disease():
     """set disease"""
 
-    rv, out = getstatusoutput(f"python3 {prg} set --disease")
+    rv, out = getstatusoutput(f"python3 {prg} set --database {TEMP_DB} --disease")
     assert rv == 0
 
 
@@ -232,7 +232,7 @@ def test_set_disease():
 def test_set_holiday():
     """set holiday"""
 
-    rv, out = getstatusoutput(f"python3 {prg} set --holiday")
+    rv, out = getstatusoutput(f"python3 {prg} set --database {TEMP_DB} --holiday")
     assert rv == 0
 
 
