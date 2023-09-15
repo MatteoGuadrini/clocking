@@ -218,6 +218,7 @@ def test_set_working_day():
 
     rv, out = getstatusoutput(f"python3 {prg} set --database {TEMP_DB} --hours 8")
     assert rv == 0
+    assert out == ""
 
 
 # --------------------------------------------------
@@ -226,6 +227,7 @@ def test_set_disease():
 
     rv, out = getstatusoutput(f"python3 {prg} set --database {TEMP_DB} --disease")
     assert rv == 0
+    assert out == ""
 
 
 # --------------------------------------------------
@@ -234,14 +236,29 @@ def test_set_holiday():
 
     rv, out = getstatusoutput(f"python3 {prg} set --database {TEMP_DB} --holiday")
     assert rv == 0
+    assert out == ""
 
 
 # --------------------------------------------------
 def test_set_holiday_range():
     """set holiday range days"""
 
-    rv, out = getstatusoutput(f"python3 {prg} set --holidays-range 1 2 3 4")
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --holidays-range 1 2 3 4"
+    )
     assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
+def test_set_custom():
+    """set custom value"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --date '10/09/2023' --custom 'my custom value'"
+    )
+    assert rv == 0
+    assert out == ""
 
 
 # --------------------------------------------------

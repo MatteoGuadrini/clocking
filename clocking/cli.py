@@ -41,6 +41,7 @@ from clocking.core import (
     print_configurations,
     insert_working_hours,
 )
+from clocking.util import datetime
 
 
 # endregion
@@ -251,7 +252,7 @@ def get_args():
         help="set holiday days",
         metavar="DAYS",
         nargs="+",
-        type=list[int],
+        type=int,
     )
     daily_value_group.add_argument(
         "-c",
@@ -462,11 +463,16 @@ def setting(**options):
     verbosity = options.get("verbose")
     user = options.get("user")
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
+    # Set filled daily values
+    today = datetime.today()
+    year = today.year if not options.get("year") else options.get("year")
+    month = today.month if not options.get("month") else options.get("month")
+    day = today.day if not options.get("day") else options.get("day")
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
-        for day in holiday_days:
-            insert_working_hours(
+        for hday in holiday_days:
+            if not insert_working_hours(
                 database=db,
                 user=user,
                 hours=options.get("hours"),
@@ -478,16 +484,19 @@ def setting(**options):
                 holiday=True,
                 disease=options.get("disease"),
                 date=options.get("date"),
-                day=day,
-                month=options.get("month"),
-                year=options.get("year"),
+                day=hday,
+                month=month,
+                year=year,
                 empty_value=options.get("empty_value"),
-            )
+            ):
+                print("error: working day insert failed")
     else:
-        insert_working_hours(
+        if not insert_working_hours(
             database=db,
             user=user,
-            hours=options.get("hours"),
+            hours=options.get("hours")
+            if options.get("hours")
+            else options.get("custom"),
             description=options.get("description"),
             location=options.get("location"),
             extraordinary=options.get("extraordinary"),
@@ -496,11 +505,12 @@ def setting(**options):
             holiday=options.get("holiday"),
             disease=options.get("disease"),
             date=options.get("date"),
-            day=options.get("day"),
-            month=options.get("month"),
-            year=options.get("year"),
+            day=day,
+            month=month,
+            year=year,
             empty_value=options.get("empty_value"),
-        )
+        ):
+            print("error: working day insert failed")
 
 
 def cli_select_command(command):
