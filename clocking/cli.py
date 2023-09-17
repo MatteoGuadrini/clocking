@@ -468,6 +468,20 @@ def setting(**options):
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
+    # Get current configuration
+    user_configuration = get_current_configuration(db, user)
+    if not user_configuration:
+        print(f"error: no active configuration found for user '{user}'")
+        return
+    # Default values
+    if options.get("hours"):
+        hours_value = options.get("hours")
+    else:
+        hours_value = (
+            options.get("custom")
+            if options.get("custom")
+            else user_configuration.empty_value
+        )
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -475,7 +489,7 @@ def setting(**options):
             if not insert_working_hours(
                 database=db,
                 user=user,
-                hours=options.get("hours"),
+                hours=0,
                 description=options.get("description"),
                 location=options.get("location"),
                 extraordinary=options.get("extraordinary"),
@@ -494,9 +508,7 @@ def setting(**options):
         if not insert_working_hours(
             database=db,
             user=user,
-            hours=options.get("hours")
-            if options.get("hours")
-            else options.get("custom"),
+            hours=hours_value,
             description=options.get("description"),
             location=options.get("location"),
             extraordinary=options.get("extraordinary"),
