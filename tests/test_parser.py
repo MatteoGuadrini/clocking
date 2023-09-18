@@ -281,6 +281,18 @@ def test_set_reset():
 
 
 # --------------------------------------------------
+def test_set_remove():
+    """remove value"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        f"--date '10/09/2023' --remove"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 

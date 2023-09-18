@@ -40,6 +40,8 @@ from clocking.core import (
     get_configurations,
     print_configurations,
     insert_working_hours,
+    remove_working_hours,
+    delete_working_hours,
 )
 from clocking.util import datetime
 
@@ -267,7 +269,10 @@ def get_args():
         action="store_true",
     )
     daily_value_group.add_argument(
-        "-R", "--remove", help="remove values date", metavar="DATE"
+        "-R",
+        "--remove",
+        help="remove values date",
+        action="store_true",
     )
     set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
     set_parse.add_argument("-d", "--day", help="set day", metavar="DAY")
@@ -482,6 +487,11 @@ def setting(**options):
             if options.get("custom")
             else user_configuration.empty_value
         )
+    empty_value = (
+        options.get("empty_value")
+        if options.get("empty_value")
+        else user_configuration.empty_value
+    )
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -523,6 +533,26 @@ def setting(**options):
             empty_value=options.get("empty_value"),
         ):
             print("error: working day insert failed")
+    # Remove values
+    if options.get("reset"):
+        remove_working_hours(
+            database=db,
+            user=user,
+            date=options.get("date"),
+            day=day,
+            month=month,
+            year=year,
+            empty_value=empty_value,
+        )
+    elif options.get("remove"):
+        delete_working_hours(
+            database=db,
+            user=user,
+            date=options.get("date"),
+            day=day,
+            month=month,
+            year=year,
+        )
 
 
 def cli_select_command(command):
