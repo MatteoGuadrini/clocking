@@ -321,6 +321,23 @@ def test_set_day():
 
 
 # --------------------------------------------------
+def test_set_month():
+    """set with month value"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        f"--hours 8 --day 1 --month 1"
+    )
+    assert rv == 0
+    assert out == ""
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test " f"--hours 8 --month 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
