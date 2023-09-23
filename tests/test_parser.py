@@ -355,6 +355,18 @@ def test_set_year():
 
 
 # --------------------------------------------------
+def test_set_all():
+    """set with all values"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        f"--hours 8 --day 1 --month 1 --year 2020 --date '11/09/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
