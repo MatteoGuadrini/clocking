@@ -355,7 +355,7 @@ def test_set_year():
 
 
 # --------------------------------------------------
-def test_set_all():
+def test_set_all_day_formats():
     """set with all values"""
 
     rv, out = getstatusoutput(
@@ -387,6 +387,31 @@ def test_set_extraordinary():
     rv, out = getstatusoutput(
         f"python3 {prg} set --database {TEMP_DB} --user test "
         "--hours 8 --extraordinary 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
+def test_set_other():
+    """set other hours"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        "--hours 8 --other 1 --day 2 --month 2 --year 2021"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        "--hours 8 --other 1 --day 2 --month 2"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --other 1"
     )
     assert rv == 0
     assert out == ""
