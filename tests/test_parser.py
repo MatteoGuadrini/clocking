@@ -418,6 +418,23 @@ def test_set_other():
 
 
 # --------------------------------------------------
+def test_set_location():
+    """set with location value"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        f"--hours 8 --day 3 --month 3 --year 2020 --location 'Praga Office'"
+    )
+    assert rv == 0
+    assert out == ""
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --holiday --location 'At home!'"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
