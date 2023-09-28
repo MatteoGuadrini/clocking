@@ -503,15 +503,15 @@ def setting(**options):
                 description=options.get("description"),
                 location=options.get("location"),
                 extraordinary=options.get("extraordinary"),
-                permit_hours=options.get("permit_hours"),
-                other_hours=options.get("other_hours"),
+                permit_hours=options.get("permit"),
+                other_hours=options.get("other"),
                 holiday=True,
                 disease=options.get("disease"),
                 date=options.get("date"),
                 day=hday,
                 month=month,
                 year=year,
-                empty_value=options.get("empty_value"),
+                empty_value=empty_value,
             ):
                 print("error: working day insert failed")
     else:
@@ -522,15 +522,15 @@ def setting(**options):
             description=options.get("description"),
             location=options.get("location"),
             extraordinary=options.get("extraordinary"),
-            permit_hours=options.get("permit_hours"),
-            other_hours=options.get("other_hours"),
+            permit_hours=options.get("permit"),
+            other_hours=options.get("other"),
             holiday=options.get("holiday"),
             disease=options.get("disease"),
             date=options.get("date"),
             day=day,
             month=month,
             year=year,
-            empty_value=options.get("empty_value"),
+            empty_value=empty_value,
         ):
             print("error: working day insert failed")
     # Remove values
