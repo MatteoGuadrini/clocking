@@ -393,6 +393,31 @@ def test_set_extraordinary():
 
 
 # --------------------------------------------------
+def test_set_permit():
+    """set permit hours"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        "--hours 8 --permit 1 --day 4 --month 4 --year 2022"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        "--hours 8 --permit 1 --day 4 --month 4"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --permit 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_set_other():
     """set other hours"""
 
