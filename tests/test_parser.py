@@ -477,6 +477,20 @@ def test_set_description():
 
 
 # --------------------------------------------------
+def test_set_all():
+    """set with all options"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        "--hours 8 --day 5 --month 5 --year 2019 --location 'Milan Office' "
+        "--description 'Study Programming Python' --permit 1 --other 1 "
+        "--extraordinary 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_delete_usage():
     """delete usage"""
 
