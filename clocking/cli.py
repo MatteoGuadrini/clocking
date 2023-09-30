@@ -479,19 +479,15 @@ def setting(**options):
         print(f"error: no active configuration found for user '{user}'")
         return
     # Default values
-    if options.get("hours"):
-        hours_value = options.get("hours")
-    else:
-        hours_value = (
-            options.get("custom")
-            if options.get("custom")
-            else user_configuration.empty_value
-        )
     empty_value = (
         options.get("empty_value")
         if options.get("empty_value")
         else user_configuration.empty_value
     )
+    if options.get("hours"):
+        hours_value = options.get("hours") if options.get("hours") else empty_value
+    else:
+        hours_value = options.get("custom") if options.get("custom") else empty_value
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
