@@ -291,7 +291,7 @@ def get_args():
     set_parse.add_argument("-l", "--location", help="set current location", type=str)
     set_parse.add_argument(
         "-p",
-        "--permit-hour",
+        "--permit",
         help="set permit work hour value",
         type=float,
         metavar="HOURS",
@@ -478,7 +478,7 @@ def setting(**options):
     if not user_configuration:
         print(f"error: no active configuration found for user '{user}'")
         return
-    # Default values
+    # Default configuration values
     empty_value = (
         options.get("empty_value")
         if options.get("empty_value")
@@ -490,6 +490,7 @@ def setting(**options):
         hours_value = options.get("custom") if options.get("custom") else empty_value
     # Insert day(s)
     holiday_days = options.get("holidays_range")
+    print(options.get("permit"))
     if holiday_days:
         for hday in holiday_days:
             if not insert_working_hours(
