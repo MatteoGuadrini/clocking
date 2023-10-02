@@ -479,33 +479,37 @@ def setting(**options):
         print(f"error: no active configuration found for user '{user}'")
         return
     # Default configuration values
+    description = options.get("description")
+    hours_value = (
+        options.get("hours") if options.get("hours") else options.get("custom")
+    )
     empty_value = (
         options.get("empty_value")
         if options.get("empty_value")
         else user_configuration.empty_value
     )
-    if options.get("hours"):
-        hours_value = options.get("hours") if options.get("hours") else empty_value
-    else:
-        hours_value = options.get("custom") if options.get("custom") else empty_value
+    if not hours_value:
+        hours_value = empty_value
+    if options.get("disease"):
+        hours_value = 0
+        description = user_configuration.disease
     # Insert day(s)
     holiday_days = options.get("holidays_range")
-    print(options.get("permit"))
     if holiday_days:
-        for hday in holiday_days:
+        description = user_configuration.holiday
+        for holiday_day in holiday_days:
             if not insert_working_hours(
                 database=db,
                 user=user,
                 hours=0,
-                description=options.get("description"),
+                description=description,
                 location=options.get("location"),
                 extraordinary=options.get("extraordinary"),
                 permit_hours=options.get("permit"),
                 other_hours=options.get("other"),
                 holiday=True,
-                disease=options.get("disease"),
                 date=options.get("date"),
-                day=hday,
+                day=holiday_day,
                 month=month,
                 year=year,
                 empty_value=empty_value,
@@ -516,7 +520,7 @@ def setting(**options):
             database=db,
             user=user,
             hours=hours_value,
-            description=options.get("description"),
+            description=description,
             location=options.get("location"),
             extraordinary=options.get("extraordinary"),
             permit_hours=options.get("permit"),
