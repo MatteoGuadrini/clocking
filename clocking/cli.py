@@ -496,13 +496,13 @@ def setting(**options):
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
-        description = user_configuration.holiday
+        holiday_description = description if description else user_configuration.holiday
         for holiday_day in holiday_days:
             if not insert_working_hours(
                 database=db,
                 user=user,
                 hours=0,
-                description=description,
+                description=holiday_description,
                 location=options.get("location"),
                 extraordinary=options.get("extraordinary"),
                 permit_hours=options.get("permit"),
