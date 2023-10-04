@@ -386,6 +386,19 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
+def check_extraordinary(hours, default):
+    """Check if extraordinary hour values into defaults
+
+    :param hours: hour values
+    :param default: default hour values
+    :return: float
+    """
+    if hours / default < 1.0:
+        hours = 0
+        print(f"warning: extraordinary hours must be greater than default {default}")
+    return hours
+
+
 def configuration(**options):
     """Configuration function
 
@@ -493,6 +506,13 @@ def setting(**options):
     if options.get("disease"):
         hours_value = 0
         description = user_configuration.disease
+    extraordinary = (
+        check_extraordinary(
+            options.get("extraordinary"), user_configuration.extraordinary
+        )
+        if options.get("extraordinary")
+        else None
+    )
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -522,7 +542,7 @@ def setting(**options):
             hours=hours_value,
             description=description,
             location=options.get("location"),
-            extraordinary=options.get("extraordinary"),
+            extraordinary=extraordinary,
             permit_hours=options.get("permit"),
             other_hours=options.get("other"),
             holiday=options.get("holiday"),
