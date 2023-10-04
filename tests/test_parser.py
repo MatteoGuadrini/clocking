@@ -391,6 +391,13 @@ def test_set_extraordinary():
     assert rv == 0
     assert out == ""
 
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        "--hours 8 --extraordinary 0.5"
+    )
+    assert rv == 0
+    assert out == "warning: extraordinary hours must be greater than default 1.0"
+
 
 # --------------------------------------------------
 def test_set_permit():
