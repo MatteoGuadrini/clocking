@@ -386,16 +386,17 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
-def check_extraordinary(hours, default):
-    """Check if extraordinary hour values into defaults
+def check_default_hours(hours, default, t=""):
+    """Check if hours value is into defaults
 
     :param hours: hour values
     :param default: default hour values
+    :param t: type of hours
     :return: float
     """
     if hours / default < 1.0:
         hours = 0
-        print(f"warning: extraordinary hours must be greater than default {default}")
+        print(f"warning: {t} hours must be greater than default {default}")
     return hours
 
 
@@ -507,8 +508,10 @@ def setting(**options):
         hours_value = 0
         description = user_configuration.disease
     extraordinary = (
-        check_extraordinary(
-            options.get("extraordinary"), user_configuration.extraordinary
+        check_default_hours(
+            options.get("extraordinary"),
+            user_configuration.extraordinary,
+            "extraordinary",
         )
         if options.get("extraordinary")
         else None
