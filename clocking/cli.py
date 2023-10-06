@@ -516,6 +516,15 @@ def setting(**options):
         if options.get("extraordinary")
         else None
     )
+    permit = (
+        check_default_hours(
+            options.get("permit"),
+            user_configuration.extraordinary,
+            "permit",
+        )
+        if options.get("permit")
+        else None
+    )
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -546,7 +555,7 @@ def setting(**options):
             description=description,
             location=options.get("location"),
             extraordinary=extraordinary,
-            permit_hours=options.get("permit"),
+            permit_hours=permit,
             other_hours=options.get("other"),
             holiday=options.get("holiday"),
             disease=options.get("disease"),
