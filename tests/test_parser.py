@@ -453,6 +453,11 @@ def test_set_other():
     )
     assert rv == 0
     assert out == ""
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --other 0.5"
+    )
+    assert rv == 0
+    assert out == "warning: other hours must be greater than default 1.0"
 
 
 # --------------------------------------------------
