@@ -66,6 +66,7 @@ def test_add_configuration():
         "--user test "
         f"--database {TEMP_DB} "
         "--daily-hours 8 "
+        "--other-hours 1 "
         "--working-days Mon Tue Wed "
         "--hour-reward 8 "
         "--extraordinary-reward 10 "
@@ -73,6 +74,7 @@ def test_add_configuration():
         "--location Milan "
         "--currency €"
     )
+    print(out)
     assert rv == 0
     assert out == ""
 
@@ -91,7 +93,7 @@ def test_print_configuration():
         == """+----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
 | id | active | user | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
 +----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
+| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     1.0     |     0.0      |
 +----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
     )
 
@@ -105,7 +107,7 @@ def test_print_configuration():
         == """+----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
 | id | active | user | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
 +----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
+| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     1.0     |     0.0      |
 +----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
     )
 
@@ -119,7 +121,7 @@ def test_print_configuration():
         == """+----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
 | id | active | user | location | empty_value | daily_hours | working_days | extraordinary | permit_hours | disease | holiday | currency | hour_reward | extraordinary_reward | food_ticket | other_hours | other_reward |
 +----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+
-| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     0.0     |     0.0      |
+| 1  |   0    | test |  Milan   |  Not worked |     8.0     | Mon Tue Wed  |      1.0      |     1.0      | Disease | Holiday |    €     |     8.0     |         10.0         |     7.0     |     1.0     |     0.0      |
 +----+--------+------+----------+-------------+-------------+--------------+---------------+--------------+---------+---------+----------+-------------+----------------------+-------------+-------------+--------------+"""
     )
 
@@ -190,6 +192,7 @@ def test_all_configuration():
         "--daily-hours 8 "
         "--working-days Mon Tue Wed "
         "--hour-reward 8 "
+        "--other-hours 1 "
         "--extraordinary-reward 10 "
         "--food-ticket 7 "
         "--location Milan "
@@ -449,12 +452,13 @@ def test_set_other():
     assert out == ""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --other 1"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --other 1"
     )
     assert rv == 0
     assert out == ""
+
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --other 0.5"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --other 0.5"
     )
     assert rv == 0
     assert out == "warning: other hours must be greater than default 1.0"
@@ -475,18 +479,17 @@ def test_set_location():
     )
     assert rv == 0
     assert out == ""
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test "
+        f"--hours 8 --day 7 --month 7 --year 2020"
+    )
+    assert rv == 0
+    assert out == ""
 
 
 # --------------------------------------------------
 def test_set_description():
     """set with description value"""
-
-    rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test "
-        f"--hours 8 --day 3 --month 3 --year 2020 --location 'Praga Office'"
-    )
-    assert rv == 0
-    assert out == ""
     rv, out = getstatusoutput(
         f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --description 'Project: #1'"
     )
