@@ -394,9 +394,10 @@ def check_default_hours(hours, default, t=""):
     :param t: type of hours
     :return: float
     """
-    if hours / default < 1.0:
-        hours = 0
-        print(f"warning: {t} hours must be greater than default {default}")
+    if default:
+        if hours / default < 1.0:
+            hours = 0
+            print(f"warning: {t} hours must be greater than default {default}")
     return hours
 
 
@@ -519,7 +520,7 @@ def setting(**options):
     permit = (
         check_default_hours(
             options.get("permit"),
-            user_configuration.extraordinary,
+            user_configuration.permit_hours,
             "permit",
         )
         if options.get("permit")
@@ -528,11 +529,16 @@ def setting(**options):
     other = (
         check_default_hours(
             options.get("other"),
-            user_configuration.extraordinary,
+            user_configuration.other_hours,
             "other",
         )
         if options.get("other")
         else None
+    )
+    location = (
+        options.get("location")
+        if options.get("location")
+        else user_configuration.location
     )
     # Insert day(s)
     holiday_days = options.get("holidays_range")
@@ -562,7 +568,7 @@ def setting(**options):
             user=user,
             hours=hours_value,
             description=description,
-            location=options.get("location"),
+            location=location,
             extraordinary=extraordinary,
             permit_hours=permit,
             other_hours=other,
