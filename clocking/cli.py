@@ -401,6 +401,19 @@ def check_default_hours(hours, default, t=""):
     return hours
 
 
+def find_extraordinary_hours(hours, default):
+    """Find extraordinary hours into worked hours
+
+    :param hours: hour values
+    :param default: default hour values
+    :return: float
+    """
+    extraordinary = 0
+    if hours > default:
+        extraordinary = hours - default
+    return extraordinary
+
+
 def configuration(**options):
     """Configuration function
 
