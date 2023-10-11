@@ -530,6 +530,11 @@ def setting(**options):
         if options.get("extraordinary")
         else None
     )
+    if extraordinary:
+        if isinstance(hours_value, (int, float)):
+            extraordinary = extraordinary + find_extraordinary_hours(
+                hours_value, user_configuration.daily_hours
+            )
     permit = (
         check_default_hours(
             options.get("permit"),
