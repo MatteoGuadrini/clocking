@@ -225,6 +225,12 @@ def test_set_working_day():
     assert rv == 0
     assert out == ""
 
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 9 --date '01/25/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
 
 # --------------------------------------------------
 def test_set_disease():
