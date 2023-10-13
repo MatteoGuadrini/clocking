@@ -508,22 +508,25 @@ def setting(**options):
         return
     # Default configuration values
     description = options.get("description")
-    hours_value = (
-        options.get("hours") if options.get("hours") else options.get("custom")
-    )
     empty_value = (
         options.get("empty_value")
         if options.get("empty_value")
         else user_configuration.empty_value
     )
+    # Default: check hours value
+    hours_value = (
+        options.get("hours") if options.get("hours") else options.get("custom")
+    )
     if not hours_value:
         hours_value = empty_value
+    # Default: check disease value
     if options.get("disease"):
         hours_value = 0
         description = user_configuration.disease
+    # Default: check extraordinary value
     extraordinary = (
         check_default_hours(
-            options.get("extraordinary"),
+            options.get("extraordinary", 0),
             user_configuration.extraordinary,
             "extraordinary",
         )
@@ -533,10 +536,16 @@ def setting(**options):
     if isinstance(hours_value, (int, float)) and isinstance(
         extraordinary, (int, float)
     ):
-        extraordinary = extraordinary + find_extraordinary_hours(
-            hours_value, user_configuration.daily_hours
-        )
+        # Check if worked hours is less of default
+        if hours_value < user_configuration.daily_hours:
+            extraordinary = 0
+        # Check if hours value contains extraordinary hours
+        else:
+            extraordinary = extraordinary + find_extraordinary_hours(
+                hours_value, user_configuration.daily_hours
+            )
         hours_value = hours_value - extraordinary
+    # Default: check permit value
     permit = (
         check_default_hours(
             options.get("permit"),
@@ -546,6 +555,7 @@ def setting(**options):
         if options.get("permit")
         else None
     )
+    # Default: check other value
     other = (
         check_default_hours(
             options.get("other"),
@@ -555,6 +565,7 @@ def setting(**options):
         if options.get("other")
         else None
     )
+    # Default: check location value
     location = (
         options.get("location")
         if options.get("location")

@@ -74,7 +74,6 @@ def test_add_configuration():
         "--location Milan "
         "--currency €"
     )
-    print(out)
     assert rv == 0
     assert out == ""
 
@@ -141,7 +140,6 @@ def test_enable_configuration():
     rv, out = getstatusoutput(
         f"python3 {prg} config --database {TEMP_DB} --user test --select-id 2"
     )
-    print(out)
     assert rv == 0
     assert out == "error: load configuration id 2 failed"
 
