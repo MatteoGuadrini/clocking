@@ -533,18 +533,6 @@ def setting(**options):
         if options.get("extraordinary")
         else 0
     )
-    if isinstance(hours_value, (int, float)) and isinstance(
-        extraordinary, (int, float)
-    ):
-        # Check if worked hours is less of default
-        if hours_value < user_configuration.daily_hours:
-            extraordinary = 0
-        # Check if hours value contains extraordinary hours
-        else:
-            extraordinary = extraordinary + find_extraordinary_hours(
-                hours_value, user_configuration.daily_hours
-            )
-        hours_value = hours_value - extraordinary
     # Default: check permit value
     permit = (
         check_default_hours(
@@ -553,8 +541,31 @@ def setting(**options):
             "permit",
         )
         if options.get("permit")
-        else None
+        else 0
     )
+    if isinstance(hours_value, (int, float)) and isinstance(
+        extraordinary, (int, float)
+    ):
+        # Check if worked hours is less than of default
+        if hours_value < user_configuration.daily_hours and extraordinary:
+            print(
+                "warning: no extraordinary because the hours worked are "
+                f"lower than the default({user_configuration.daily_hours})"
+            )
+            extraordinary = 0
+        # Check if worked hours is greater than of default
+        elif hours_value > user_configuration.daily_hours and permit:
+            print(
+                "warning: no permit because the hours worked are "
+                f"greater than the default({user_configuration.daily_hours})"
+            )
+            permit = 0
+        # Check if hours value contains extraordinary hours
+        else:
+            extraordinary = extraordinary + find_extraordinary_hours(
+                hours_value, user_configuration.daily_hours
+            )
+        hours_value = hours_value - extraordinary
     # Default: check other value
     other = (
         check_default_hours(
@@ -563,7 +574,7 @@ def setting(**options):
             "other",
         )
         if options.get("other")
-        else None
+        else 0
     )
     # Default: check location value
     location = (
