@@ -512,7 +512,7 @@ def test_set_all():
         "--extraordinary 1"
     )
     assert rv == 0
-    assert out == ""
+    assert out == "warning: no permit and extraordinary hours in the same day"
 
 
 # --------------------------------------------------

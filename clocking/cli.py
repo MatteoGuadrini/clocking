@@ -543,6 +543,16 @@ def setting(**options):
         if options.get("permit")
         else 0
     )
+    # Default: check other value
+    other = (
+        check_default_hours(
+            options.get("other"),
+            user_configuration.other_hours,
+            "other",
+        )
+        if options.get("other")
+        else 0
+    )
     if isinstance(hours_value, (int, float)) and isinstance(
         extraordinary, (int, float)
     ):
@@ -565,17 +575,12 @@ def setting(**options):
             extraordinary = extraordinary + find_extraordinary_hours(
                 hours_value, user_configuration.daily_hours
             )
+        # Check if permit and extraordinary are specified
+        if permit and extraordinary:
+            print("warning: no permit and extraordinary hours in the same day")
+            permit = 0
+            extraordinary = 0
         hours_value = hours_value - extraordinary
-    # Default: check other value
-    other = (
-        check_default_hours(
-            options.get("other"),
-            user_configuration.other_hours,
-            "other",
-        )
-        if options.get("other")
-        else 0
-    )
     # Default: check location value
     location = (
         options.get("location")
