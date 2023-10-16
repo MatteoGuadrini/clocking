@@ -587,6 +587,8 @@ def setting(**options):
         if options.get("location")
         else user_configuration.location
     )
+    insert_err_msg = "error: working day insert failed"
+    remove_err_msg = "error: working day deletion failed"
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -608,7 +610,7 @@ def setting(**options):
                 year=year,
                 empty_value=empty_value,
             ):
-                print("error: working day insert failed")
+                print(insert_err_msg)
     else:
         if not insert_working_hours(
             database=db,
@@ -627,10 +629,10 @@ def setting(**options):
             year=year,
             empty_value=empty_value,
         ):
-            print("error: working day insert failed")
+            print(insert_err_msg)
     # Remove values
     if options.get("reset"):
-        remove_working_hours(
+        if not remove_working_hours(
             database=db,
             user=user,
             date=options.get("date"),
@@ -638,16 +640,18 @@ def setting(**options):
             month=month,
             year=year,
             empty_value=empty_value,
-        )
+        ):
+            print(remove_err_msg)
     elif options.get("remove"):
-        delete_working_hours(
+        if not delete_working_hours(
             database=db,
             user=user,
             date=options.get("date"),
             day=day,
             month=month,
             year=year,
-        )
+        ):
+            print(remove_err_msg)
 
 
 def cli_select_command(command):
