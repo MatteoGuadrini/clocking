@@ -487,7 +487,7 @@ def configuration(**options):
 
 
 def setting(**options):
-    """
+    """Setting function
 
     :param options: options dictionary
     :return: None
@@ -501,11 +501,12 @@ def setting(**options):
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
+    vprint(f"setting date is day={day}, month={month}, year={year}", verbose=verbosity)
     # Get current configuration
     user_configuration = get_current_configuration(db, user)
     if not user_configuration:
         print(f"error: no active configuration found for user '{user}'")
-        return
+        exit(1)
     # Default configuration values
     description = options.get("description")
     empty_value = (
@@ -587,6 +588,12 @@ def setting(**options):
         if options.get("location")
         else user_configuration.location
     )
+    vprint(
+        f"setting hours={hours_value}, location={location}, "
+        f"extraordinary={extraordinary}, permit={permit}, other={other}"
+        f"description={description}",
+        verbose=verbosity,
+    )
     insert_err_msg = "error: working day insert failed"
     remove_err_msg = "error: working day deletion failed"
     # Insert day(s)
@@ -611,6 +618,7 @@ def setting(**options):
                 empty_value=empty_value,
             ):
                 print(insert_err_msg)
+                exit(2)
     else:
         if not insert_working_hours(
             database=db,
@@ -630,6 +638,7 @@ def setting(**options):
             empty_value=empty_value,
         ):
             print(insert_err_msg)
+            exit(2)
     # Remove values
     if options.get("reset"):
         if not remove_working_hours(
@@ -642,6 +651,7 @@ def setting(**options):
             empty_value=empty_value,
         ):
             print(remove_err_msg)
+            exit(3)
     elif options.get("remove"):
         if not delete_working_hours(
             database=db,
@@ -652,6 +662,7 @@ def setting(**options):
             year=year,
         ):
             print(remove_err_msg)
+            exit(4)
 
 
 def cli_select_command(command):
