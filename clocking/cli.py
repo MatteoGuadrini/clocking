@@ -252,8 +252,9 @@ def get_args():
         "-G",
         "--holidays-range",
         help="set holiday days",
-        metavar="DAYS",
+        metavar="DAY[1-31]",
         nargs="+",
+        choices=range(1, 32),
         type=int,
     )
     daily_value_group.add_argument(
@@ -275,9 +276,23 @@ def get_args():
         action="store_true",
     )
     set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
-    set_parse.add_argument("-d", "--day", help="set day", metavar="DAY")
-    set_parse.add_argument("-m", "--month", help="set month", metavar="MONTH")
-    set_parse.add_argument("-y", "--year", help="set year", metavar="YEAR")
+    set_parse.add_argument(
+        "-d",
+        "--day",
+        help="set day",
+        choices=range(1, 32),
+        metavar="DAY[1-31]",
+        type=int,
+    )
+    set_parse.add_argument(
+        "-m",
+        "--month",
+        help="set month",
+        choices=range(1, 13),
+        metavar="MONTH[1-12]",
+        type=int,
+    )
+    set_parse.add_argument("-y", "--year", help="set year", metavar="YEAR", type=int)
     set_parse.add_argument(
         "-e",
         "--extraordinary",
