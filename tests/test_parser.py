@@ -316,12 +316,12 @@ def test_set_day():
     """set with day value"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " f"--hours 8 --day 1"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --day 1"
     )
     assert rv == 0
     assert out == ""
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " f"--hours 8 --day 01"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --day 01"
     )
     assert rv == 0
     assert out == ""
@@ -338,7 +338,7 @@ def test_set_month():
     assert rv == 0
     assert out == ""
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " f"--hours 8 --month 1"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --month 1"
     )
     assert rv == 0
     assert out == ""
@@ -355,7 +355,7 @@ def test_set_year():
     assert rv == 0
     assert out == ""
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " f"--hours 8 --year 2020"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --year 2020"
     )
     assert rv == 0
     assert out == ""
@@ -425,13 +425,13 @@ def test_set_permit():
     assert out == ""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --permit 1"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --permit 1"
     )
     assert rv == 0
     assert out == ""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} set --database {TEMP_DB} --user test " "--hours 8 --permit 0.5"
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --permit 0.5"
     )
     assert rv == 0
     assert out == "warning: permit hours must be greater than default 1.0"
