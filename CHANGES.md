@@ -1,5 +1,13 @@
 # Release notes
 
+## 0.0.8
+
+Oct 20, 2023
+
+- Add _setting_ function
+- Add _check_default_hours_ function
+- Add range choice for days and months
+
 ## 0.0.7
 
 Sep 06, 2023
