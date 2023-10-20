@@ -50,7 +50,7 @@ options:
 
 ### Configuration
 
-`clocking` use configurations to apply automatically determine information when insert data into database; these
+`clocking` uses configurations to apply automatically determine information when insert data into database; these
 configurations to creates in command line through `config` section.
 
 ```console
@@ -72,6 +72,47 @@ Use `config` action also to delete or clean configurations:
 $> clocking config --delete-id 1
 # Clean all configurations
 $> clocking config --reset
+```
+
+### Setting
+
+`clocking` uses set mode to insert data into own database; these
+configurations to creates in command line through `set` section.
+
+```console
+# Set current working day
+$> clocking set --hours 8
+# Set other working day
+$> clocking set --hours 9.5 --date '11/25/2022'
+# Set disease
+$> clocking set --disease
+# Set holiday
+$> clocking set --holiday
+# Set custom value
+$> clocking set --custom 'Today I not work! I play guitar!'
+# Set custom day value: this month, this year but first day
+$> clocking set --hours 8 --day 1
+# Set custom month value: this day, this year but month november
+$> clocking set --hours 8 --month 11
+# Set custom year value: this day, this month but year 2022
+$> clocking set --hours 8 --year 2021
+# Set extraordinary hours
+$> clocking set --hours 8 --extraordinary 1
+# Set permit hours
+$> clocking set --hours 7 --permit 1
+# Set other hours
+$> clocking set --hours 8 --other 0.5
+# Set location
+$> clocking set --hours 8 --location 'Milan Office, p.za Duomo'
+# Set description
+$> clocking set --hours 8 --description 'Project: #1'
+# Set all
+$> clocking set --hours 8 --day 5 --month 5 --year 2019 --location 'Milan Office' \
+    --description 'Study Programming Python' --extraordinary 1 --other 1
+# Reset a day
+$> clocking set --date '10/09/2023' --reset'
+# Delete a day
+$> clocking set --date '10/09/2023' --remove'
 ```
 
 ### As a python module

@@ -23,23 +23,40 @@
 """clocking module that contains some utility"""
 
 # region imports
+from collections import namedtuple
 from datetime import datetime
 from sqlite3 import Cursor
+
 from prettytable import PrettyTable
-from collections import namedtuple
+
 from .exception import UserConfigurationError
 
 # endregion
 
 # region globals
-UserConfiguration = namedtuple('UserConfiguration', [
-    'rowid', 'active', 'user', 'location', 'empty_value',
-    'daily_hours', 'working_days', 'extraordinary',
-    'permit_hours', 'disease', 'holiday', 'currency',
-    'hour_reward', 'extraordinary_reward', 'food_ticket',
-    'other_hours', 'other_reward'
-])
-DataTable = namedtuple('DataTable', ['data', 'table'])
+UserConfiguration = namedtuple(
+    "UserConfiguration",
+    [
+        "rowid",
+        "active",
+        "user",
+        "location",
+        "empty_value",
+        "daily_hours",
+        "working_days",
+        "extraordinary",
+        "permit_hours",
+        "disease",
+        "holiday",
+        "currency",
+        "hour_reward",
+        "extraordinary_reward",
+        "food_ticket",
+        "other_hours",
+        "other_reward",
+    ],
+)
+DataTable = namedtuple("DataTable", ["data", "table"])
 
 
 # endregion
@@ -47,21 +64,39 @@ DataTable = namedtuple('DataTable', ['data', 'table'])
 # region functions
 def datestring_to_datetime(date):
     """Convert any date-string format to datetime object
-    
+
     :param date: date in string format
     :return: datetime
     :raise: ValueError
     """
     all_date_format = (
-        '%d{0}%m{0}%Y', '%d{0}%Y{0}%m', '%m{0}%Y{0}%d',
-        '%m{0}%d{0}%Y', '%Y{0}%d{0}%m', '%Y{0}%m{0}%d',
-        '%d{0}%m{0}%y', '%d{0}%y{0}%m', '%m{0}%y{0}%d',
-        '%m{0}%d{0}%y', '%y{0}%d{0}%m', '%y{0}%m{0}%d',
-        '%Y%d%m', '%Y%m%d', '%d%m%Y', '%d%Y%m', '%m%Y%d', '%m%d%Y',
-        '%y%d%m', '%y%m%d', '%d%m%y', '%d%y%m', '%m%y%d', '%m%d%y'
+        "%d{0}%m{0}%Y",
+        "%d{0}%Y{0}%m",
+        "%m{0}%Y{0}%d",
+        "%m{0}%d{0}%Y",
+        "%Y{0}%d{0}%m",
+        "%Y{0}%m{0}%d",
+        "%d{0}%m{0}%y",
+        "%d{0}%y{0}%m",
+        "%m{0}%y{0}%d",
+        "%m{0}%d{0}%y",
+        "%y{0}%d{0}%m",
+        "%y{0}%m{0}%d",
+        "%Y%d%m",
+        "%Y%m%d",
+        "%d%m%Y",
+        "%d%Y%m",
+        "%m%Y%d",
+        "%m%d%Y",
+        "%y%d%m",
+        "%y%m%d",
+        "%d%m%y",
+        "%d%y%m",
+        "%m%y%d",
+        "%m%d%y",
     )
     # Try converts string into datetime object
-    for sep in r'-\/ .:;':
+    for sep in r"-\/ .:;":
         for fmt in all_date_format:
             # Add separator into format
             fmt = fmt.format(sep)
@@ -70,12 +105,12 @@ def datestring_to_datetime(date):
                 return date
             except ValueError:
                 pass
-    raise ValueError(f'{date} is not a valid date format')
+    raise ValueError(f"{date} is not a valid date format")
 
 
-def build_dateid(date=None, year=None, month=None, day=None, fmt='%Y%m%d'):
+def build_dateid(date=None, year=None, month=None, day=None, fmt="%Y%m%d"):
     """Build date_id for database
-    
+
     :param date: datetime object
     :param year: number represents the year
     :param month: number represents the year
@@ -84,8 +119,6 @@ def build_dateid(date=None, year=None, month=None, day=None, fmt='%Y%m%d'):
     :return: str
     """
     # Build date
-    if date and (year or month or day):
-        print('warning: date arguments is selected first')
     if date:
         date = datestring_to_datetime(date)
     elif year and month and day:
@@ -97,9 +130,9 @@ def build_dateid(date=None, year=None, month=None, day=None, fmt='%Y%m%d'):
     return date.strftime(fmt)
 
 
-def split_dateid(date_id, fmt='%Y%m%d'):
-    """Split date_id to year, month and day 
-    
+def split_dateid(date_id, fmt="%Y%m%d"):
+    """Split date_id to year, month and day
+
     :param date_id: string date_id object
     :param fmt: date_id string format
     :return: tuple
@@ -110,7 +143,7 @@ def split_dateid(date_id, fmt='%Y%m%d'):
 
 def make_printable_table(cursor: Cursor):
     """Create a PrettyTable object from sqlite3 Cursor object
-    
+
     :param cursor: sqlite3 Cursor object
     :return: DataTable
     """
@@ -123,29 +156,40 @@ def make_printable_table(cursor: Cursor):
 
 def sum_rewards(data, configuration: UserConfiguration):
     """Sum working hours rewards
-    
+
     :param data: tuple of working hours
     :param configuration: UserConfiguration object
     :return: float
     :raises: ValueError, UserConfigurationError
     """
     # Check data contains numbers
-    if not all(isinstance(row[4], (int, float))
-               for row in data):
+    if not all(isinstance(row[4], (int, float)) for row in data):
         raise ValueError("all element of data doesn't contain a numbers")
     # Check configuration
     if not isinstance(configuration, UserConfiguration):
-        raise UserConfigurationError(f"{type(configuration)} is not an UserConfiguration object")
+        raise UserConfigurationError(
+            f"{type(configuration)} is not an UserConfiguration object"
+        )
     # Calculate rewards
-    rewards = [str(
-        sum([
-            row[4] * configuration.hour_reward,
-            row[7] * configuration.extraordinary_reward,
-            row[8] * configuration.hour_reward,
-            row[9] * configuration.other_reward,
-        ]) + configuration.food_ticket if row[4] > 0 else 0
-    ) + configuration.currency for row in data]
+    rewards = [
+        str(
+            sum(
+                [
+                    row[4] * configuration.hour_reward,
+                    row[7] * configuration.extraordinary_reward,
+                    row[8] * configuration.hour_reward,
+                    row[9] * configuration.other_reward,
+                ]
+            )
+            + configuration.food_ticket
+            if row[4] > 0
+            else 0
+        )
+        + configuration.currency
+        for row in data
+    ]
 
     return rewards
+
 
 # endregion
