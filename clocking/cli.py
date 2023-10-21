@@ -313,10 +313,10 @@ def get_args():
     )
     set_parse.add_argument("-t", "--description", help="set description", type=str)
     # Delete subparser
-    deleting = subparser.add_parser(
+    deleting_parse = subparser.add_parser(
         "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
     )
-    deleting_group = deleting.add_mutually_exclusive_group(required=True)
+    deleting_group = deleting_parse.add_mutually_exclusive_group(required=True)
     deleting_group.add_argument(
         "-D", "--date", help="delete specific date", metavar="DATE"
     )
@@ -680,6 +680,18 @@ def setting(**options):
             exit(4)
 
 
+def deleting(**options):
+    """Delete function
+
+    :param options: options dictionary
+    :return: None
+    """
+    db = options.get("database")
+    verbosity = options.get("verbose")
+    user = options.get("user")
+    vprint(f"delete data into database {db} for user {user}", verbose=verbosity)
+
+
 def cli_select_command(command):
     """
     Select command
@@ -691,7 +703,7 @@ def cli_select_command(command):
     commands = {
         "config": configuration,
         "set": setting,
-        "delete": None,
+        "delete": deleting,
         "print": None,
     }
     return commands.get(command)
