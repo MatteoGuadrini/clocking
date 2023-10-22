@@ -690,6 +690,12 @@ def deleting(**options):
     verbosity = options.get("verbose")
     user = options.get("user")
     vprint(f"delete data into database {db} for user {user}", verbose=verbosity)
+    # Set filled daily values
+    today = datetime.today()
+    year = today.year if not options.get("year") else options.get("year")
+    month = today.month if not options.get("month") else options.get("month")
+    day = today.day if not options.get("day") else options.get("day")
+    vprint(f"deleting date is day={day}, month={month}, year={year}", verbose=verbosity)
 
 
 def cli_select_command(command):
