@@ -321,13 +321,16 @@ def get_args():
         "-D", "--date", help="delete specific date", metavar="DATE"
     )
     deleting_group.add_argument(
-        "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
+        "-d", "--day", help="delete whole month", type=int, metavar="DAY"
     )
     deleting_group.add_argument(
         "-M", "--month", help="delete whole month", type=int, metavar="MONTH"
     )
     deleting_group.add_argument(
-        "-C", "--clear", help="clear all data", action="store_true"
+        "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
+    )
+    deleting_group.add_argument(
+        "-C", "--clear", help="clear all data to defaults", action="store_true"
     )
     # Print subparser
     printing = subparser.add_parser(
