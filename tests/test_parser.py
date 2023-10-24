@@ -526,6 +526,17 @@ def test_delete_usage():
 
 
 # --------------------------------------------------
+def test_delete_day():
+    """delete usage"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --day 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_print_usage():
     """print usage"""
 
