@@ -527,10 +527,27 @@ def test_delete_usage():
 
 # --------------------------------------------------
 def test_delete_day():
-    """delete usage"""
+    """delete day"""
 
     rv, out = getstatusoutput(
         f"python3 {prg} delete --database {TEMP_DB} --user test --day 1"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --date 2/2/2021"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
+def test_delete_month():
+    """delete month"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 10"
     )
     assert rv == 0
     assert out == ""
