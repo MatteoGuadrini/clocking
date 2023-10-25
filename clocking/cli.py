@@ -42,6 +42,7 @@ from clocking.core import (
     insert_working_hours,
     remove_working_hours,
     delete_working_hours,
+    delete_whole_month,
 )
 from clocking.util import datetime
 
@@ -699,17 +700,23 @@ def deleting(**options):
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
     vprint(f"deleting date is day={day}, month={month}, year={year}", verbose=verbosity)
-    # Deleting data
-    if not delete_working_hours(
-        database=db,
-        user=user,
-        date=options.get("date"),
-        day=day,
-        month=month,
-        year=year,
-    ):
-        print("error: working day deletion failed")
-        exit(4)
+    # Deleting day
+    if options.get("date") or options.get("day"):
+        if not delete_working_hours(
+            database=db,
+            user=user,
+            date=options.get("date"),
+            day=day,
+            month=month,
+            year=year,
+        ):
+            print("error: working day deletion failed")
+            exit(4)
+    # Deleting whole month
+    elif options.get("month"):
+        if not delete_whole_month(database=db, user=user, month=month, year=year):
+            print("error: working month deletion failed")
+            exit(4)
 
 
 def cli_select_command(command):
