@@ -554,6 +554,17 @@ def test_delete_month():
 
 
 # --------------------------------------------------
+def test_delete_year():
+    """delete year"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 10"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_print_usage():
     """print usage"""
 
