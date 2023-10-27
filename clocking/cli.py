@@ -43,6 +43,7 @@ from clocking.core import (
     remove_working_hours,
     delete_working_hours,
     delete_whole_month,
+    delete_whole_year,
 )
 from clocking.util import datetime
 
@@ -716,6 +717,11 @@ def deleting(**options):
     elif options.get("month"):
         if not delete_whole_month(database=db, user=user, month=month, year=year):
             print("error: working month deletion failed")
+            exit(4)
+    # Deleting whole year
+    elif options.get("year"):
+        if not delete_whole_year(database=db, user=user, year=year):
+            print("error: working year deletion failed")
             exit(4)
 
 

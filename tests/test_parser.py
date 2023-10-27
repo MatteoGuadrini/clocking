@@ -558,7 +558,7 @@ def test_delete_year():
     """delete year"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --month 10"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --year 2022"
     )
     assert rv == 0
     assert out == ""
