@@ -44,6 +44,7 @@ from clocking.core import (
     delete_working_hours,
     delete_whole_month,
     delete_whole_year,
+    delete_user,
 )
 from clocking.util import datetime
 
@@ -332,7 +333,7 @@ def get_args():
         "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
     )
     deleting_group.add_argument(
-        "-C", "--clear", help="clear all data to defaults", action="store_true"
+        "-C", "--clear", help="clear all data for user", action="store_true"
     )
     # Print subparser
     printing = subparser.add_parser(
@@ -722,6 +723,11 @@ def deleting(**options):
     elif options.get("year"):
         if not delete_whole_year(database=db, user=user, year=year):
             print("error: working year deletion failed")
+            exit(4)
+    # Deleting whole data for user
+    elif options.get("clear"):
+        if not delete_user(database=db, user=user):
+            print("error: working user deletion failed")
             exit(4)
 
 
