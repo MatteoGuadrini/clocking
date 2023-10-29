@@ -565,6 +565,17 @@ def test_delete_year():
 
 
 # --------------------------------------------------
+def test_delete_user():
+    """delete user"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --clear"
+    )
+    assert rv == 0
+    assert out == ""
+
+
+# --------------------------------------------------
 def test_print_usage():
     """print usage"""
 
