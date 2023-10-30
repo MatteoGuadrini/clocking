@@ -407,6 +407,27 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
+def confirm(message, default="n"):
+    """
+    Ask user to enter Y or N (case-insensitive).
+    :message: message to print
+    :default: default answer
+    :return: True if the answer is Y.
+    :rtype: bool
+    """
+    while answer := None not in ["y", "n"]:
+        answer = input(
+            "{0}\nTo continue? {1}".format(
+                message, "[Y/n]" if default == "y" else "[y/N]"
+            )
+        ).lower()
+        # Check if default
+        if not answer:
+            answer = default
+            break
+    return answer == "y"
+
+
 def check_default_hours(hours, default, t=""):
     """Check if hours value is into defaults
 
