@@ -335,6 +335,12 @@ def get_args():
     deleting_group.add_argument(
         "-C", "--clear", help="clear all data for user", action="store_true"
     )
+    deleting_parse.add_argument(
+        "-f",
+        "--force",
+        help="force delete action without prompt confirmation",
+        action="store_true",
+    )
     # Print subparser
     printing = subparser.add_parser(
         "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
