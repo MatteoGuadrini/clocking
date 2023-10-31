@@ -51,6 +51,7 @@ from clocking.util import datetime
 
 # endregion
 
+
 # region functions
 def get_args():
     """Get command-line arguments
@@ -729,33 +730,39 @@ def deleting(**options):
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
     vprint(f"deleting date is day={day}, month={month}, year={year}", verbose=verbosity)
+    # Get force for deletion
+    force = options.get("force")
     # Deleting day
     if options.get("date") or options.get("day"):
-        if not delete_working_hours(
-            database=db,
-            user=user,
-            date=options.get("date"),
-            day=day,
-            month=month,
-            year=year,
-        ):
-            print("error: working day deletion failed")
-            exit(4)
+        if force or confirm("Delete day."):
+            if not delete_working_hours(
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+            ):
+                print("error: working day deletion failed")
+                exit(4)
     # Deleting whole month
     elif options.get("month"):
-        if not delete_whole_month(database=db, user=user, month=month, year=year):
-            print("error: working month deletion failed")
-            exit(4)
+        if force or confirm("Delete whole month."):
+            if not delete_whole_month(database=db, user=user, month=month, year=year):
+                print("error: working month deletion failed")
+                exit(4)
     # Deleting whole year
     elif options.get("year"):
-        if not delete_whole_year(database=db, user=user, year=year):
-            print("error: working year deletion failed")
-            exit(4)
+        if force or confirm("Delete whole year."):
+            if not delete_whole_year(database=db, user=user, year=year):
+                print("error: working year deletion failed")
+                exit(4)
     # Deleting whole data for user
     elif options.get("clear"):
-        if not delete_user(database=db, user=user):
-            print("error: working user deletion failed")
-            exit(4)
+        if force or confirm("Delete whole data for user."):
+            if not delete_user(database=db, user=user):
+                print("error: working user data deletion failed")
+                exit(4)
 
 
 def cli_select_command(command):

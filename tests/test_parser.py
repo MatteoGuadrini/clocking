@@ -530,13 +530,14 @@ def test_delete_day():
     """delete day"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --day 1"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --day 1 --force"
     )
+    print(out)
     assert rv == 0
     assert out == ""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --date 2/2/2021"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --date 2/2/2021 --force"
     )
     assert rv == 0
     assert out == ""
@@ -547,7 +548,7 @@ def test_delete_month():
     """delete month"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --month 10"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 10 --force"
     )
     assert rv == 0
     assert out == ""
@@ -558,7 +559,7 @@ def test_delete_year():
     """delete year"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --year 2022"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --year 2022 --force"
     )
     assert rv == 0
     assert out == ""
@@ -569,7 +570,7 @@ def test_delete_user():
     """delete user"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --clear"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --clear --force"
     )
     assert rv == 0
     assert out == ""
