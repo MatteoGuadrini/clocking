@@ -140,7 +140,7 @@ def test_enable_configuration():
     rv, out = getstatusoutput(
         f"python3 {prg} config --database {TEMP_DB} --user test --select-id 2"
     )
-    assert rv == 0
+    assert rv == 1
     assert out == "error: load configuration id 2 failed"
 
 
@@ -150,16 +150,16 @@ def test_delete_configuration():
 
     # Delete configuration
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --delete-id 1"
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 1 --force"
     )
     assert rv == 0
     assert out == ""
 
     # Delete non-existent configuration
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --delete-id 2"
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 2 --force"
     )
-    assert rv == 0
+    assert rv == 4
     assert out == "error: delete configuration id 2 failed"
 
 
@@ -169,7 +169,9 @@ def test_reset_configuration():
 
     # Reset all configurations
     test_add_configuration()
-    rv, out = getstatusoutput(f"python3 {prg} config --database {TEMP_DB} --reset")
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --reset --force"
+    )
     assert rv == 0
     assert out == ""
 
@@ -197,7 +199,7 @@ def test_all_configuration():
         "--currency € "
         "--select-id 1 "
         "--delete-id 1 "
-        "--reset "
+        "--reset --force"
     )
     assert rv == 0
     assert out == ""
@@ -548,7 +550,7 @@ def test_delete_month():
     """delete month"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --month 10 --force"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 11 --force"
     )
     assert rv == 0
     assert out == ""

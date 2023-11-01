@@ -237,6 +237,12 @@ def get_args():
         type=int,
         metavar="ID",
     )
+    delete_group.add_argument(
+        "-f",
+        "--force",
+        help="force delete action without prompt confirmation",
+        action="store_true",
+    )
 
     # Set subparser
     set_parse = subparser.add_parser(
@@ -472,18 +478,26 @@ def configuration(**options):
     db = options.get("database")
     verbosity = options.get("verbose")
     user = options.get("user")
+    # Get force for deletion
+    force = options.get("force")
     vprint("check configuration table", verbose=verbosity)
     create_configuration_table(db)
     # Delete configuration
     if options.get("delete_id"):
         vprint(f"delete configuration id {options.get('delete_id')}", verbose=verbosity)
-        if not delete_configuration(db, options.get("delete_id")):
-            print(f"error: delete configuration id {options.get('delete_id')} failed")
+        if force or confirm(f"Delete configuration id {options.get('delete_id')}."):
+            if not delete_configuration(db, options.get("delete_id")):
+                print(
+                    f"error: delete configuration id {options.get('delete_id')} failed"
+                )
+                exit(4)
     # Reset configurations
     if options.get("reset"):
         vprint("reset configuration table", verbose=verbosity)
-        if not reset_configuration(db):
-            print("error: reset configuration table failed or table is empty")
+        if force or confirm("Reset configuration table."):
+            if not reset_configuration(db):
+                print("error: reset configuration table failed or table is empty")
+                exit(4)
     # Create new configuration
     if options.get("daily_hours"):
         vprint("create new configuration", verbose=verbosity)
@@ -521,6 +535,7 @@ def configuration(**options):
         else:
             if not enable_configuration(db, options.get("select_id")):
                 print(f"error: load configuration id {options.get('select_id')} failed")
+                exit(1)
     # Print configuration
     if options.get("print"):
         vprint(
