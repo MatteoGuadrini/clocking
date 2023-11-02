@@ -283,7 +283,7 @@ def test_set_reset():
 
     rv, out = getstatusoutput(
         f"python3 {prg} set --database {TEMP_DB} --user test "
-        f"--date '10/09/2023' --reset"
+        f"--date '10/09/2023' --reset --force"
     )
     assert rv == 0
     assert out == ""
@@ -295,7 +295,7 @@ def test_set_remove():
 
     rv, out = getstatusoutput(
         f"python3 {prg} set --database {TEMP_DB} --user test "
-        f"--date '10/09/2023' --remove"
+        f"--date '10/09/2023' --remove --force"
     )
     assert rv == 0
     assert out == ""

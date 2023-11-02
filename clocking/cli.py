@@ -285,6 +285,12 @@ def get_args():
         help="remove values date",
         action="store_true",
     )
+    set_parse.add_argument(
+        "-f",
+        "--force",
+        help="force delete action without prompt confirmation",
+        action="store_true",
+    )
     set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
     set_parse.add_argument(
         "-d",
@@ -322,6 +328,7 @@ def get_args():
         metavar="HOURS",
     )
     set_parse.add_argument("-t", "--description", help="set description", type=str)
+
     # Delete subparser
     deleting_parse = subparser.add_parser(
         "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
@@ -348,6 +355,7 @@ def get_args():
         help="force delete action without prompt confirmation",
         action="store_true",
     )
+
     # Print subparser
     printing = subparser.add_parser(
         "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
@@ -559,13 +567,20 @@ def setting(**options):
     db = options.get("database")
     verbosity = options.get("verbose")
     user = options.get("user")
+    # Get force for deletion
+    force = options.get("force")
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
     # Set filled daily values
     today = datetime.today()
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
-    vprint(f"setting date is day={day}, month={month}, year={year}", verbose=verbosity)
+    if options.get("date"):
+        vprint(f"setting date is {options.get('date')}", verbose=verbosity)
+    else:
+        vprint(
+            f"setting date is day={day}, month={month}, year={year}", verbose=verbosity
+        )
     # Get current configuration
     user_configuration = get_current_configuration(db, user)
     if not user_configuration:
@@ -705,28 +720,30 @@ def setting(**options):
             exit(2)
     # Remove values
     if options.get("reset"):
-        if not remove_working_hours(
-            database=db,
-            user=user,
-            date=options.get("date"),
-            day=day,
-            month=month,
-            year=year,
-            empty_value=empty_value,
-        ):
-            print(remove_err_msg)
-            exit(3)
+        if force or confirm("Reset working day to defaults."):
+            if not remove_working_hours(
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
+            ):
+                print(remove_err_msg)
+                exit(3)
     elif options.get("remove"):
-        if not delete_working_hours(
-            database=db,
-            user=user,
-            date=options.get("date"),
-            day=day,
-            month=month,
-            year=year,
-        ):
-            print(remove_err_msg)
-            exit(4)
+        if force or confirm("Remove working day."):
+            if not delete_working_hours(
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+            ):
+                print(remove_err_msg)
+                exit(4)
 
 
 def deleting(**options):
@@ -744,7 +761,12 @@ def deleting(**options):
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
-    vprint(f"deleting date is day={day}, month={month}, year={year}", verbose=verbosity)
+    if options.get("date"):
+        vprint(f"deleting date is {options.get('date')}", verbose=verbosity)
+    else:
+        vprint(
+            f"deleting date is day={day}, month={month}, year={year}", verbose=verbosity
+        )
     # Get force for deletion
     force = options.get("force")
     # Deleting day
