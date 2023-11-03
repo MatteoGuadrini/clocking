@@ -544,6 +544,12 @@ def test_delete_day():
     assert rv == 0
     assert out == ""
 
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --date 3/2/2021 --force"
+    )
+    assert rv == 4
+    assert out == "error: working day deletion failed"
+
 
 # --------------------------------------------------
 def test_delete_month():
@@ -554,6 +560,12 @@ def test_delete_month():
     )
     assert rv == 0
     assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 12 --force"
+    )
+    assert rv == 4
+    assert out == "error: working month deletion failed"
 
 
 # --------------------------------------------------
@@ -566,6 +578,12 @@ def test_delete_year():
     assert rv == 0
     assert out == ""
 
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --year 1998 --force"
+    )
+    assert rv == 4
+    assert out == "error: working year deletion failed"
+
 
 # --------------------------------------------------
 def test_delete_user():
@@ -576,6 +594,13 @@ def test_delete_user():
     )
     assert rv == 0
     assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test2 --clear --force"
+    )
+    print(out)
+    assert rv == 4
+    assert out == "error: working user data deletion failed"
 
 
 # --------------------------------------------------
