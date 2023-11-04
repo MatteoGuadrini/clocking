@@ -23,6 +23,7 @@
 # region imports
 import argparse
 import os.path
+import sqlite3
 from getpass import getuser
 
 from __init__ import __version__
@@ -797,7 +798,9 @@ def deleting(**options):
     # Deleting whole data for user
     elif options.get("clear"):
         if force or confirm("Delete whole data for user."):
-            if not delete_user(database=db, user=user):
+            try:
+                delete_user(database=db, user=user)
+            except sqlite3.OperationalError:
                 print("error: working user data deletion failed")
                 exit(4)
 
