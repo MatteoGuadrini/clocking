@@ -76,8 +76,7 @@ $> clocking config --reset
 
 ### Setting
 
-`clocking` uses set mode to insert data into own database; these
-configurations to creates in command line through `set` section.
+`clocking` uses set mode to insert data into own database; insert data in command line through `set` section.
 
 ```console
 # Set current working day
@@ -109,10 +108,31 @@ $> clocking set --hours 8 --description 'Project: #1'
 # Set all
 $> clocking set --hours 8 --day 5 --month 5 --year 2019 --location 'Milan Office' \
     --description 'Study Programming Python' --extraordinary 1 --other 1
-# Reset a day
-$> clocking set --date '10/09/2023' --reset'
-# Delete a day
-$> clocking set --date '10/09/2023' --remove'
+# Reset a day, without prompt
+$> clocking set --date '10/09/2023' --reset --force
+# Delete a day, without prompt
+$> clocking set --date '10/09/2023' --remove --force
+```
+
+### Deleting
+
+`clocking` uses delete mode to delete data from own database; delete data in command line through `delete` section.
+
+```console
+# Delete working first day of month
+$> clocking delete --day 1
+Delete day.
+To continue? [y/N]
+# Delete working first day of month, without prompt
+$> clocking delete --day 1 --force
+# Delete precise date, without prompt
+$> clocking delete --date 2/2/2021 --force
+# Delete whole month (current year), without prompt
+$> clocking delete --month 11 --force
+# Delete whole year 2022, without prompt
+$> clocking delete --year 2022 --force
+# Delete whole user data, without prompt
+$> clocking delete --clear --force
 ```
 
 ### As a python module
