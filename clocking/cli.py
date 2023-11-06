@@ -339,10 +339,20 @@ def get_args():
         "-D", "--date", help="delete specific date", metavar="DATE"
     )
     deleting_group.add_argument(
-        "-d", "--day", help="delete whole month", type=int, metavar="DAY"
+        "-d",
+        "--day",
+        help="delete whole month",
+        type=int,
+        choices=range(1, 32),
+        metavar="DAY[1-31]",
     )
     deleting_group.add_argument(
-        "-M", "--month", help="delete whole month", type=int, metavar="MONTH"
+        "-M",
+        "--month",
+        help="delete whole month",
+        type=int,
+        choices=range(1, 13),
+        metavar="MONTH[1-12]",
     )
     deleting_group.add_argument(
         "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
