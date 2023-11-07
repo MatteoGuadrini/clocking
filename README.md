@@ -28,7 +28,7 @@ Use the command line to track and take daily hours worked on projects or not.
 
 ```console
 $ clocking -h
-usage: clocking [-h] [-v] [-V] [-d FILE] {config,cfg,c,set,st,s,delete,del,d,print,prt,p} ...
+usage: clocking [-h] {config,cfg,c,set,st,s,delete,del,d,print,prt,p} ...
 
 tracking or monitoring worked hours
 
@@ -42,10 +42,6 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -v, --verbose         enable verbosity (default: False)
-  -V, --version         print version
-  -d FILE, --database FILE
-                        select database file (default: None)
 ```
 
 ### Configuration
