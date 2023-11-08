@@ -1,5 +1,15 @@
 # Release notes
 
+## 0.0.9
+
+Nov 09, 2023
+
+- Add _deleting_ function
+- Add _confirm_ function
+- Add _force_ argument on **delete** action
+- Add _force_ arguments for **configuration** action
+- Add _force_ arguments for **setting** action
+
 ## 0.0.8
 
 Oct 20, 2023
