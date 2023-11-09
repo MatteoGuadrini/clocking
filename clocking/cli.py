@@ -23,6 +23,7 @@
 # region imports
 import argparse
 import os.path
+import sqlite3
 from getpass import getuser
 
 from __init__ import __version__
@@ -42,11 +43,15 @@ from clocking.core import (
     insert_working_hours,
     remove_working_hours,
     delete_working_hours,
+    delete_whole_month,
+    delete_whole_year,
+    delete_user,
 )
 from clocking.util import datetime
 
 
 # endregion
+
 
 # region functions
 def get_args():
@@ -233,6 +238,12 @@ def get_args():
         type=int,
         metavar="ID",
     )
+    delete_group.add_argument(
+        "-f",
+        "--force",
+        help="force delete action without prompt confirmation",
+        action="store_true",
+    )
 
     # Set subparser
     set_parse = subparser.add_parser(
@@ -275,6 +286,12 @@ def get_args():
         help="remove values date",
         action="store_true",
     )
+    set_parse.add_argument(
+        "-f",
+        "--force",
+        help="force delete action without prompt confirmation",
+        action="store_true",
+    )
     set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
     set_parse.add_argument(
         "-d",
@@ -312,23 +329,44 @@ def get_args():
         metavar="HOURS",
     )
     set_parse.add_argument("-t", "--description", help="set description", type=str)
+
     # Delete subparser
-    deleting = subparser.add_parser(
+    deleting_parse = subparser.add_parser(
         "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
     )
-    deleting_group = deleting.add_mutually_exclusive_group(required=True)
+    deleting_group = deleting_parse.add_mutually_exclusive_group(required=True)
     deleting_group.add_argument(
         "-D", "--date", help="delete specific date", metavar="DATE"
+    )
+    deleting_group.add_argument(
+        "-d",
+        "--day",
+        help="delete whole month",
+        type=int,
+        choices=range(1, 32),
+        metavar="DAY[1-31]",
+    )
+    deleting_group.add_argument(
+        "-M",
+        "--month",
+        help="delete whole month",
+        type=int,
+        choices=range(1, 13),
+        metavar="MONTH[1-12]",
     )
     deleting_group.add_argument(
         "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
     )
     deleting_group.add_argument(
-        "-M", "--month", help="delete whole month", type=int, metavar="MONTH"
+        "-C", "--clear", help="clear all data for user", action="store_true"
     )
-    deleting_group.add_argument(
-        "-C", "--clear", help="clear all data", action="store_true"
+    deleting_parse.add_argument(
+        "-f",
+        "--force",
+        help="force delete action without prompt confirmation",
+        action="store_true",
     )
+
     # Print subparser
     printing = subparser.add_parser(
         "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
@@ -401,6 +439,27 @@ def vprint(*messages, verbose=False):
         print(level, *messages)
 
 
+def confirm(message, default="n"):
+    """
+    Ask user to enter Y or N (case-insensitive).
+    :message: message to print
+    :default: default answer
+    :return: True if the answer is Y.
+    :rtype: bool
+    """
+    while answer := None not in ["y", "n"]:
+        answer = input(
+            "{0}\nTo continue? {1}".format(
+                message, "[Y/n]" if default == "y" else "[y/N]"
+            )
+        ).lower()
+        # Check if default
+        if not answer:
+            answer = default
+            break
+    return answer == "y"
+
+
 def check_default_hours(hours, default, t=""):
     """Check if hours value is into defaults
 
@@ -438,18 +497,26 @@ def configuration(**options):
     db = options.get("database")
     verbosity = options.get("verbose")
     user = options.get("user")
+    # Get force for deletion
+    force = options.get("force")
     vprint("check configuration table", verbose=verbosity)
     create_configuration_table(db)
     # Delete configuration
     if options.get("delete_id"):
         vprint(f"delete configuration id {options.get('delete_id')}", verbose=verbosity)
-        if not delete_configuration(db, options.get("delete_id")):
-            print(f"error: delete configuration id {options.get('delete_id')} failed")
+        if force or confirm(f"Delete configuration id {options.get('delete_id')}."):
+            if not delete_configuration(db, options.get("delete_id")):
+                print(
+                    f"error: delete configuration id {options.get('delete_id')} failed"
+                )
+                exit(4)
     # Reset configurations
     if options.get("reset"):
         vprint("reset configuration table", verbose=verbosity)
-        if not reset_configuration(db):
-            print("error: reset configuration table failed or table is empty")
+        if force or confirm("Reset configuration table."):
+            if not reset_configuration(db):
+                print("error: reset configuration table failed or table is empty")
+                exit(4)
     # Create new configuration
     if options.get("daily_hours"):
         vprint("create new configuration", verbose=verbosity)
@@ -487,6 +554,7 @@ def configuration(**options):
         else:
             if not enable_configuration(db, options.get("select_id")):
                 print(f"error: load configuration id {options.get('select_id')} failed")
+                exit(1)
     # Print configuration
     if options.get("print"):
         vprint(
@@ -510,13 +578,20 @@ def setting(**options):
     db = options.get("database")
     verbosity = options.get("verbose")
     user = options.get("user")
+    # Get force for deletion
+    force = options.get("force")
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
     # Set filled daily values
     today = datetime.today()
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
-    vprint(f"setting date is day={day}, month={month}, year={year}", verbose=verbosity)
+    if options.get("date"):
+        vprint(f"setting date is {options.get('date')}", verbose=verbosity)
+    else:
+        vprint(
+            f"setting date is day={day}, month={month}, year={year}", verbose=verbosity
+        )
     # Get current configuration
     user_configuration = get_current_configuration(db, user)
     if not user_configuration:
@@ -656,28 +731,88 @@ def setting(**options):
             exit(2)
     # Remove values
     if options.get("reset"):
-        if not remove_working_hours(
-            database=db,
-            user=user,
-            date=options.get("date"),
-            day=day,
-            month=month,
-            year=year,
-            empty_value=empty_value,
-        ):
-            print(remove_err_msg)
-            exit(3)
+        if force or confirm("Reset working day to defaults."):
+            if not remove_working_hours(
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
+            ):
+                print(remove_err_msg)
+                exit(3)
     elif options.get("remove"):
-        if not delete_working_hours(
-            database=db,
-            user=user,
-            date=options.get("date"),
-            day=day,
-            month=month,
-            year=year,
-        ):
-            print(remove_err_msg)
-            exit(4)
+        if force or confirm("Remove working day."):
+            if not delete_working_hours(
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+            ):
+                print(remove_err_msg)
+                exit(4)
+
+
+def deleting(**options):
+    """Delete function
+
+    :param options: options dictionary
+    :return: None
+    """
+    db = options.get("database")
+    verbosity = options.get("verbose")
+    user = options.get("user")
+    vprint(f"delete data into database {db} for user {user}", verbose=verbosity)
+    # Set filled daily values
+    today = datetime.today()
+    year = today.year if not options.get("year") else options.get("year")
+    month = today.month if not options.get("month") else options.get("month")
+    day = today.day if not options.get("day") else options.get("day")
+    if options.get("date"):
+        vprint(f"deleting date is {options.get('date')}", verbose=verbosity)
+    else:
+        vprint(
+            f"deleting date is day={day}, month={month}, year={year}", verbose=verbosity
+        )
+    # Get force for deletion
+    force = options.get("force")
+    # Deleting day
+    if options.get("date") or options.get("day"):
+        if force or confirm("Delete day."):
+            if not delete_working_hours(
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+            ):
+                print("error: working day deletion failed")
+                exit(4)
+    # Deleting whole month
+    elif options.get("month"):
+        if force or confirm("Delete whole month."):
+            if not delete_whole_month(database=db, user=user, month=month, year=year):
+                print("error: working month deletion failed")
+                exit(4)
+    # Deleting whole year
+    elif options.get("year"):
+        if force or confirm("Delete whole year."):
+            if not delete_whole_year(database=db, user=user, year=year):
+                print("error: working year deletion failed")
+                exit(4)
+    # Deleting whole data for user
+    elif options.get("clear"):
+        if force or confirm("Delete whole data for user."):
+            try:
+                delete_user(database=db, user=user)
+            except sqlite3.OperationalError:
+                print("error: working user data deletion failed")
+                exit(4)
 
 
 def cli_select_command(command):
@@ -691,7 +826,7 @@ def cli_select_command(command):
     commands = {
         "config": configuration,
         "set": setting,
-        "delete": None,
+        "delete": deleting,
         "print": None,
     }
     return commands.get(command)

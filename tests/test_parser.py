@@ -140,7 +140,7 @@ def test_enable_configuration():
     rv, out = getstatusoutput(
         f"python3 {prg} config --database {TEMP_DB} --user test --select-id 2"
     )
-    assert rv == 0
+    assert rv == 1
     assert out == "error: load configuration id 2 failed"
 
 
@@ -150,16 +150,16 @@ def test_delete_configuration():
 
     # Delete configuration
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --delete-id 1"
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 1 --force"
     )
     assert rv == 0
     assert out == ""
 
     # Delete non-existent configuration
     rv, out = getstatusoutput(
-        f"python3 {prg} config --database {TEMP_DB} --delete-id 2"
+        f"python3 {prg} config --database {TEMP_DB} --delete-id 2 --force"
     )
-    assert rv == 0
+    assert rv == 4
     assert out == "error: delete configuration id 2 failed"
 
 
@@ -169,7 +169,9 @@ def test_reset_configuration():
 
     # Reset all configurations
     test_add_configuration()
-    rv, out = getstatusoutput(f"python3 {prg} config --database {TEMP_DB} --reset")
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --reset --force"
+    )
     assert rv == 0
     assert out == ""
 
@@ -197,7 +199,7 @@ def test_all_configuration():
         "--currency € "
         "--select-id 1 "
         "--delete-id 1 "
-        "--reset "
+        "--reset --force"
     )
     assert rv == 0
     assert out == ""
@@ -281,7 +283,7 @@ def test_set_reset():
 
     rv, out = getstatusoutput(
         f"python3 {prg} set --database {TEMP_DB} --user test "
-        f"--date '10/09/2023' --reset"
+        f"--date '10/09/2023' --reset --force"
     )
     assert rv == 0
     assert out == ""
@@ -293,7 +295,7 @@ def test_set_remove():
 
     rv, out = getstatusoutput(
         f"python3 {prg} set --database {TEMP_DB} --user test "
-        f"--date '10/09/2023' --remove"
+        f"--date '10/09/2023' --remove --force"
     )
     assert rv == 0
     assert out == ""
@@ -523,6 +525,82 @@ def test_delete_usage():
         rv, out = getstatusoutput(f"python3 {prg} delete {flag}")
         assert rv == 0
         assert out.lower().startswith("usage: clocking delete")
+
+
+# --------------------------------------------------
+def test_delete_day():
+    """delete day"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --day 1 --force"
+    )
+    print(out)
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --date 2/2/2021 --force"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --date 3/2/2021 --force"
+    )
+    assert rv == 4
+    assert out == "error: working day deletion failed"
+
+
+# --------------------------------------------------
+def test_delete_month():
+    """delete month"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 11 --force"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 12 --force"
+    )
+    assert rv == 4
+    assert out == "error: working month deletion failed"
+
+
+# --------------------------------------------------
+def test_delete_year():
+    """delete year"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --year 2022 --force"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --year 1998 --force"
+    )
+    assert rv == 4
+    assert out == "error: working year deletion failed"
+
+
+# --------------------------------------------------
+def test_delete_user():
+    """delete user"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test --clear --force"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} delete --database {TEMP_DB} --user test2 --clear --force"
+    )
+    print(out)
+    assert rv == 4
+    assert out == "error: working user data deletion failed"
 
 
 # --------------------------------------------------
