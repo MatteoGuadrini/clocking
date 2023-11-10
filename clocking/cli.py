@@ -368,10 +368,10 @@ def get_args():
     )
 
     # Print subparser
-    printing = subparser.add_parser(
+    printing_parse = subparser.add_parser(
         "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
     )
-    printing_group = printing.add_mutually_exclusive_group(required=True)
+    printing_group = printing_parse.add_mutually_exclusive_group(required=True)
     printing_group.add_argument(
         "-D", "--date", help="print specific date", metavar="DATE"
     )
@@ -384,7 +384,7 @@ def get_args():
     printing_group.add_argument(
         "-U", "--all", help="print whole user data", type=str, metavar="USER"
     )
-    printing_fmt_group = printing.add_mutually_exclusive_group()
+    printing_fmt_group = printing_parse.add_mutually_exclusive_group()
     printing_fmt_group.add_argument(
         "-c", "--csv", help="print in csv format", action="store_true"
     )
@@ -394,7 +394,7 @@ def get_args():
     printing_fmt_group.add_argument(
         "-m", "--html", help="print in html format", action="store_true"
     )
-    printing_selection_group = printing.add_mutually_exclusive_group()
+    printing_selection_group = printing_parse.add_mutually_exclusive_group()
     printing_selection_group.add_argument(
         "-H", "--holiday", help="print only holidays", action="store_true"
     )
@@ -413,13 +413,15 @@ def get_args():
     printing_selection_group.add_argument(
         "-p", "--permit-hour", help="print only permit hours", action="store_true"
     )
-    printing.add_argument(
+    printing_parse.add_argument(
         "-E",
         "--export",
         help="suppress output and export value into file",
         metavar="FILE",
     )
-    printing.add_argument("-r", "--rewards", help="print rewards", action="store_true")
+    printing_parse.add_argument(
+        "-r", "--rewards", help="print rewards", action="store_true"
+    )
 
     args = parser.parse_args()
     return args
@@ -645,7 +647,7 @@ def setting(**options):
         else 0
     )
     if isinstance(hours_value, (int, float)) and isinstance(
-        extraordinary, (int, float)
+            extraordinary, (int, float)
     ):
         # Check if worked hours is less than of default
         if hours_value < user_configuration.daily_hours and extraordinary:
@@ -692,40 +694,40 @@ def setting(**options):
         holiday_description = description if description else user_configuration.holiday
         for holiday_day in holiday_days:
             if not insert_working_hours(
-                database=db,
-                user=user,
-                hours=0,
-                description=holiday_description,
-                location=options.get("location"),
-                extraordinary=options.get("extraordinary"),
-                permit_hours=options.get("permit"),
-                other_hours=options.get("other"),
-                holiday=True,
-                date=options.get("date"),
-                day=holiday_day,
-                month=month,
-                year=year,
-                empty_value=empty_value,
+                    database=db,
+                    user=user,
+                    hours=0,
+                    description=holiday_description,
+                    location=options.get("location"),
+                    extraordinary=options.get("extraordinary"),
+                    permit_hours=options.get("permit"),
+                    other_hours=options.get("other"),
+                    holiday=True,
+                    date=options.get("date"),
+                    day=holiday_day,
+                    month=month,
+                    year=year,
+                    empty_value=empty_value,
             ):
                 print(insert_err_msg)
                 exit(2)
     else:
         if not insert_working_hours(
-            database=db,
-            user=user,
-            hours=hours_value,
-            description=description,
-            location=location,
-            extraordinary=extraordinary,
-            permit_hours=permit,
-            other_hours=other,
-            holiday=options.get("holiday"),
-            disease=options.get("disease"),
-            date=options.get("date"),
-            day=day,
-            month=month,
-            year=year,
-            empty_value=empty_value,
+                database=db,
+                user=user,
+                hours=hours_value,
+                description=description,
+                location=location,
+                extraordinary=extraordinary,
+                permit_hours=permit,
+                other_hours=other,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
         ):
             print(insert_err_msg)
             exit(2)
@@ -733,25 +735,25 @@ def setting(**options):
     if options.get("reset"):
         if force or confirm("Reset working day to defaults."):
             if not remove_working_hours(
-                database=db,
-                user=user,
-                date=options.get("date"),
-                day=day,
-                month=month,
-                year=year,
-                empty_value=empty_value,
+                    database=db,
+                    user=user,
+                    date=options.get("date"),
+                    day=day,
+                    month=month,
+                    year=year,
+                    empty_value=empty_value,
             ):
                 print(remove_err_msg)
                 exit(3)
     elif options.get("remove"):
         if force or confirm("Remove working day."):
             if not delete_working_hours(
-                database=db,
-                user=user,
-                date=options.get("date"),
-                day=day,
-                month=month,
-                year=year,
+                    database=db,
+                    user=user,
+                    date=options.get("date"),
+                    day=day,
+                    month=month,
+                    year=year,
             ):
                 print(remove_err_msg)
                 exit(4)
@@ -784,12 +786,12 @@ def deleting(**options):
     if options.get("date") or options.get("day"):
         if force or confirm("Delete day."):
             if not delete_working_hours(
-                database=db,
-                user=user,
-                date=options.get("date"),
-                day=day,
-                month=month,
-                year=year,
+                    database=db,
+                    user=user,
+                    date=options.get("date"),
+                    day=day,
+                    month=month,
+                    year=year,
             ):
                 print("error: working day deletion failed")
                 exit(4)
@@ -815,6 +817,18 @@ def deleting(**options):
                 exit(4)
 
 
+def printing(**options):
+    """Print function
+
+    :param options: options dictionary
+    :return: None
+    """
+    db = options.get("database")
+    verbosity = options.get("verbose")
+    user = options.get("user")
+    vprint(f"delete data into database {db} for user {user}", verbose=verbosity)
+
+
 def cli_select_command(command):
     """
     Select command
@@ -827,7 +841,7 @@ def cli_select_command(command):
         "config": configuration,
         "set": setting,
         "delete": deleting,
-        "print": None,
+        "print": printing,
     }
     return commands.get(command)
 
