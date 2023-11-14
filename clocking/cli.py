@@ -49,6 +49,7 @@ from clocking.core import (
     get_working_hours,
     print_working_table,
     get_whole_month,
+    get_whole_year,
 )
 from clocking.util import datetime
 
@@ -852,6 +853,15 @@ def printing(**options):
     elif options.get("month"):
         print_working_table(
             get_whole_month(db, user, year=year, month=month),
+            sort=sort,
+            csv=csv,
+            json=json,
+            html=html,
+            rewards=rewards,
+        )
+    elif options.get("year"):
+        print_working_table(
+            get_whole_year(db, user, year=year),
             sort=sort,
             csv=csv,
             json=json,
