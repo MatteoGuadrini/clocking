@@ -379,10 +379,23 @@ def get_args():
         "-D", "--date", help="print specific date", metavar="DATE"
     )
     printing_parse.add_argument(
+        "-d",
+        "--day",
+        help="print specific day",
+        choices=range(1, 32),
+        metavar="DAY[1-31]",
+        type=int,
+    )
+    printing_parse.add_argument(
         "-Y", "--year", help="print whole year", type=int, metavar="YEAR"
     )
     printing_parse.add_argument(
-        "-M", "--month", help="print whole month", type=int, metavar="MONTH"
+        "-M",
+        "--month",
+        help="print whole month",
+        type=int,
+        choices=range(1, 32),
+        metavar="MONTH[1-12]",
     )
     printing_parse.add_argument(
         "-U", "--all", help="print whole user data", type=str, metavar="USER"
@@ -834,6 +847,7 @@ def printing(**options):
     today = datetime.today()
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
+    day = today.day if not options.get("day") else options.get("day")
     # Print output options
     sort = options.get("sort")
     csv = options.get("csv")
@@ -841,9 +855,11 @@ def printing(**options):
     html = options.get("html")
     rewards = options.get("rewards")
     # Print selected data
-    if options.get("date"):
+    if options.get("date") or options.get("day"):
         print_working_table(
-            get_working_hours(db, user, date=options.get("date")),
+            get_working_hours(
+                db, user, day=day, month=month, year=year, date=options.get("date")
+            ),
             sort=sort,
             csv=csv,
             json=json,
