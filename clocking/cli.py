@@ -50,6 +50,7 @@ from clocking.core import (
     print_working_table,
     get_whole_month,
     get_whole_year,
+    get_all_days,
 )
 from clocking.util import datetime
 
@@ -398,7 +399,7 @@ def get_args():
         metavar="MONTH[1-12]",
     )
     printing_parse.add_argument(
-        "-U", "--all", help="print whole user data", type=str, metavar="USER"
+        "-U", "--all", help="print whole user data", action="store_true"
     )
     printing_fmt_group = printing_parse.add_mutually_exclusive_group()
     printing_fmt_group.add_argument(
@@ -663,7 +664,7 @@ def setting(**options):
         else 0
     )
     if isinstance(hours_value, (int, float)) and isinstance(
-            extraordinary, (int, float)
+        extraordinary, (int, float)
     ):
         # Check if worked hours is less than of default
         if hours_value < user_configuration.daily_hours and extraordinary:
@@ -710,40 +711,40 @@ def setting(**options):
         holiday_description = description if description else user_configuration.holiday
         for holiday_day in holiday_days:
             if not insert_working_hours(
-                    database=db,
-                    user=user,
-                    hours=0,
-                    description=holiday_description,
-                    location=options.get("location"),
-                    extraordinary=options.get("extraordinary"),
-                    permit_hours=options.get("permit"),
-                    other_hours=options.get("other"),
-                    holiday=True,
-                    date=options.get("date"),
-                    day=holiday_day,
-                    month=month,
-                    year=year,
-                    empty_value=empty_value,
+                database=db,
+                user=user,
+                hours=0,
+                description=holiday_description,
+                location=options.get("location"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit"),
+                other_hours=options.get("other"),
+                holiday=True,
+                date=options.get("date"),
+                day=holiday_day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
             ):
                 print(insert_err_msg)
                 exit(2)
     else:
         if not insert_working_hours(
-                database=db,
-                user=user,
-                hours=hours_value,
-                description=description,
-                location=location,
-                extraordinary=extraordinary,
-                permit_hours=permit,
-                other_hours=other,
-                holiday=options.get("holiday"),
-                disease=options.get("disease"),
-                date=options.get("date"),
-                day=day,
-                month=month,
-                year=year,
-                empty_value=empty_value,
+            database=db,
+            user=user,
+            hours=hours_value,
+            description=description,
+            location=location,
+            extraordinary=extraordinary,
+            permit_hours=permit,
+            other_hours=other,
+            holiday=options.get("holiday"),
+            disease=options.get("disease"),
+            date=options.get("date"),
+            day=day,
+            month=month,
+            year=year,
+            empty_value=empty_value,
         ):
             print(insert_err_msg)
             exit(2)
@@ -751,25 +752,25 @@ def setting(**options):
     if options.get("reset"):
         if force or confirm("Reset working day to defaults."):
             if not remove_working_hours(
-                    database=db,
-                    user=user,
-                    date=options.get("date"),
-                    day=day,
-                    month=month,
-                    year=year,
-                    empty_value=empty_value,
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
             ):
                 print(remove_err_msg)
                 exit(3)
     elif options.get("remove"):
         if force or confirm("Remove working day."):
             if not delete_working_hours(
-                    database=db,
-                    user=user,
-                    date=options.get("date"),
-                    day=day,
-                    month=month,
-                    year=year,
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
             ):
                 print(remove_err_msg)
                 exit(4)
@@ -802,12 +803,12 @@ def deleting(**options):
     if options.get("date") or options.get("day"):
         if force or confirm("Delete day."):
             if not delete_working_hours(
-                    database=db,
-                    user=user,
-                    date=options.get("date"),
-                    day=day,
-                    month=month,
-                    year=year,
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
             ):
                 print("error: working day deletion failed")
                 exit(4)
@@ -878,6 +879,15 @@ def printing(**options):
     elif options.get("year"):
         print_working_table(
             get_whole_year(db, user, year=year),
+            sort=sort,
+            csv=csv,
+            json=json,
+            html=html,
+            rewards=rewards,
+        )
+    elif options.get("all"):
+        print_working_table(
+            get_all_days(db, user),
             sort=sort,
             csv=csv,
             json=json,
