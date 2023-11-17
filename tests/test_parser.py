@@ -726,3 +726,20 @@ def test_print_all():
 | 20220203 | 2022 |   2   |  3  |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
     )
+
+
+# --------------------------------------------------
+def test_print_csv():
+    """print date in csv"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --date '01/25/2022' --csv"
+    )
+    assert rv == 0
+    print(out)
+    assert (
+            out
+            == """date_id,year,month,day,hours,description,location,extraordinary,permit_hours,other_hours,holiday,disease
+20220125,2022,1,25,8.0,,Milan,1.0,0.0,0.0,0,0
+"""
+    )
