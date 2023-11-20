@@ -855,6 +855,11 @@ def printing(**options):
     json = options.get("json")
     html = options.get("html")
     rewards = options.get("rewards")
+    # Get current configuration
+    user_configuration = get_current_configuration(db, user)
+    if not user_configuration:
+        print(f"error: no active configuration found for user '{user}'")
+        exit(1)
     # Print selected data
     if options.get("date") or options.get("day"):
         print_working_table(
@@ -865,7 +870,7 @@ def printing(**options):
             csv=csv,
             json=json,
             html=html,
-            rewards=rewards,
+            rewards=user_configuration if rewards else None,
         )
     elif options.get("month"):
         print_working_table(
@@ -874,7 +879,7 @@ def printing(**options):
             csv=csv,
             json=json,
             html=html,
-            rewards=rewards,
+            rewards=user_configuration if rewards else None,
         )
     elif options.get("year"):
         print_working_table(
@@ -883,7 +888,7 @@ def printing(**options):
             csv=csv,
             json=json,
             html=html,
-            rewards=rewards,
+            rewards=user_configuration if rewards else None,
         )
     elif options.get("all"):
         print_working_table(
@@ -892,7 +897,7 @@ def printing(**options):
             csv=csv,
             json=json,
             html=html,
-            rewards=rewards,
+            rewards=user_configuration if rewards else None,
         )
 
 
