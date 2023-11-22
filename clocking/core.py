@@ -39,6 +39,7 @@ from .util import (
 
 # endregion
 
+
 # region functions
 def database_exists(database):
     """Check if database exists
@@ -190,23 +191,23 @@ def create_configuration_table(database):
 
 
 def add_configuration(
-    database,
-    active,
-    user,
-    location,
-    empty_value,
-    daily_hours,
-    working_days,
-    extraordinary,
-    permit_hours,
-    disease,
-    holiday,
-    currency,
-    hour_reward,
-    extraordinary_reward,
-    food_ticket,
-    other_hours,
-    other_reward,
+        database,
+        active,
+        user,
+        location,
+        empty_value,
+        daily_hours,
+        working_days,
+        extraordinary,
+        permit_hours,
+        disease,
+        holiday,
+        currency,
+        hour_reward,
+        extraordinary_reward,
+        food_ticket,
+        other_hours,
+        other_reward,
 ):
     """Add new configuration into database
 
@@ -284,7 +285,6 @@ def enable_configuration(database, row_id):
         result = cur.fetchone()
         active = result[0] if result else None
         if not active:
-
             # Update active into configuration table
             cur.execute(
                 r"UPDATE configuration SET active = ? WHERE id = ?;",
@@ -377,17 +377,17 @@ def get_current_configuration(database, user):
 
 
 def get_working_hours(
-    database,
-    user,
-    date=None,
-    day=None,
-    month=None,
-    year=None,
-    holiday=False,
-    disease=False,
-    extraordinary=False,
-    permit_hours=False,
-    other_hours=False,
+        database,
+        user,
+        date=None,
+        day=None,
+        month=None,
+        year=None,
+        holiday=False,
+        disease=False,
+        extraordinary=False,
+        permit_hours=False,
+        other_hours=False,
 ):
     """Get working day from database
 
@@ -416,9 +416,9 @@ def get_working_hours(
         query = f"SELECT * FROM '{user}' WHERE date_id='{date_id}'"
         # Check if return only holiday
         if holiday:
-            query += " AND holiday IS NOT NULL"
+            query += " AND (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " AND disease IS NOT NULL"
+            query += " AND (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -431,14 +431,14 @@ def get_working_hours(
 
 
 def get_whole_year(
-    database,
-    user,
-    year,
-    holiday=False,
-    disease=False,
-    extraordinary=False,
-    permit_hours=False,
-    other_hours=False,
+        database,
+        user,
+        year,
+        holiday=False,
+        disease=False,
+        extraordinary=False,
+        permit_hours=False,
+        other_hours=False,
 ):
     """Get whole year's working days from database
 
@@ -461,9 +461,9 @@ def get_whole_year(
         query = f"SELECT * FROM '{user}' WHERE year = ?"
         # Check if return only holiday
         if holiday:
-            query += " AND holiday IS NOT NULL"
+            query += " AND (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " AND disease IS NOT NULL"
+            query += " AND (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -476,15 +476,15 @@ def get_whole_year(
 
 
 def get_whole_month(
-    database,
-    user,
-    year,
-    month,
-    holiday=False,
-    disease=False,
-    extraordinary=False,
-    permit_hours=False,
-    other_hours=False,
+        database,
+        user,
+        year,
+        month,
+        holiday=False,
+        disease=False,
+        extraordinary=False,
+        permit_hours=False,
+        other_hours=False,
 ):
     """Get whole month's working days from database
 
@@ -508,9 +508,9 @@ def get_whole_month(
         query = rf"SELECT * FROM '{user}' WHERE year = ? AND month = ?"
         # Check if return only holiday
         if holiday:
-            query += " AND holiday IS NOT NULL"
+            query += " AND (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " AND disease IS NOT NULL"
+            query += " AND (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -523,13 +523,13 @@ def get_whole_month(
 
 
 def get_all_days(
-    database,
-    user,
-    holiday=False,
-    disease=False,
-    extraordinary=False,
-    permit_hours=False,
-    other_hours=False,
+        database,
+        user,
+        holiday=False,
+        disease=False,
+        extraordinary=False,
+        permit_hours=False,
+        other_hours=False,
 ):
     """Get all days from database
 
@@ -551,9 +551,9 @@ def get_all_days(
         query = rf"SELECT * FROM '{user}'"
         # Check if return only holiday
         if holiday:
-            query += " WHERE holiday IS NOT NULL"
+            query += " WHERE (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " WHERE disease IS NOT NULL"
+            query += " WHERE (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " WHERE (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -622,21 +622,21 @@ def create_working_hours_table(database, user):
 
 
 def insert_working_hours(
-    database,
-    user,
-    hours=0,
-    description=None,
-    location=None,
-    extraordinary=0,
-    permit_hours=0,
-    other_hours=0,
-    holiday=None,
-    disease=None,
-    date=None,
-    day=None,
-    month=None,
-    year=None,
-    empty_value=None,
+        database,
+        user,
+        hours=0,
+        description=None,
+        location=None,
+        extraordinary=0,
+        permit_hours=0,
+        other_hours=0,
+        holiday=None,
+        disease=None,
+        date=None,
+        day=None,
+        month=None,
+        year=None,
+        empty_value=None,
 ):
     """Insert working day into database
 
@@ -677,7 +677,6 @@ def insert_working_hours(
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if not cur.fetchone():
-
             # Insert into database
             cur.execute(
                 rf"INSERT INTO '{user}' ("
@@ -700,7 +699,6 @@ def insert_working_hours(
                 ),
             )
         else:
-
             # Update into database
             cur.execute(
                 rf"UPDATE '{user}' "
@@ -727,7 +725,7 @@ def insert_working_hours(
 
 
 def remove_working_hours(
-    database, user, date=None, day=None, month=None, year=None, empty_value=None
+        database, user, date=None, day=None, month=None, year=None, empty_value=None
 ):
     """Remove working day into database
 
@@ -754,7 +752,6 @@ def remove_working_hours(
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if cur.fetchone():
-
             # Update empty day into database
             cur.execute(
                 rf"UPDATE '{user}' "
@@ -882,7 +879,7 @@ def print_configurations(cursor):
 
 
 def print_working_table(
-    cursor, sort=False, csv=False, json=False, html=False, rewards=None
+        cursor, sort=False, csv=False, json=False, html=False, rewards=None
 ):
     """Print in stdout the working hours table
 
@@ -919,7 +916,7 @@ def print_working_table(
 
 
 def save_working_table(
-    cursor, file, sort=False, csv=False, json=False, html=False, rewards=None
+        cursor, file, sort=False, csv=False, json=False, html=False, rewards=None
 ):
     """Save into file the working hours table
 
@@ -956,6 +953,5 @@ def save_working_table(
             fh.write(working_table.get_html_string())
         else:
             fh.write(working_table.get_string())
-
 
 # endregion
