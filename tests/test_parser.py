@@ -534,7 +534,6 @@ def test_delete_day():
     rv, out = getstatusoutput(
         f"python3 {prg} delete --database {TEMP_DB} --user test --day 1 --force"
     )
-    print(out)
     assert rv == 0
     assert out == ""
 
@@ -598,7 +597,6 @@ def test_delete_user():
     rv, out = getstatusoutput(
         f"python3 {prg} delete --database {TEMP_DB} --user test2 --clear --force"
     )
-    print(out)
     assert rv == 4
     assert out == "error: working user data deletion failed"
 
@@ -726,6 +724,30 @@ def test_print_holiday():
 
 
 # --------------------------------------------------
+def test_print_disease():
+    """print disease"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --disease --date '05/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --disease --year 2022"
+    )
+    assert rv == 0
+    assert (
+            out
+            == """+----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day |   hours    | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    1    |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
 def test_print_all():
     """print all"""
 
@@ -738,7 +760,6 @@ def test_print_all():
     rv, out = getstatusoutput(
         f"python3 {prg} print --database {TEMP_DB} --user test --all"
     )
-    print(out)
     assert rv == 0
     assert (
             out
@@ -747,6 +768,7 @@ def test_print_all():
 +----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
 | 20220103 | 2022 |   1   |  3  |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
 | 20220104 | 2022 |   1   |  4  | Not worked |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    1    |    0    |
+| 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    1    |
 | 20220124 | 2022 |   1   |  24 |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
 | 20220125 | 2022 |   1   |  25 |    8.0     |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
 | 20220203 | 2022 |   2   |  3  |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
