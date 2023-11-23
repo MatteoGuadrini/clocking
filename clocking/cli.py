@@ -871,6 +871,7 @@ def printing(**options):
                 year=year,
                 date=options.get("date"),
                 holiday=options.get("holiday"),
+                disease=options.get("disease"),
             ),
             sort=sort,
             csv=csv,
@@ -881,7 +882,12 @@ def printing(**options):
     elif options.get("month"):
         print_working_table(
             get_whole_month(
-                db, user, year=year, month=month, holiday=options.get("holiday")
+                db,
+                user,
+                year=year,
+                month=month,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
             ),
             sort=sort,
             csv=csv,
@@ -891,7 +897,13 @@ def printing(**options):
         )
     elif options.get("year"):
         print_working_table(
-            get_whole_year(db, user, year=year, holiday=options.get("holiday")),
+            get_whole_year(
+                db,
+                user,
+                year=year,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+            ),
             sort=sort,
             csv=csv,
             json=json,
@@ -900,7 +912,12 @@ def printing(**options):
         )
     elif options.get("all"):
         print_working_table(
-            get_all_days(db, user, holiday=options.get("holiday")),
+            get_all_days(
+                db,
+                user,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+            ),
             sort=sort,
             csv=csv,
             json=json,
