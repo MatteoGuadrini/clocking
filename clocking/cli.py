@@ -428,7 +428,7 @@ def get_args():
         "-o", "--other", help="print only other hours", action="store_true"
     )
     printing_selection_group.add_argument(
-        "-p", "--permit-hour", help="print only permit hours", action="store_true"
+        "-p", "--permit-hours", help="print only permit hours", action="store_true"
     )
     printing_parse.add_argument(
         "-E",
@@ -873,6 +873,7 @@ def printing(**options):
                 holiday=options.get("holiday"),
                 disease=options.get("disease"),
                 extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
             ),
             sort=sort,
             csv=csv,
@@ -890,6 +891,7 @@ def printing(**options):
                 holiday=options.get("holiday"),
                 disease=options.get("disease"),
                 extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
             ),
             sort=sort,
             csv=csv,
@@ -906,6 +908,7 @@ def printing(**options):
                 holiday=options.get("holiday"),
                 disease=options.get("disease"),
                 extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
             ),
             sort=sort,
             csv=csv,
@@ -921,6 +924,7 @@ def printing(**options):
                 holiday=options.get("holiday"),
                 disease=options.get("disease"),
                 extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
             ),
             sort=sort,
             csv=csv,
