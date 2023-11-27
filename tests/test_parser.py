@@ -785,7 +785,6 @@ def test_print_permit():
     rv, out = getstatusoutput(
         f"python3 {prg} print --database {TEMP_DB} --user test --permit-hours --year 2022"
     )
-    print(out)
     assert rv == 0
     assert (
             out
@@ -793,6 +792,31 @@ def test_print_permit():
 | date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
 | 20220121 | 2022 |   1   |  21 |  7.0  |     None    |  Milan   |      0.0      |     1.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_other():
+    """print other hours"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --other 1 --date '22/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test "
+        "--other-hours --year 2022"
+    )
+    assert rv == 0
+    assert (
+            out
+            == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220122 | 2022 |   1   |  22 |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     1.0     |    0    |    0    |
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
     )
 
@@ -821,6 +845,7 @@ def test_print_all():
 | 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    1    |
 | 20220111 | 2022 |   1   |  11 |    7.0     |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
 | 20220121 | 2022 |   1   |  21 |    7.0     |     None    |  Milan   |      0.0      |     1.0      |     0.0     |    0    |    0    |
+| 20220122 | 2022 |   1   |  22 |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     1.0     |    0    |    0    |
 | 20220124 | 2022 |   1   |  24 |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
 | 20220125 | 2022 |   1   |  25 |    8.0     |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
 | 20220203 | 2022 |   2   |  3  |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
