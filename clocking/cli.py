@@ -48,6 +48,7 @@ from clocking.core import (
     delete_user,
     get_working_hours,
     print_working_table,
+    save_working_table,
     get_whole_month,
     get_whole_year,
     get_all_days,
@@ -860,9 +861,11 @@ def printing(**options):
     if not user_configuration:
         print(f"error: no active configuration found for user '{user}'")
         exit(1)
+    # Select output function
+    output_command = save_working_table if options.get("export") else print_working_table
     # Print selected data
     if options.get("date") or options.get("day"):
-        print_working_table(
+        output_command(
             get_working_hours(
                 db,
                 user,
@@ -883,7 +886,7 @@ def printing(**options):
             rewards=user_configuration if rewards else None,
         )
     elif options.get("month"):
-        print_working_table(
+        output_command(
             get_whole_month(
                 db,
                 user,
@@ -902,7 +905,7 @@ def printing(**options):
             rewards=user_configuration if rewards else None,
         )
     elif options.get("year"):
-        print_working_table(
+        output_command(
             get_whole_year(
                 db,
                 user,
@@ -920,7 +923,7 @@ def printing(**options):
             rewards=user_configuration if rewards else None,
         )
     elif options.get("all"):
-        print_working_table(
+        output_command(
             get_all_days(
                 db,
                 user,
