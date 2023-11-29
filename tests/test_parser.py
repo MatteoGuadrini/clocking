@@ -978,3 +978,25 @@ def test_print_rewards():
 | 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |  81.0€  |
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+"""
     )
+
+
+# --------------------------------------------------
+def test_print_export():
+    """export data"""
+
+    tmp_file = '/tmp/test.txt'
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 9 --date '01/25/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --date '01/25/2022' --export '{tmp_file}'"
+    )
+    print(out)
+    assert rv == 0
+    assert out == ""
+
+    assert os.path.exists(tmp_file) is True
