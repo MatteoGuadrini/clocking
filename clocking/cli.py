@@ -508,6 +508,20 @@ def find_extraordinary_hours(hours, default):
     return extraordinary
 
 
+def output_command(*args, **kwargs):
+    """Select output command
+
+    :param args: positional arguments of *_working_table
+    :param kwargs: keyword arguments of *_working_table
+    :return: None
+    """
+    if kwargs.get('file'):
+        save_working_table(*args, **kwargs)
+    else:
+        del kwargs['file']
+        print_working_table(*args, **kwargs)
+
+
 def configuration(**options):
     """Configuration function
 
@@ -861,8 +875,6 @@ def printing(**options):
     if not user_configuration:
         print(f"error: no active configuration found for user '{user}'")
         exit(1)
-    # Select output function
-    output_command = save_working_table if options.get("export") else print_working_table
     # Print selected data
     if options.get("date") or options.get("day"):
         output_command(
@@ -884,6 +896,7 @@ def printing(**options):
             json=json,
             html=html,
             rewards=user_configuration if rewards else None,
+            file=options.get("export"),
         )
     elif options.get("month"):
         output_command(
@@ -903,6 +916,7 @@ def printing(**options):
             json=json,
             html=html,
             rewards=user_configuration if rewards else None,
+            file=options.get("export"),
         )
     elif options.get("year"):
         output_command(
@@ -921,6 +935,7 @@ def printing(**options):
             json=json,
             html=html,
             rewards=user_configuration if rewards else None,
+            file=options.get("export"),
         )
     elif options.get("all"):
         output_command(
@@ -938,6 +953,7 @@ def printing(**options):
             json=json,
             html=html,
             rewards=user_configuration if rewards else None,
+            file=options.get("export"),
         )
 
 
