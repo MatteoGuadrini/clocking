@@ -71,6 +71,7 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prog="clocking",
     )
+    # Common parser
     common_parser = argparse.ArgumentParser(add_help=False)
     common_parser.add_argument(
         "-v", "--verbose", help="enable verbosity", action="store_true"
@@ -89,6 +90,26 @@ def get_args():
     common_parser.add_argument(
         "-u", "--user", help="change user", metavar="USER", default=getuser()
     )
+    # Date parser
+    date_parser = argparse.ArgumentParser(add_help=False)
+    date_parser.add_argument("-D", "--date", help="set date", metavar="DATE")
+    date_parser.add_argument(
+        "-d",
+        "--day",
+        help="set day",
+        choices=range(1, 32),
+        metavar="DAY[1-31]",
+        type=int,
+    )
+    date_parser.add_argument(
+        "-m",
+        "--month",
+        help="set month",
+        choices=range(1, 13),
+        metavar="MONTH[1-12]",
+        type=int,
+    )
+    date_parser.add_argument("-y", "--year", help="set year", metavar="YEAR", type=int)
     subparser = parser.add_subparsers(
         dest="command", help="commands to run", required=True
     )
@@ -253,7 +274,7 @@ def get_args():
 
     # Set subparser
     set_parse = subparser.add_parser(
-        "set", help="setting values", aliases=["st", "s"], parents=[common_parser]
+        "set", help="setting values", aliases=["st", "s"], parents=[common_parser, date_parser]
     )
     daily_value_group = set_parse.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument(
@@ -298,24 +319,6 @@ def get_args():
         help="force delete action without prompt confirmation",
         action="store_true",
     )
-    set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
-    set_parse.add_argument(
-        "-d",
-        "--day",
-        help="set day",
-        choices=range(1, 32),
-        metavar="DAY[1-31]",
-        type=int,
-    )
-    set_parse.add_argument(
-        "-m",
-        "--month",
-        help="set month",
-        choices=range(1, 13),
-        metavar="MONTH[1-12]",
-        type=int,
-    )
-    set_parse.add_argument("-y", "--year", help="set year", metavar="YEAR", type=int)
     set_parse.add_argument(
         "-e",
         "--extraordinary",
@@ -338,32 +341,9 @@ def get_args():
 
     # Delete subparser
     deleting_parse = subparser.add_parser(
-        "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
+        "delete", help="remove values", aliases=["del", "d"], parents=[common_parser, date_parser]
     )
-    deleting_group = deleting_parse.add_mutually_exclusive_group(required=True)
-    deleting_group.add_argument(
-        "-D", "--date", help="delete specific date", metavar="DATE"
-    )
-    deleting_group.add_argument(
-        "-d",
-        "--day",
-        help="delete whole month",
-        type=int,
-        choices=range(1, 32),
-        metavar="DAY[1-31]",
-    )
-    deleting_group.add_argument(
-        "-M",
-        "--month",
-        help="delete whole month",
-        type=int,
-        choices=range(1, 13),
-        metavar="MONTH[1-12]",
-    )
-    deleting_group.add_argument(
-        "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
-    )
-    deleting_group.add_argument(
+    deleting_parse.add_argument(
         "-C", "--clear", help="clear all data for user", action="store_true"
     )
     deleting_parse.add_argument(
@@ -375,29 +355,7 @@ def get_args():
 
     # Print subparser
     printing_parse = subparser.add_parser(
-        "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
-    )
-    printing_parse.add_argument(
-        "-D", "--date", help="print specific date", metavar="DATE"
-    )
-    printing_parse.add_argument(
-        "-d",
-        "--day",
-        help="print specific day",
-        choices=range(1, 32),
-        metavar="DAY[1-31]",
-        type=int,
-    )
-    printing_parse.add_argument(
-        "-Y", "--year", help="print whole year", type=int, metavar="YEAR"
-    )
-    printing_parse.add_argument(
-        "-M",
-        "--month",
-        help="print whole month",
-        type=int,
-        choices=range(1, 32),
-        metavar="MONTH[1-12]",
+        "print", help="print values", aliases=["prt", "p"], parents=[common_parser, date_parser]
     )
     printing_parse.add_argument(
         "-U", "--all", help="print whole user data", action="store_true"
@@ -410,7 +368,7 @@ def get_args():
         "-j", "--json", help="print in json format", action="store_true"
     )
     printing_fmt_group.add_argument(
-        "-m", "--html", help="print in html format", action="store_true"
+        "-l", "--html", help="print in html format", action="store_true"
     )
     printing_selection_group = printing_parse.add_mutually_exclusive_group()
     printing_selection_group.add_argument(
