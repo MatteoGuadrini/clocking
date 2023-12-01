@@ -555,7 +555,7 @@ def test_delete_month():
     """delete month"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --month 11 --force"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 12 --force"
     )
     assert rv == 0
     assert out == ""

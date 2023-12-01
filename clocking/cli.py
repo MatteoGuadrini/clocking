@@ -480,7 +480,7 @@ def output_command(*args, **kwargs):
         print_working_table(*args, **kwargs)
 
 
-def configuration(**options):
+def configurate(**options):
     """Configuration function
 
     :param options: options dictionary
@@ -924,7 +924,7 @@ def cli_select_command(command):
     """
     # Define action dictionary
     commands = {
-        "config": configuration,
+        "config": configurate,
         "set": setting,
         "delete": deleting,
         "print": printing,
