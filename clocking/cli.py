@@ -30,6 +30,7 @@ from __init__ import __version__
 from clocking.core import (
     database_exists,
     make_database,
+    delete_database,
     get_current_version,
     update_version,
     create_configuration_table,
@@ -266,6 +267,12 @@ def get_args():
         metavar="ID",
     )
     delete_group.add_argument(
+        "-z",
+        "--delete-db",
+        help="delete whole database",
+        action="store_true",
+    )
+    delete_group.add_argument(
         "-f",
         "--force",
         help="force delete action without prompt confirmation",
@@ -493,6 +500,12 @@ def configurate(**options):
     force = options.get("force")
     vprint("check configuration table", verbose=verbosity)
     create_configuration_table(db)
+    # Delete database
+    if options.get("delete_db"):
+        vprint(f"delete database {options.get('delete_db')}", verbose=verbosity)
+        if force or confirm(f"Delete database {options.get('delete_db')}."):
+            delete_database(db)
+            exit(0)
     # Delete configuration
     if options.get("delete_id"):
         vprint(f"delete configuration id {options.get('delete_id')}", verbose=verbosity)
