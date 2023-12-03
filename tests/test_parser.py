@@ -1000,3 +1000,14 @@ def test_print_export():
     assert out == ""
 
     assert os.path.exists(tmp_file) is True
+
+
+# --------------------------------------------------
+def test_delete_database():
+    """delete database"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --delete-db --force"
+    )
+    assert rv == 0
+    assert out == ""
