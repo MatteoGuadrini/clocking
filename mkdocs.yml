@@ -1,0 +1,6 @@
+site_name: clocking
+site_url: https://clocking.readthedocs.io/en/latest/
+nav:
+  - Home: index.md
+  - Package: package.md
+  - CLI: cli.md
