@@ -4,3 +4,6 @@ nav:
   - Home: index.md
   - Package: package.md
   - CLI: cli.md
+
+theme:
+  name: cinder
