@@ -18,6 +18,24 @@ cd clocking
 pytest tests 
 ```
 
+## Installing
+
+To install package, follow below.
+
+With `pip`:
+
+```commandline
+pip install clocking
+```
+
+With `git`:
+
+```commandline
+git clone https://github.com/MatteoGuadrini/clocking.git
+cd clocking
+pip install .
+```
+
 ## Usage
 
 `clocking` was born to be a python library that offers a command line utility.
