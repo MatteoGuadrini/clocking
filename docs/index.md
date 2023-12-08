@@ -47,3 +47,14 @@ git clone https://github.com/MatteoGuadrini/clocking.git
 cd clocking
 pip install .
 ```
+
+## Start here
+
+Now that clocking is installed, you can start using it.
+Let's start by understanding where to start.
+Let's start with version control and help.
+
+```commandline
+clocking --version
+clocking --help
+```
