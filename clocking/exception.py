@@ -22,8 +22,10 @@
 
 """clocking module that contains some exception classes"""
 
+__all__ = ("WorkingDayError", "UserConfigurationError")
 
-class WorkingDayError(ValueError): 
+
+class WorkingDayError(ValueError):
     pass
 
 
