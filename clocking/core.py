@@ -36,8 +36,35 @@ from .util import (
     UserConfiguration,
 )
 
-
 # endregion
+
+__all__ = (
+    "database_exists",
+    "make_database",
+    "delete_database",
+    "get_current_version",
+    "update_version",
+    "create_configuration_table",
+    "add_configuration",
+    "enable_configuration",
+    "reset_configuration",
+    "get_configurations",
+    "get_current_configuration",
+    "get_working_hours",
+    "get_whole_year",
+    "get_whole_month",
+    "get_all_days",
+    "delete_configuration",
+    "insert_working_hours",
+    "remove_working_hours",
+    "delete_working_hours",
+    "delete_whole_year",
+    "delete_whole_month",
+    "delete_user",
+    "print_configurations",
+    "print_working_table",
+    "save_working_table",
+)
 
 
 # region functions
