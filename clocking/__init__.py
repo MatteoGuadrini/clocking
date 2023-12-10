@@ -22,6 +22,6 @@
 
 __version__ = "0.0.9"
 
-from core import *  # noqa: F403
-from exception import *  # noqa: F403
-from util import *  # noqa: F403
+from .core import *  # noqa: F403
+from .exception import *  # noqa: F403
+from .util import *  # noqa: F403
