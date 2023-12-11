@@ -26,8 +26,7 @@ import os.path
 import sqlite3
 from getpass import getuser
 
-from __init__ import __version__
-from clocking.core import (
+from clocking import (
     database_exists,
     make_database,
     delete_database,
@@ -53,8 +52,9 @@ from clocking.core import (
     get_whole_month,
     get_whole_year,
     get_all_days,
+    datetime,
+    __version__
 )
-from clocking.util import datetime
 
 
 # endregion
