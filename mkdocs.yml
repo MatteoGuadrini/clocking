@@ -5,5 +5,14 @@ nav:
   - Package: package.md
   - CLI: cli.md
 
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+            show_root_heading: true
+            show_source: false
+
 theme:
   name: cinder
