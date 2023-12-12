@@ -1,3 +1,4 @@
 prettytable
 mkdocs
 mkdocs-cinder
+mkdocstrings
