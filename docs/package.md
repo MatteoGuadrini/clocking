@@ -6,12 +6,23 @@
 
 Core module contains some functions to work with database (sqlite).
 
-## Database test/creation/deletion
+::: clocking.core
 
-These functions work to database file level
+## Util module
 
-### ::: clocking.core.database_exists
+Util module contains some functions to help to work with time and data.
 
-### ::: clocking.core.make_database
+::: clocking.util
 
-### ::: clocking.core.delete_database
+::: clocking.util.UserConfiguration
+
+::: clocking.util.DataTable
+
+## Exception module
+
+Exception module contains Exception classes.
+
+::: clocking.exception.WorkingDayError
+
+::: clocking.exception.UserConfigurationError
+        
