@@ -26,6 +26,8 @@ It is possible configure more than one configuration per user.
 
 ### Print group
 
+Print options used to print the saved configurations.
+
 | short | long         | description                   | args |
 |-------|--------------|-------------------------------|------|
 | -p    | --print      | Print current configuration   |      |
