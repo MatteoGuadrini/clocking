@@ -39,3 +39,29 @@ clocking config --print
 clocking config --print-user
 clocking config --print-all
 ```
+
+### Set group
+
+Set options used to add configuration for the user.
+
+| short | long                   | description                | args                        |
+|-------|------------------------|----------------------------|-----------------------------|
+| -D    | --daily-hours          | Daily work hours           | hours                       |
+| -N    | --working-days         | Working day's name         | Mon,Tue,Wed,Thu,Fri,Sat,Sun |
+| -E    | --extraordinary        | Extraordinary hour value   | hours                       |
+| -P    | --permit-hours         | Permit work hour value     | hours                       |
+| -U    | --other-hours          | Other hour                 | hours                       |
+| -S    | --disease              | Disease value              | text                        |
+| -H    | --holiday              | Holiday value              | text                        |
+| -C    | --currency             | Currency value             | text/symbol                 |
+| -R    | --hour-reward          | Hour reward                | float                       |
+| -W    | --extraordinary-reward | Extraordinary hour reward  | float                       |
+| -F    | --food-ticket          | Food ticket reward         | float                       |
+| -O    | --other-reward         | Other reward               | float                       |
+| -L    | --location             | Current location           | location                    |
+| -e    | --empty-value          | Fill empty date with value | text                        |
+
+```commandline
+clocking config --daily-hours 8 --other-hours 1 --working-days Mon Tue Wed --hour-reward 8 --extraordinary-reward 10 --food-ticket 7 --location "Milan Office" --currency "€"
+clocking config --daily-hours 8 --other-hours 1 --hour-reward 10 --extraordinary-reward 15 --location "Pasadina Office" --currency "$"
+```
