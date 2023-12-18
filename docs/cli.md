@@ -42,7 +42,7 @@ clocking config --print-all
 
 ### Set group
 
-Set options used to add configuration for the user.
+Set options used to add default configurations for the user.
 
 | short | long                   | description                | args                        |
 |-------|------------------------|----------------------------|-----------------------------|
