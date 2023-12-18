@@ -136,7 +136,7 @@ def get_args():
     set_group.add_argument(
         "-D",
         "--daily-hours",
-        help="daily work hours",
+        help="daily default work hours",
         default=None,
         type=float,
         metavar="HOURS",
@@ -144,7 +144,7 @@ def get_args():
     set_group.add_argument(
         "-N",
         "--working-days",
-        help="working day's name",
+        help="default working day's name",
         nargs=argparse.ONE_OR_MORE,
         default={"Mon", "Tue", "Wed", "Thu", "Fri"},
         choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
@@ -154,7 +154,7 @@ def get_args():
     set_group.add_argument(
         "-E",
         "--extraordinary",
-        help="extraordinary hour value",
+        help="default extraordinary hour value",
         default=1.0,
         type=float,
         metavar="HOURS",
@@ -162,7 +162,7 @@ def get_args():
     set_group.add_argument(
         "-P",
         "--permit-hours",
-        help="permit work hour value",
+        help="default permit work hour value",
         default=1.0,
         type=float,
         metavar="HOURS",
@@ -170,7 +170,7 @@ def get_args():
     set_group.add_argument(
         "-S",
         "--disease",
-        help="disease value",
+        help="default disease value",
         default="Disease",
         type=str,
         metavar="STR",
@@ -178,7 +178,7 @@ def get_args():
     set_group.add_argument(
         "-H",
         "--holiday",
-        help="holiday value",
+        help="default holiday value",
         default="Holiday",
         type=str,
         metavar="STR",
@@ -186,7 +186,7 @@ def get_args():
     set_group.add_argument(
         "-C",
         "--currency",
-        help="currency value",
+        help="default currency value",
         default="$",
         type=str,
         metavar="SYMBOL",
@@ -194,7 +194,7 @@ def get_args():
     set_group.add_argument(
         "-R",
         "--hour-reward",
-        help="hour reward",
+        help="default hour reward",
         default=10.0,
         type=float,
         metavar="NUMBER",
@@ -202,7 +202,7 @@ def get_args():
     set_group.add_argument(
         "-W",
         "--extraordinary-reward",
-        help="extraordinary hour reward",
+        help="default extraordinary hour reward",
         default=15.0,
         type=float,
         metavar="NUMBER",
@@ -210,7 +210,7 @@ def get_args():
     set_group.add_argument(
         "-F",
         "--food-ticket",
-        help="food ticket reward",
+        help="default food ticket reward",
         default=0,
         type=float,
         metavar="NUMBER",
@@ -218,15 +218,15 @@ def get_args():
     set_group.add_argument(
         "-U",
         "--other-hours",
-        help="other worked hours",
+        help="default other worked hours",
         default=0,
         type=float,
-        metavar="VALUE",
+        metavar="HOURS",
     )
     set_group.add_argument(
         "-O",
         "--other-reward",
-        help="other reward",
+        help="default other reward",
         default=0,
         type=float,
         metavar="NUMBER",
@@ -234,7 +234,7 @@ def get_args():
     set_group.add_argument(
         "-L",
         "--location",
-        help="current location",
+        help="default current location",
         default="Office",
         type=str,
         metavar="LOCATION",
@@ -242,7 +242,7 @@ def get_args():
     set_group.add_argument(
         "-e",
         "--empty-value",
-        help="fill empty date with value",
+        help="default fill empty date with value",
         default="Not worked",
         metavar="VALUE",
     )
