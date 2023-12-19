@@ -65,3 +65,15 @@ Set options used to add default configurations for the user.
 clocking config --daily-hours 8 --other-hours 1 --working-days Mon Tue Wed --hour-reward 8 --extraordinary-reward 10 --food-ticket 7 --location "Milan Office" --currency "€"
 clocking config --daily-hours 8 --other-hours 1 --hour-reward 10 --extraordinary-reward 15 --location "Pasadina Office" --currency "$"
 ```
+
+### Selection group
+
+Selection options used to load a configurations for the user.
+
+| short | long        | description                     | args |
+|-------|-------------|---------------------------------|------|
+| -i    | --select-id | Load configuration selecting id | id   |
+
+```commandline
+clocking config --select-id 1
+```
