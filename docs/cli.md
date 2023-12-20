@@ -77,3 +77,15 @@ Selection options used to load a configurations for the user.
 ```commandline
 clocking config --select-id 1
 ```
+
+### Reset group
+
+Reset options used to reset all configurations for the user.
+
+| short | long    | description              | args |
+|-------|---------|--------------------------|------|
+| -r    | --reset | Reset all configurations |      |
+
+```commandline
+clocking config --reset
+```
