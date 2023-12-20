@@ -256,7 +256,7 @@ def get_args():
     )
     reset_group = config.add_argument_group("reset")
     reset_group.add_argument(
-        "-r", "--reset", help="reset all with default values", action="store_true"
+        "-r", "--reset", help="reset all configurations", action="store_true"
     )
     delete_group = config.add_argument_group("delete")
     delete_group.add_argument(
