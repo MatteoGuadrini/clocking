@@ -89,3 +89,20 @@ Reset options used to reset all configurations for the user.
 ```commandline
 clocking config --reset
 ```
+
+### Delete group
+
+Delete options used to permanently delete the configurations for the user.
+
+| short | long        | description                                     | args |
+|-------|-------------|-------------------------------------------------|------|
+| -d    | --delete-id | Delete configuration selecting id               | id   |
+| -z    | --delete-db | Delete whole database                           |      |
+| -f    | --force     | Force delete action without prompt confirmation |      |
+
+```commandline
+clocking config --delete-id 1
+clocking config --delete-db
+clocking config --delete-id 1 --force
+clocking config --delete-db --force
+```
