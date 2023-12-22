@@ -18,7 +18,9 @@
 `clocking` has _config_ subparser to configure your personal settings.
 
 ```commandline
-clocking config -h
+clocking config --help
+clocking cfg -h
+clocking c -h
 ```
 
 All options are intended to default of empty values of _set_ subparser.
@@ -105,4 +107,14 @@ clocking config --delete-id 1
 clocking config --delete-db
 clocking config --delete-id 1 --force
 clocking config --delete-db --force
+```
+
+## Set subparser
+
+`clocking` has _set_ subparser to insert/modify/reset data.
+
+```commandline
+clocking set --help
+clocking st -h
+clocking s -h
 ```
