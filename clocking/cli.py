@@ -53,7 +53,7 @@ from clocking import (
     get_whole_year,
     get_all_days,
     datetime,
-    __version__
+    __version__,
 )
 
 
@@ -281,7 +281,10 @@ def get_args():
 
     # Set subparser
     set_parse = subparser.add_parser(
-        "set", help="setting values", aliases=["st", "s"], parents=[common_parser, date_parser]
+        "set",
+        help="setting values",
+        aliases=["st", "s"],
+        parents=[common_parser, date_parser],
     )
     daily_value_group = set_parse.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument(
@@ -311,7 +314,7 @@ def get_args():
     daily_value_group.add_argument(
         "-r",
         "--reset",
-        help="reset current date with default fill empty value",
+        help="reset selected date with default fill empty value",
         action="store_true",
     )
     daily_value_group.add_argument(
@@ -348,7 +351,10 @@ def get_args():
 
     # Delete subparser
     deleting_parse = subparser.add_parser(
-        "delete", help="remove values", aliases=["del", "d"], parents=[common_parser, date_parser]
+        "delete",
+        help="remove values",
+        aliases=["del", "d"],
+        parents=[common_parser, date_parser],
     )
     deleting_parse.add_argument(
         "-C", "--clear", help="clear all data for user", action="store_true"
@@ -362,7 +368,10 @@ def get_args():
 
     # Print subparser
     printing_parse = subparser.add_parser(
-        "print", help="print values", aliases=["prt", "p"], parents=[common_parser, date_parser]
+        "print",
+        help="print values",
+        aliases=["prt", "p"],
+        parents=[common_parser, date_parser],
     )
     printing_parse.add_argument(
         "-U", "--all", help="print whole user data", action="store_true"
@@ -480,10 +489,10 @@ def output_command(*args, **kwargs):
     :param kwargs: keyword arguments of *_working_table
     :return: None
     """
-    if kwargs.get('file'):
+    if kwargs.get("file"):
         save_working_table(*args, **kwargs)
     else:
-        del kwargs['file']
+        del kwargs["file"]
         print_working_table(*args, **kwargs)
 
 
@@ -650,7 +659,7 @@ def setting(**options):
         else 0
     )
     if isinstance(hours_value, (int, float)) and isinstance(
-            extraordinary, (int, float)
+        extraordinary, (int, float)
     ):
         # Check if worked hours is less than of default
         if hours_value < user_configuration.daily_hours and extraordinary:
@@ -697,40 +706,40 @@ def setting(**options):
         holiday_description = description if description else user_configuration.holiday
         for holiday_day in holiday_days:
             if not insert_working_hours(
-                    database=db,
-                    user=user,
-                    hours=0,
-                    description=holiday_description,
-                    location=options.get("location"),
-                    extraordinary=options.get("extraordinary"),
-                    permit_hours=options.get("permit"),
-                    other_hours=options.get("other"),
-                    holiday=True,
-                    date=options.get("date"),
-                    day=holiday_day,
-                    month=month,
-                    year=year,
-                    empty_value=empty_value,
+                database=db,
+                user=user,
+                hours=0,
+                description=holiday_description,
+                location=options.get("location"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit"),
+                other_hours=options.get("other"),
+                holiday=True,
+                date=options.get("date"),
+                day=holiday_day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
             ):
                 print(insert_err_msg)
                 exit(2)
     else:
         if not insert_working_hours(
-                database=db,
-                user=user,
-                hours=hours_value,
-                description=description,
-                location=location,
-                extraordinary=extraordinary,
-                permit_hours=permit,
-                other_hours=other,
-                holiday=options.get("holiday"),
-                disease=options.get("disease"),
-                date=options.get("date"),
-                day=day,
-                month=month,
-                year=year,
-                empty_value=empty_value,
+            database=db,
+            user=user,
+            hours=hours_value,
+            description=description,
+            location=location,
+            extraordinary=extraordinary,
+            permit_hours=permit,
+            other_hours=other,
+            holiday=options.get("holiday"),
+            disease=options.get("disease"),
+            date=options.get("date"),
+            day=day,
+            month=month,
+            year=year,
+            empty_value=empty_value,
         ):
             print(insert_err_msg)
             exit(2)
@@ -738,25 +747,25 @@ def setting(**options):
     if options.get("reset"):
         if force or confirm("Reset working day to defaults."):
             if not remove_working_hours(
-                    database=db,
-                    user=user,
-                    date=options.get("date"),
-                    day=day,
-                    month=month,
-                    year=year,
-                    empty_value=empty_value,
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
+                empty_value=empty_value,
             ):
                 print(remove_err_msg)
                 exit(3)
     elif options.get("remove"):
         if force or confirm("Remove working day."):
             if not delete_working_hours(
-                    database=db,
-                    user=user,
-                    date=options.get("date"),
-                    day=day,
-                    month=month,
-                    year=year,
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
             ):
                 print(remove_err_msg)
                 exit(4)
@@ -789,12 +798,12 @@ def deleting(**options):
     if options.get("date") or options.get("day"):
         if force or confirm("Delete day."):
             if not delete_working_hours(
-                    database=db,
-                    user=user,
-                    date=options.get("date"),
-                    day=day,
-                    month=month,
-                    year=year,
+                database=db,
+                user=user,
+                date=options.get("date"),
+                day=day,
+                month=month,
+                year=year,
             ):
                 print("error: working day deletion failed")
                 exit(4)
