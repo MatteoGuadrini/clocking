@@ -118,3 +118,21 @@ clocking set --help
 clocking st -h
 clocking s -h
 ```
+
+### Daily group
+
+Daily group is exclusive. Choose one flag mode to set values.
+
+| short | long             | description                                       | args  |
+|-------|------------------|---------------------------------------------------|-------|
+| -w    | --hours          | Set worked hours                                  | hours |
+| -s    | --disease        | Set disease day                                   |       |
+| -H    | --holiday        | Set holiday day                                   |       |
+| -G    | --holidays-range | Set holiday days                                  | days  |
+| -c    | --custom         | Set fill selected date with custom value          | value |
+| -r    | --reset          | Reset selected date with default fill empty value |       |
+| -R    | --remove         | Remove date value                                 |       |
+
+```commandline
+clocking config --reset
+```
