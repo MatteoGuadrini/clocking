@@ -134,5 +134,11 @@ Daily group is exclusive. Choose one flag mode to set values.
 | -R    | --remove         | Remove date value                                 |       |
 
 ```commandline
-clocking config --reset
+clocking set --hours 8
+clocking set --disease
+clocking set --holiday
+clocking set --holidays-range 7 8 9 11 12 23
+clocking set --custom "Today I am boring!"
+clocking set --reset
+clocking set --remove
 ```
