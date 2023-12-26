@@ -142,3 +142,26 @@ clocking set --custom "Today I am boring!"
 clocking set --reset
 clocking set --remove
 ```
+
+### Other options
+
+`set` subparser supports other options.
+
+| short | long            | description                                     | args  |
+|-------|-----------------|-------------------------------------------------|-------|
+| -f    | --force         | force delete action without prompt confirmation |       |
+| -e    | --extraordinary | Set extraordinary hours                         | hours |
+| -o    | --other         | Set other hours                                 | hours |
+| -l    | --location      | Set current location                            | text  |
+| -p    | --permit        | Set permit hours                                | hours |
+| -t    | --description   | Set description                                 | text  |
+
+```commandline
+clocking set --reset --force
+clocking set --remove --force
+clocking set --hours 8 --extraordinary 1
+clocking set --hours 8 --other 1
+clocking set --hours 8 --location "New York Office"
+clocking set --hours 7 --permit 1
+clocking set --hours 8 --description "New project"
+```
