@@ -93,7 +93,7 @@ def get_args():
     )
     # Date parser
     date_parser = argparse.ArgumentParser(add_help=False)
-    date_parser.add_argument("-D", "--date", help="set date", metavar="DATE")
+    date_parser.add_argument("-D", "--date", help="set literally date", metavar="DATE")
     date_parser.add_argument(
         "-d",
         "--day",
@@ -320,7 +320,7 @@ def get_args():
     daily_value_group.add_argument(
         "-R",
         "--remove",
-        help="remove values date",
+        help="remove date value",
         action="store_true",
     )
     set_parse.add_argument(
