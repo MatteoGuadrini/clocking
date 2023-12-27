@@ -165,3 +165,24 @@ clocking set --hours 8 --location "New York Office"
 clocking set --hours 7 --permit 1
 clocking set --hours 8 --description "New project"
 ```
+
+### Date options
+
+`set` subparser inheritance date options.
+
+| short | long    | description        | args  |
+|-------|---------|--------------------|-------|
+| -D    | --date  | Set literally date | date  |
+| -d    | --day   | Set day            | day   |
+| -m    | --month | Set month          | month |
+| -y    | --year  | Set year           | year  |
+
+```commandline
+clocking set --hours 8 --date "15/7/2023"
+clocking set --hours 8 --date "7.15.2023"
+clocking set --hours 8 --date "2023-7-15"
+clocking set --hours 8 --day 31
+clocking set --hours 8 --month 2
+clocking set --hours 8 --year 2022
+clocking set --hours 8 --day 31 --month 2 --year 2022
+```
