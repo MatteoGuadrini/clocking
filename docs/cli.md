@@ -186,3 +186,13 @@ clocking set --hours 8 --month 2
 clocking set --hours 8 --year 2022
 clocking set --hours 8 --day 31 --month 2 --year 2022
 ```
+
+## Delete subparser
+
+`clocking` has _delete_ subparser to delete data.
+
+```commandline
+clocking delete --help
+clocking del -h
+clocking d -h
+```
