@@ -196,3 +196,33 @@ clocking delete --help
 clocking del -h
 clocking d -h
 ```
+
+| short | long    | description                                     | args |
+|-------|---------|-------------------------------------------------|------|
+| -C    | --clear | Clear all data for user                         |      |
+| -f    | --force | Force delete action without prompt confirmation |      |
+
+```commandline
+clocking delete -C
+clocking delete -C -f
+```
+
+### Date options
+
+`delete` subparser inheritance date options.
+
+| short | long    | description        | args  |
+|-------|---------|--------------------|-------|
+| -D    | --date  | Set literally date | date  |
+| -d    | --day   | Set day            | day   |
+| -m    | --month | Set month          | month |
+| -y    | --year  | Set year           | year  |
+
+```commandline
+clocking delete -C --date "15/7/2023"
+clocking delete -C --day 31
+clocking delete -C --month 2
+clocking delete -C --year 2022
+clocking delete -C --day 31 --month 2 --year 2022
+clocking delete -C --day 31 --month 2 --year 2022 -f
+```
