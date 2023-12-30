@@ -226,3 +226,14 @@ clocking delete -C --year 2022
 clocking delete -C --day 31 --month 2 --year 2022
 clocking delete -C --day 31 --month 2 --year 2022 -f
 ```
+
+## Print subparser
+
+`clocking` has _print_ subparser to print selected data.
+
+```commandline
+clocking print --help
+clocking prt -h
+clocking p -h
+```
+
