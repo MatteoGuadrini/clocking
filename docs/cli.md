@@ -237,3 +237,16 @@ clocking prt -h
 clocking p -h
 ```
 
+| short | long            | description                                 | args |
+|-------|-----------------|---------------------------------------------|------|
+| -U    | --all           | Print whole user data                       |      |
+| -c    | --csv           | Print in csv format                         |      |
+| -j    | --json          | Print in json format                        |      |
+| -l    | --html          | Print in html format                        |      |
+| -H    | --holiday       | Print only holidays                         |      |
+| -s    | --disease       | Print only diseases                         |      |
+| -e    | --extraordinary | Print only extraordinaries hours            |      |
+| -o    | --other-hours   | Print only other hours                      |      |
+| -p    | --permit-hours  | Print only permit hours                     |      |
+| -E    | --export        | Suppress output and export values into file |      |
+| -r    | --rewards       | Print rewards                               |      |
