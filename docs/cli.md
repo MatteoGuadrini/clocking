@@ -250,3 +250,15 @@ clocking p -h
 | -p    | --permit-hours  | Print only permit hours                     |      |
 | -E    | --export        | Suppress output and export values into file |      |
 | -r    | --rewards       | Print rewards                               |      |
+
+### Date options
+
+`print` subparser inheritance date options.
+
+| short | long    | description        | args  |
+|-------|---------|--------------------|-------|
+| -D    | --date  | Set literally date | date  |
+| -d    | --day   | Set day            | day   |
+| -m    | --month | Set month          | month |
+| -y    | --year  | Set year           | year  |
+
