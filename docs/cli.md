@@ -262,3 +262,17 @@ clocking p -h
 | -m    | --month | Set month          | month |
 | -y    | --year  | Set year           | year  |
 
+```commandline
+clocking print --date '01/25/2022'
+clocking print --day 25 --month 1 --year 2022
+clocking print --year 2022 --month 1
+clocking print --year 2022
+clocking print --holiday --year 2022
+clocking print --disease --month 1
+clocking print --disease --year 2022
+clocking print --date '01/25/2022' --csv
+clocking print --day 25 --month 1 --year 2022 --html
+clocking print --year 2022 --json
+clocking print --date '01/25/2022' --rewards
+clocking print --month 1 --export /tmp/my_hours.txt
+```
