@@ -199,7 +199,7 @@ $> clocking print --disease --month 1
 | 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Home!   |      0.0      |     0.0      |     0.0     |    0    |    1    |
 +----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
 # Print disease in whole year
-$> clocking print --disease --month 1
+$> clocking print --disease --year 2022
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
 | date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
 +----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
@@ -332,8 +332,6 @@ if not get_current_configuration(mydb, user):
                       other_reward=8.0
                       )
     enable_configuration(mydb, row_id=1)
-    # Prepare table for insert hours
-    create_working_hours_table(mydb, user)
 
 # Insert daily hours...
 insert_working_hours(mydb, user, argv[1])
