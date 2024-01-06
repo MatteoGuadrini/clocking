@@ -22,6 +22,36 @@ clocking config --daily-hours 8 \       # Max standard hours per day
                 --extraordinary-reward 10 \ # Reward for one extraordinary hour
                 --food-ticket 7 \       # Reward for one food ticket
                 --location "Milan Office" \ # Standard location
-                --other-reward 7 \       # Reward for one other hour
-                --empty-value "Im not worked today" # Standard empty value for no entry
+                --other-reward 7 \      # Reward for one other hour
+                --empty-value "I'm not worked today" # Standard empty value for no entry
 ```
+
+We have now configured our profile in terms of hours and salary. Now just enable it.
+
+!!! note
+
+    It is possible to enable a profile at the time of insertion if you know the profile number.
+
+First, we print all the profiles entered into our database.
+
+```console
+clocking config --print-user
++----+-...
+| id | ...
++----+-...
+| 1  | ...
++----+-...
+```
+
+Catch the _id_ and enable it.
+
+```console
+clocking config --select-id 1
+clocking config --print
++----+--------+-...
+| id | active | ...
++----+--------+-...
+| 1  |   1    | ...
++----+--------+-...
+```
+
