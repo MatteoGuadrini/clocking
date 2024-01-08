@@ -4,8 +4,13 @@ nav:
   - Home: index.md
   - Package: package.md
   - CLI: cli.md
+  - Examples: examples.md
+
+markdown_extensions:
+  - "admonition"
 
 plugins:
+  - search
   - mkdocstrings:
       handlers:
         python:
