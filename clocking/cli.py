@@ -373,6 +373,7 @@ def get_args():
         aliases=["prt", "p"],
         parents=[common_parser, date_parser],
     )
+    printing_parse.set_defaults(all=True)
     printing_parse.add_argument(
         "-U", "--all", help="print whole user data", action="store_true"
     )
