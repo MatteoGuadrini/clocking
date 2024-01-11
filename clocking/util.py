@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # util -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -201,5 +201,6 @@ def sum_rewards(data, configuration: UserConfiguration):
     ]
 
     return rewards
+
 
 # endregion

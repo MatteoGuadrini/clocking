@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # core -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -218,23 +218,23 @@ def create_configuration_table(database):
 
 
 def add_configuration(
-        database,
-        active,
-        user,
-        location,
-        empty_value,
-        daily_hours,
-        working_days,
-        extraordinary,
-        permit_hours,
-        disease,
-        holiday,
-        currency,
-        hour_reward,
-        extraordinary_reward,
-        food_ticket,
-        other_hours,
-        other_reward,
+    database,
+    active,
+    user,
+    location,
+    empty_value,
+    daily_hours,
+    working_days,
+    extraordinary,
+    permit_hours,
+    disease,
+    holiday,
+    currency,
+    hour_reward,
+    extraordinary_reward,
+    food_ticket,
+    other_hours,
+    other_reward,
 ):
     """Add new configuration into database
 
@@ -404,17 +404,17 @@ def get_current_configuration(database, user):
 
 
 def get_working_hours(
-        database,
-        user,
-        date=None,
-        day=None,
-        month=None,
-        year=None,
-        holiday=False,
-        disease=False,
-        extraordinary=False,
-        permit_hours=False,
-        other_hours=False,
+    database,
+    user,
+    date=None,
+    day=None,
+    month=None,
+    year=None,
+    holiday=False,
+    disease=False,
+    extraordinary=False,
+    permit_hours=False,
+    other_hours=False,
 ):
     """Get working day from database
 
@@ -458,14 +458,14 @@ def get_working_hours(
 
 
 def get_whole_year(
-        database,
-        user,
-        year,
-        holiday=False,
-        disease=False,
-        extraordinary=False,
-        permit_hours=False,
-        other_hours=False,
+    database,
+    user,
+    year,
+    holiday=False,
+    disease=False,
+    extraordinary=False,
+    permit_hours=False,
+    other_hours=False,
 ):
     """Get whole year's working days from database
 
@@ -503,15 +503,15 @@ def get_whole_year(
 
 
 def get_whole_month(
-        database,
-        user,
-        year,
-        month,
-        holiday=False,
-        disease=False,
-        extraordinary=False,
-        permit_hours=False,
-        other_hours=False,
+    database,
+    user,
+    year,
+    month,
+    holiday=False,
+    disease=False,
+    extraordinary=False,
+    permit_hours=False,
+    other_hours=False,
 ):
     """Get whole month's working days from database
 
@@ -550,13 +550,13 @@ def get_whole_month(
 
 
 def get_all_days(
-        database,
-        user,
-        holiday=False,
-        disease=False,
-        extraordinary=False,
-        permit_hours=False,
-        other_hours=False,
+    database,
+    user,
+    holiday=False,
+    disease=False,
+    extraordinary=False,
+    permit_hours=False,
+    other_hours=False,
 ):
     """Get all days from database
 
@@ -649,21 +649,21 @@ def create_working_hours_table(database, user):
 
 
 def insert_working_hours(
-        database,
-        user,
-        hours=0,
-        description=None,
-        location=None,
-        extraordinary=0,
-        permit_hours=0,
-        other_hours=0,
-        holiday=None,
-        disease=None,
-        date=None,
-        day=None,
-        month=None,
-        year=None,
-        empty_value=None,
+    database,
+    user,
+    hours=0,
+    description=None,
+    location=None,
+    extraordinary=0,
+    permit_hours=0,
+    other_hours=0,
+    holiday=None,
+    disease=None,
+    date=None,
+    day=None,
+    month=None,
+    year=None,
+    empty_value=None,
 ):
     """Insert working day into database
 
@@ -752,7 +752,7 @@ def insert_working_hours(
 
 
 def remove_working_hours(
-        database, user, date=None, day=None, month=None, year=None, empty_value=None
+    database, user, date=None, day=None, month=None, year=None, empty_value=None
 ):
     """Remove working day into database
 
@@ -906,7 +906,7 @@ def print_configurations(cursor):
 
 
 def print_working_table(
-        cursor, sort=False, csv=False, json=False, html=False, rewards=None
+    cursor, sort=False, csv=False, json=False, html=False, rewards=None
 ):
     """Print in stdout the working hours table
 
@@ -943,7 +943,7 @@ def print_working_table(
 
 
 def save_working_table(
-        cursor, file, sort=False, csv=False, json=False, html=False, rewards=None
+    cursor, file, sort=False, csv=False, json=False, html=False, rewards=None
 ):
     """Save into file the working hours table
 
@@ -980,5 +980,6 @@ def save_working_table(
             fh.write(working_table.get_html_string())
         else:
             fh.write(working_table.get_string())
+
 
 # endregion
