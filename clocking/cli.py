@@ -951,6 +951,14 @@ def cli_select_command(command):
         "set": setting,
         "delete": deleting,
         "print": printing,
+        "cfg": configurate,
+        "st": setting,
+        "del": deleting,
+        "prt": printing,
+        "c": configurate,
+        "s": setting,
+        "d": deleting,
+        "p": printing,
     }
     return commands.get(command)
 
