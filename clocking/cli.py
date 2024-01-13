@@ -980,7 +980,10 @@ def main():
     options = vars(args)
     cmd = cli_select_command(args.command)
     if cmd:
-        cmd(**options)
+        try:
+            cmd(**options)
+        except sqlite3.DatabaseError as err:
+            print(f"error: an error has occurred on database. {err}")
 
 
 # endregion
