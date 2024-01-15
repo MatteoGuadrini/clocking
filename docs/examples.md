@@ -94,3 +94,34 @@ clocking print --day 16
 | 20240116 | 2024 |   1   |  16 | I'm not worked today | I have fever |...|    1    |
 +----------+------+-------+-----+----------------------+--------------+...+---------+
 ```
+
+However, if you have entered the hours of the day incorrectly, you can correct it by relaunching the command on the day;
+or, it is possible to delete it or restore the defaults via the enabled configuration.
+
+```console
+clocking set --hours 8
+clocking print --day 16
++----------+------+-------+-----+-------+-------------+--------------+...+---------+
+| date_id  | year | month | day | hours | description |   location   |...| disease |
++----------+------+-------+-----+-------+-------------+--------------+...+---------+
+| 20240116 | 2024 |   1   |  16 |  8.0  |     None    | Milan Office |...|    0    |
++----------+------+-------+-----+-------+-------------+--------------+...+---------+
+clocking set --reset
+Reset working day to defaults.
+To continue? [y/N] y
+clocking print --day 16                                                                                                                                           130 ↵
++----------+------+-------+-----+----------------------+-------------+...+---------+
+| date_id  | year | month | day |        hours         | description |...| disease |
++----------+------+-------+-----+----------------------+-------------+...+---------+
+| 20240116 | 2024 |   1   |  16 | I'm not worked today |     None    |...|    0    |
++----------+------+-------+-----+----------------------+-------------+...+---------+
+clocking set --remove   # Or 'clocking delete --day 16'
+Remove working day.
+To continue? [y/N] y
+clocking print --day 16
++---------+------+-------+-----+-------+-------------+----------+...+---------+
+| date_id | year | month | day | hours | description | location |...| disease |
++---------+------+-------+-----+-------+-------------+----------+...+---------+
++---------+------+-------+-----+-------+-------------+----------+...+---------+
+
+```
