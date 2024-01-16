@@ -442,12 +442,13 @@ def confirm(message, default="n"):
     :return: True if the answer is Y.
     :rtype: bool
     """
-    while answer := None not in ["y", "n"]:
-        answer = input(
-            "{0}\nTo continue? {1}".format(
+    while (
+        answer := input(
+            "{0}\nTo continue? {1} ".format(
                 message, "[Y/n]" if default == "y" else "[y/N]"
             )
         ).lower()
+    ) not in ["y", "n"]:
         # Check if default
         if not answer:
             answer = default
