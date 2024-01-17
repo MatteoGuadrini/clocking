@@ -125,3 +125,14 @@ clocking print --day 16
 +---------+------+-------+-----+-------+-------------+----------+...+---------+
 
 ```
+
+## Tracking project time for teams
+
+Let's imagine we are a team manager who manages various projects for a specific objective.
+Each person manages a certain project, and we need to quantify the hours spent on each individual project.
+We need to create a fairly general configuration.
+
+```console
+clocking config --daily-hours 8 --currency "$" --hour-reward 8 --location "Damage Inc."
+```
+
