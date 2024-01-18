@@ -173,9 +173,6 @@ def sum_rewards(data, configuration: UserConfiguration):
     :return: float
     :raises: ValueError, UserConfigurationError
     """
-    # Check data contains numbers
-    if not all(isinstance(row[4], (int, float)) for row in data):
-        raise ValueError("all element of data doesn't contain a numbers")
     # Check configuration
     if not isinstance(configuration, UserConfiguration):
         raise UserConfigurationError(
@@ -193,7 +190,7 @@ def sum_rewards(data, configuration: UserConfiguration):
                 ]
             )
             + configuration.food_ticket
-            if row[4] > 0
+            if isinstance(row[4], (int, float)) and row[4] > 0
             else 0
         )
         + configuration.currency
