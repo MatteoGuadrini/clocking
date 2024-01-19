@@ -133,6 +133,73 @@ Each person manages a certain project, and we need to quantify the hours spent o
 We need to create a fairly general configuration.
 
 ```console
-clocking config --daily-hours 8 --currency "$" --hour-reward 8 --location "Damage Inc."
+id=1
+for userdb in jack jessy james jerry; do
+    clocking config --daily-hours 8 --currency "$" --hour-reward 8 --location "Damage Inc." --user $userdb --select-id $id
+    id=$((id+1))
+done
 ```
 
+Today is the first day of work in the team;
+at the end of the day, I have to assign how many hours were spent on each project and each person.
+
+```console
+clocking set --hours 2 --user jack --description "Project #1: build site"
+clocking set --hours 3 --user jessy --description "Project #2: network firewall"
+clocking set --hours 8 --user james --description "Project #3: human resource"
+clocking set --hours 3 --user jerry --description "Project #4: database manager"
+```
+
+And now see all worked hours for our project.
+
+```console
+for userdb in jack jessy james jerry; do
+    echo $userdb
+    clocking print --user $userdb
+    echo
+done
+
+jack
++----------+------+-------+-----+-------+------------------------+-------------+...+---------+
+| date_id  | year | month | day | hours |      description       |   location  |...| disease |
++----------+------+-------+-----+-------+------------------------+-------------+...+---------+
+| 20240119 | 2024 |   1   |  19 |  2.0  | Project #1: build site | Damage Inc. |...|    0    |
++----------+------+-------+-----+-------+------------------------+-------------+...+---------+
+
+jessy
++----------+------+-------+-----+-------+------------------------------+-------------+...+---------+
+| date_id  | year | month | day | hours |         description          |   location  |...| disease |
++----------+------+-------+-----+-------+------------------------------+-------------+...+---------+
+| 20240119 | 2024 |   1   |  19 |  3.0  | Project #2: network firewall | Damage Inc. |...|    0    |
++----------+------+-------+-----+-------+------------------------------+-------------+...+---------+
+
+james
++----------+------+-------+-----+-------+----------------------------+-------------+...+---------+
+| date_id  | year | month | day | hours |        description         |   location  |...| disease |
++----------+------+-------+-----+-------+----------------------------+-------------+...+---------+
+| 20240119 | 2024 |   1   |  19 |  8.0  | Project #3: human resource | Damage Inc. |...|    0    |
++----------+------+-------+-----+-------+----------------------------+-------------+...+---------+
+
+jerry
++----------+------+-------+-----+-------+------------------------------+-------------+...+---------+
+| date_id  | year | month | day | hours |         description          |   location  |...| disease |
++----------+------+-------+-----+-------+------------------------------+-------------+...+---------+
+| 20240119 | 2024 |   1   |  19 |  3.0  | Project #4: database manager | Damage Inc. |...|    0    |
++----------+------+-------+-----+-------+------------------------------+-------------+...+---------+
+```
+
+The project continues and comes to an end.
+At this point, we need to quantify the hours spent on each project by our team.
+
+```console
+clocking print --user jack --rewards
++----------+------+-------+-----+-------+------------------------+-------------+---------------+...+---------+
+| date_id  | year | month | day | hours |      description       |   location  | extraordinary |...| rewards |
++----------+------+-------+-----+-------+------------------------+-------------+---------------+...+---------+
+| 20240119 | 2024 |   1   |  19 |  2.0  | Project #1: build site | Damage Inc. |      0.0      |...|  16.0$  |
+| 20240120 | 2024 |   1   |  20 |  4.0  | Project #1: build site | Damage Inc. |      0.0      |...|  32.0$  |
+| 20240121 | 2024 |   1   |  21 |  3.5  | Project #1: build site | Damage Inc. |      0.0      |...|  28.0$  |
+| 20240122 | 2024 |   1   |  22 |  7.0  | Project #1: build site | Damage Inc. |      0.0      |...|  56.0$  |
+| 20240123 | 2024 |   1   |  23 |  8.0  | Project #1: build site | Damage Inc. |      1.5      |...|  86.5$  |
++----------+------+-------+-----+-------+------------------------+-------------+---------------+...+---------+
+```
