@@ -203,3 +203,53 @@ clocking print --user jack --rewards
 | 20240123 | 2024 |   1   |  23 |  8.0  | Project #1: build site | Damage Inc. |      1.5      |...|  86.5$  |
 +----------+------+-------+-----+-------+------------------------+-------------+---------------+...+---------+
 ```
+
+## Developing my tracking library
+
+As a developers, we can develop a custom script or decorator function to track and dump time to database.
+We start to create a simple custom script.
+
+```python
+# My code here
+...
+# Calculate hours that has been passed
+hours = 3.7
+
+from clocking.core import *
+
+mydb = 'script.db'
+user = 'script'
+
+# Create configuration if not was created
+if not get_current_configuration(mydb, user):
+    # Update version
+    update_version(mydb)
+    # Create default configuration
+    create_configuration_table(mydb)
+    add_configuration(mydb,
+                      active=True,
+                      user=user,
+                      location='My workstation',
+                      empty_value='not run!',
+                      daily_hours=8.0,
+                      working_days="Mon Tue Wed Thu Fri Sat",
+                      extraordinary=0,
+                      permit_hours=0,
+                      disease='',
+                      holiday='',
+                      currency='',
+                      hour_reward=0,
+                      extraordinary_reward=0,
+                      food_ticket=0,
+                      other_hours=0,
+                      other_reward=0
+                      )
+    enable_configuration(mydb, row_id=1)
+
+# Insert daily hours...
+insert_working_hours(mydb, user, hours)
+
+# ...and print it!
+print_working_table(get_working_hours(mydb, user))
+```
+
