@@ -210,10 +210,16 @@ As a developers, we can develop a custom script or decorator function to track a
 We start to create a simple custom script.
 
 ```python
+import datetime
+
+start_time = datetime.datetime.now()
 # My code here
 ...
+end_time = datetime.datetime.now()
+hours_difference = abs(start_time - end_time).total_seconds() / 3600.0
+
 # Calculate hours that has been passed
-hours = 3.7
+hours = float("{:.2f}".format(hours_difference))
 
 from clocking.core import *
 
@@ -253,3 +259,66 @@ insert_working_hours(mydb, user, hours)
 print_working_table(get_working_hours(mydb, user))
 ```
 
+This creates a simple database that log any runs of the script and time spent to compute the job.
+
+Another example, is to write a custom function decorator to track hours that run other functions.
+
+```python
+from clocking.core import *
+from functools import wraps
+import datetime
+
+mydb = 'script.db'
+
+
+@wraps
+def clocking_decorator(func):
+    user = func.__name__
+
+    def decorate(*args, **kwargs):
+        start_time = datetime.datetime.now()
+        func(*args, **kwargs)
+        end_time = datetime.datetime.now()
+        hours_difference = abs(start_time - end_time).total_seconds() / 3600.0
+        # Calculate hours that has been passed
+        hours = float("{:.2f}".format(hours_difference))
+
+        # Create configuration if not was created
+        if not get_current_configuration(mydb, user):
+            # Update version
+            update_version(mydb)
+            # Create default configuration
+            create_configuration_table(mydb)
+            add_configuration(mydb,
+                              active=True,
+                              user=user,
+                              location=f'function: {user}',
+                              empty_value='not run!',
+                              daily_hours=8.0,
+                              working_days="Mon Tue Wed Thu Fri Sat",
+                              extraordinary=0,
+                              permit_hours=0,
+                              disease='',
+                              holiday='',
+                              currency='',
+                              hour_reward=0,
+                              extraordinary_reward=0,
+                              food_ticket=0,
+                              other_hours=0,
+                              other_reward=0
+                              )
+            enable_configuration(mydb, row_id=1)
+
+        # Insert daily hours...
+        insert_working_hours(mydb, user, hours)
+
+    return decorate
+
+
+@clocking_decorator
+def my_log_runs_function(arg1, arg2):
+    print(arg1, arg2)
+
+
+my_log_runs_function(1, 2)
+```
