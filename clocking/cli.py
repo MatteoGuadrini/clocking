@@ -599,6 +599,7 @@ def setting(**options):
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
     # Set filled daily values
     today = datetime.today()
+    today_name = today.strftime("%a")
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
@@ -677,6 +678,10 @@ def setting(**options):
                 f"greater than the default({user_configuration.daily_hours})"
             )
             permit = 0
+        # Check if day is in working days
+        elif today_name not in user_configuration.working_days:
+            extraordinary = hours_value
+            hours_value = 0
         # Check if hours value contains extraordinary hours
         else:
             extraordinary = extraordinary + find_extraordinary_hours(
