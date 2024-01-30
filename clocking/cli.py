@@ -705,8 +705,7 @@ def setting(**options):
         f"description={description}",
         verbose=verbosity,
     )
-    insert_err_msg = "error: working day insert failed"
-    remove_err_msg = "error: working day deletion failed"
+    err_msg = "error: working day {} failed"
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -728,7 +727,7 @@ def setting(**options):
                 year=year,
                 empty_value=empty_value,
             ):
-                print(insert_err_msg)
+                print(err_msg.format("insert"))
                 exit(2)
     else:
         if not insert_working_hours(
@@ -748,7 +747,7 @@ def setting(**options):
             year=year,
             empty_value=empty_value,
         ):
-            print(insert_err_msg)
+            print(err_msg.format("insert"))
             exit(2)
     # Remove values
     if options.get("reset"):
@@ -762,7 +761,7 @@ def setting(**options):
                 year=year,
                 empty_value=empty_value,
             ):
-                print(remove_err_msg)
+                print(err_msg.format("reset"))
                 exit(3)
     elif options.get("remove"):
         if force or confirm("Remove working day."):
@@ -774,7 +773,7 @@ def setting(**options):
                 month=month,
                 year=year,
             ):
-                print(remove_err_msg)
+                print(err_msg.format("remove"))
                 exit(4)
 
 
