@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # cli -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -26,10 +26,10 @@ import os.path
 import sqlite3
 from getpass import getuser
 
-from __init__ import __version__
-from clocking.core import (
+from clocking import (
     database_exists,
     make_database,
+    delete_database,
     get_current_version,
     update_version,
     create_configuration_table,
@@ -46,8 +46,15 @@ from clocking.core import (
     delete_whole_month,
     delete_whole_year,
     delete_user,
+    get_working_hours,
+    print_working_table,
+    save_working_table,
+    get_whole_month,
+    get_whole_year,
+    get_all_days,
+    datetime,
+    __version__,
 )
-from clocking.util import datetime
 
 
 # endregion
@@ -65,6 +72,7 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prog="clocking",
     )
+    # Common parser
     common_parser = argparse.ArgumentParser(add_help=False)
     common_parser.add_argument(
         "-v", "--verbose", help="enable verbosity", action="store_true"
@@ -83,6 +91,26 @@ def get_args():
     common_parser.add_argument(
         "-u", "--user", help="change user", metavar="USER", default=getuser()
     )
+    # Date parser
+    date_parser = argparse.ArgumentParser(add_help=False)
+    date_parser.add_argument("-D", "--date", help="set literally date", metavar="DATE")
+    date_parser.add_argument(
+        "-d",
+        "--day",
+        help="set day",
+        choices=range(1, 32),
+        metavar="DAY[1-31]",
+        type=int,
+    )
+    date_parser.add_argument(
+        "-m",
+        "--month",
+        help="set month",
+        choices=range(1, 13),
+        metavar="MONTH[1-12]",
+        type=int,
+    )
+    date_parser.add_argument("-y", "--year", help="set year", metavar="YEAR", type=int)
     subparser = parser.add_subparsers(
         dest="command", help="commands to run", required=True
     )
@@ -108,7 +136,7 @@ def get_args():
     set_group.add_argument(
         "-D",
         "--daily-hours",
-        help="daily work hours",
+        help="daily default work hours",
         default=None,
         type=float,
         metavar="HOURS",
@@ -116,9 +144,9 @@ def get_args():
     set_group.add_argument(
         "-N",
         "--working-days",
-        help="working day's name",
+        help="default working day's name",
         nargs=argparse.ONE_OR_MORE,
-        default={"Mon", "Tue", "Wed", "Thu", "Fri"},
+        default=["Mon", "Tue", "Wed", "Thu", "Fri"],
         choices={"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
         type=str,
         metavar="STR",
@@ -126,7 +154,7 @@ def get_args():
     set_group.add_argument(
         "-E",
         "--extraordinary",
-        help="extraordinary hour value",
+        help="default extraordinary hour value",
         default=1.0,
         type=float,
         metavar="HOURS",
@@ -134,7 +162,7 @@ def get_args():
     set_group.add_argument(
         "-P",
         "--permit-hours",
-        help="permit work hour value",
+        help="default permit work hour value",
         default=1.0,
         type=float,
         metavar="HOURS",
@@ -142,7 +170,7 @@ def get_args():
     set_group.add_argument(
         "-S",
         "--disease",
-        help="disease value",
+        help="default disease value",
         default="Disease",
         type=str,
         metavar="STR",
@@ -150,7 +178,7 @@ def get_args():
     set_group.add_argument(
         "-H",
         "--holiday",
-        help="holiday value",
+        help="default holiday value",
         default="Holiday",
         type=str,
         metavar="STR",
@@ -158,7 +186,7 @@ def get_args():
     set_group.add_argument(
         "-C",
         "--currency",
-        help="currency value",
+        help="default currency value",
         default="$",
         type=str,
         metavar="SYMBOL",
@@ -166,7 +194,7 @@ def get_args():
     set_group.add_argument(
         "-R",
         "--hour-reward",
-        help="hour reward",
+        help="default hour reward",
         default=10.0,
         type=float,
         metavar="NUMBER",
@@ -174,7 +202,7 @@ def get_args():
     set_group.add_argument(
         "-W",
         "--extraordinary-reward",
-        help="extraordinary hour reward",
+        help="default extraordinary hour reward",
         default=15.0,
         type=float,
         metavar="NUMBER",
@@ -182,7 +210,7 @@ def get_args():
     set_group.add_argument(
         "-F",
         "--food-ticket",
-        help="food ticket reward",
+        help="default food ticket reward",
         default=0,
         type=float,
         metavar="NUMBER",
@@ -190,15 +218,15 @@ def get_args():
     set_group.add_argument(
         "-U",
         "--other-hours",
-        help="other worked hours",
+        help="default other worked hours",
         default=0,
         type=float,
-        metavar="VALUE",
+        metavar="HOURS",
     )
     set_group.add_argument(
         "-O",
         "--other-reward",
-        help="other reward",
+        help="default other reward",
         default=0,
         type=float,
         metavar="NUMBER",
@@ -206,7 +234,7 @@ def get_args():
     set_group.add_argument(
         "-L",
         "--location",
-        help="current location",
+        help="default current location",
         default="Office",
         type=str,
         metavar="LOCATION",
@@ -214,7 +242,7 @@ def get_args():
     set_group.add_argument(
         "-e",
         "--empty-value",
-        help="fill empty date with value",
+        help="default fill empty date with value",
         default="Not worked",
         metavar="VALUE",
     )
@@ -228,7 +256,7 @@ def get_args():
     )
     reset_group = config.add_argument_group("reset")
     reset_group.add_argument(
-        "-r", "--reset", help="reset all with default values", action="store_true"
+        "-r", "--reset", help="reset all configurations", action="store_true"
     )
     delete_group = config.add_argument_group("delete")
     delete_group.add_argument(
@@ -239,6 +267,12 @@ def get_args():
         metavar="ID",
     )
     delete_group.add_argument(
+        "-z",
+        "--delete-db",
+        help="delete whole database",
+        action="store_true",
+    )
+    delete_group.add_argument(
         "-f",
         "--force",
         help="force delete action without prompt confirmation",
@@ -247,7 +281,10 @@ def get_args():
 
     # Set subparser
     set_parse = subparser.add_parser(
-        "set", help="setting values", aliases=["st", "s"], parents=[common_parser]
+        "set",
+        help="setting values",
+        aliases=["st", "s"],
+        parents=[common_parser, date_parser],
     )
     daily_value_group = set_parse.add_mutually_exclusive_group(required=True)
     daily_value_group.add_argument(
@@ -277,13 +314,13 @@ def get_args():
     daily_value_group.add_argument(
         "-r",
         "--reset",
-        help="reset current date with default fill empty value",
+        help="reset selected date with default fill empty value",
         action="store_true",
     )
     daily_value_group.add_argument(
         "-R",
         "--remove",
-        help="remove values date",
+        help="remove date value",
         action="store_true",
     )
     set_parse.add_argument(
@@ -292,24 +329,6 @@ def get_args():
         help="force delete action without prompt confirmation",
         action="store_true",
     )
-    set_parse.add_argument("-D", "--date", help="set date", metavar="DATE")
-    set_parse.add_argument(
-        "-d",
-        "--day",
-        help="set day",
-        choices=range(1, 32),
-        metavar="DAY[1-31]",
-        type=int,
-    )
-    set_parse.add_argument(
-        "-m",
-        "--month",
-        help="set month",
-        choices=range(1, 13),
-        metavar="MONTH[1-12]",
-        type=int,
-    )
-    set_parse.add_argument("-y", "--year", help="set year", metavar="YEAR", type=int)
     set_parse.add_argument(
         "-e",
         "--extraordinary",
@@ -332,32 +351,12 @@ def get_args():
 
     # Delete subparser
     deleting_parse = subparser.add_parser(
-        "delete", help="remove values", aliases=["del", "d"], parents=[common_parser]
+        "delete",
+        help="remove values",
+        aliases=["del", "d"],
+        parents=[common_parser, date_parser],
     )
-    deleting_group = deleting_parse.add_mutually_exclusive_group(required=True)
-    deleting_group.add_argument(
-        "-D", "--date", help="delete specific date", metavar="DATE"
-    )
-    deleting_group.add_argument(
-        "-d",
-        "--day",
-        help="delete whole month",
-        type=int,
-        choices=range(1, 32),
-        metavar="DAY[1-31]",
-    )
-    deleting_group.add_argument(
-        "-M",
-        "--month",
-        help="delete whole month",
-        type=int,
-        choices=range(1, 13),
-        metavar="MONTH[1-12]",
-    )
-    deleting_group.add_argument(
-        "-Y", "--year", help="delete whole year", type=int, metavar="YEAR"
-    )
-    deleting_group.add_argument(
+    deleting_parse.add_argument(
         "-C", "--clear", help="clear all data for user", action="store_true"
     )
     deleting_parse.add_argument(
@@ -368,23 +367,17 @@ def get_args():
     )
 
     # Print subparser
-    printing = subparser.add_parser(
-        "print", help="print values", aliases=["prt", "p"], parents=[common_parser]
+    printing_parse = subparser.add_parser(
+        "print",
+        help="print values",
+        aliases=["prt", "p"],
+        parents=[common_parser, date_parser],
     )
-    printing_group = printing.add_mutually_exclusive_group(required=True)
-    printing_group.add_argument(
-        "-D", "--date", help="print specific date", metavar="DATE"
+    printing_parse.set_defaults(all=True)
+    printing_parse.add_argument(
+        "-U", "--all", help="print whole user data", action="store_true"
     )
-    printing_group.add_argument(
-        "-Y", "--year", help="print whole year", type=int, metavar="YEAR"
-    )
-    printing_group.add_argument(
-        "-M", "--month", help="print whole month", type=int, metavar="MONTH"
-    )
-    printing_group.add_argument(
-        "-U", "--all", help="print whole user data", type=str, metavar="USER"
-    )
-    printing_fmt_group = printing.add_mutually_exclusive_group()
+    printing_fmt_group = printing_parse.add_mutually_exclusive_group()
     printing_fmt_group.add_argument(
         "-c", "--csv", help="print in csv format", action="store_true"
     )
@@ -392,9 +385,9 @@ def get_args():
         "-j", "--json", help="print in json format", action="store_true"
     )
     printing_fmt_group.add_argument(
-        "-m", "--html", help="print in html format", action="store_true"
+        "-l", "--html", help="print in html format", action="store_true"
     )
-    printing_selection_group = printing.add_mutually_exclusive_group()
+    printing_selection_group = printing_parse.add_mutually_exclusive_group()
     printing_selection_group.add_argument(
         "-H", "--holiday", help="print only holidays", action="store_true"
     )
@@ -408,18 +401,20 @@ def get_args():
         action="store_true",
     )
     printing_selection_group.add_argument(
-        "-o", "--other", help="print only other hours", action="store_true"
+        "-o", "--other-hours", help="print only other hours", action="store_true"
     )
     printing_selection_group.add_argument(
-        "-p", "--permit-hour", help="print only permit hours", action="store_true"
+        "-p", "--permit-hours", help="print only permit hours", action="store_true"
     )
-    printing.add_argument(
+    printing_parse.add_argument(
         "-E",
         "--export",
         help="suppress output and export value into file",
         metavar="FILE",
     )
-    printing.add_argument("-r", "--rewards", help="print rewards", action="store_true")
+    printing_parse.add_argument(
+        "-r", "--rewards", help="print rewards", action="store_true"
+    )
 
     args = parser.parse_args()
     return args
@@ -447,12 +442,13 @@ def confirm(message, default="n"):
     :return: True if the answer is Y.
     :rtype: bool
     """
-    while answer := None not in ["y", "n"]:
-        answer = input(
-            "{0}\nTo continue? {1}".format(
+    while (
+        answer := input(
+            "{0}\nTo continue? {1} ".format(
                 message, "[Y/n]" if default == "y" else "[y/N]"
             )
         ).lower()
+    ) not in ["y", "n"]:
         # Check if default
         if not answer:
             answer = default
@@ -488,7 +484,21 @@ def find_extraordinary_hours(hours, default):
     return extraordinary
 
 
-def configuration(**options):
+def output_command(*args, **kwargs):
+    """Select output command
+
+    :param args: positional arguments of *_working_table
+    :param kwargs: keyword arguments of *_working_table
+    :return: None
+    """
+    if kwargs.get("file"):
+        save_working_table(*args, **kwargs)
+    else:
+        del kwargs["file"]
+        print_working_table(*args, **kwargs)
+
+
+def configurate(**options):
     """Configuration function
 
     :param options: options dictionary
@@ -501,6 +511,12 @@ def configuration(**options):
     force = options.get("force")
     vprint("check configuration table", verbose=verbosity)
     create_configuration_table(db)
+    # Delete database
+    if options.get("delete_db"):
+        vprint(f"delete database {options.get('delete_db')}", verbose=verbosity)
+        if force or confirm(f"Delete database {options.get('delete_db')}."):
+            delete_database(db)
+            exit(0)
     # Delete configuration
     if options.get("delete_id"):
         vprint(f"delete configuration id {options.get('delete_id')}", verbose=verbosity)
@@ -527,7 +543,7 @@ def configuration(**options):
             options.get("location"),
             options.get("empty_value"),
             options.get("daily_hours"),
-            " ".join(day for day in options.get("working_days")),
+            " ".join(day for day in options.get("working_days", [])),
             options.get("extraordinary"),
             options.get("permit_hours"),
             options.get("disease"),
@@ -583,6 +599,7 @@ def setting(**options):
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
     # Set filled daily values
     today = datetime.today()
+    today_name = today.strftime("%a")
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
     day = today.day if not options.get("day") else options.get("day")
@@ -661,6 +678,10 @@ def setting(**options):
                 f"greater than the default({user_configuration.daily_hours})"
             )
             permit = 0
+        # Check if day is in working days
+        elif today_name not in user_configuration.working_days:
+            extraordinary = hours_value
+            hours_value = 0
         # Check if hours value contains extraordinary hours
         else:
             extraordinary = extraordinary + find_extraordinary_hours(
@@ -684,8 +705,7 @@ def setting(**options):
         f"description={description}",
         verbose=verbosity,
     )
-    insert_err_msg = "error: working day insert failed"
-    remove_err_msg = "error: working day deletion failed"
+    err_msg = "error: working day {} failed"
     # Insert day(s)
     holiday_days = options.get("holidays_range")
     if holiday_days:
@@ -707,7 +727,7 @@ def setting(**options):
                 year=year,
                 empty_value=empty_value,
             ):
-                print(insert_err_msg)
+                print(err_msg.format("insert"))
                 exit(2)
     else:
         if not insert_working_hours(
@@ -727,7 +747,7 @@ def setting(**options):
             year=year,
             empty_value=empty_value,
         ):
-            print(insert_err_msg)
+            print(err_msg.format("insert"))
             exit(2)
     # Remove values
     if options.get("reset"):
@@ -741,7 +761,7 @@ def setting(**options):
                 year=year,
                 empty_value=empty_value,
             ):
-                print(remove_err_msg)
+                print(err_msg.format("reset"))
                 exit(3)
     elif options.get("remove"):
         if force or confirm("Remove working day."):
@@ -753,7 +773,7 @@ def setting(**options):
                 month=month,
                 year=year,
             ):
-                print(remove_err_msg)
+                print(err_msg.format("remove"))
                 exit(4)
 
 
@@ -815,6 +835,114 @@ def deleting(**options):
                 exit(4)
 
 
+def printing(**options):
+    """Print function
+
+    :param options: options dictionary
+    :return: None
+    """
+    db = options.get("database")
+    verbosity = options.get("verbose")
+    user = options.get("user")
+    vprint(f"print data from database {db} for user {user}", verbose=verbosity)
+    # Set filled daily values
+    today = datetime.today()
+    year = today.year if not options.get("year") else options.get("year")
+    month = today.month if not options.get("month") else options.get("month")
+    day = today.day if not options.get("day") else options.get("day")
+    # Print output options
+    sort = options.get("sort")
+    csv = options.get("csv")
+    json = options.get("json")
+    html = options.get("html")
+    rewards = options.get("rewards")
+    # Get current configuration
+    user_configuration = get_current_configuration(db, user)
+    if not user_configuration:
+        print(f"error: no active configuration found for user '{user}'")
+        exit(1)
+    # Print selected data
+    if options.get("date") or options.get("day"):
+        output_command(
+            get_working_hours(
+                db,
+                user,
+                day=day,
+                month=month,
+                year=year,
+                date=options.get("date"),
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
+                other_hours=options.get("other_hours"),
+            ),
+            sort=sort,
+            csv=csv,
+            json=json,
+            html=html,
+            rewards=user_configuration if rewards else None,
+            file=options.get("export"),
+        )
+    elif options.get("month"):
+        output_command(
+            get_whole_month(
+                db,
+                user,
+                year=year,
+                month=month,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
+                other_hours=options.get("other_hours"),
+            ),
+            sort=sort,
+            csv=csv,
+            json=json,
+            html=html,
+            rewards=user_configuration if rewards else None,
+            file=options.get("export"),
+        )
+    elif options.get("year"):
+        output_command(
+            get_whole_year(
+                db,
+                user,
+                year=year,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
+                other_hours=options.get("other_hours"),
+            ),
+            sort=sort,
+            csv=csv,
+            json=json,
+            html=html,
+            rewards=user_configuration if rewards else None,
+            file=options.get("export"),
+        )
+    elif options.get("all"):
+        output_command(
+            get_all_days(
+                db,
+                user,
+                holiday=options.get("holiday"),
+                disease=options.get("disease"),
+                extraordinary=options.get("extraordinary"),
+                permit_hours=options.get("permit_hours"),
+                other_hours=options.get("other_hours"),
+            ),
+            sort=sort,
+            csv=csv,
+            json=json,
+            html=html,
+            rewards=user_configuration if rewards else None,
+            file=options.get("export"),
+        )
+
+
 def cli_select_command(command):
     """
     Select command
@@ -824,10 +952,18 @@ def cli_select_command(command):
     """
     # Define action dictionary
     commands = {
-        "config": configuration,
+        "config": configurate,
         "set": setting,
         "delete": deleting,
-        "print": None,
+        "print": printing,
+        "cfg": configurate,
+        "st": setting,
+        "del": deleting,
+        "prt": printing,
+        "c": configurate,
+        "s": setting,
+        "d": deleting,
+        "p": printing,
     }
     return commands.get(command)
 
@@ -849,10 +985,14 @@ def main():
     options = vars(args)
     cmd = cli_select_command(args.command)
     if cmd:
-        cmd(**options)
+        try:
+            cmd(**options)
+        except sqlite3.DatabaseError as err:
+            print(f"error: an error has occurred on database. {err}")
 
 
 # endregion
+
 
 # region main
 if __name__ == "__main__":

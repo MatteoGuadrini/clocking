@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # exception -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -22,8 +22,10 @@
 
 """clocking module that contains some exception classes"""
 
+__all__ = ("WorkingDayError", "UserConfigurationError")
 
-class WorkingDayError(ValueError): 
+
+class WorkingDayError(ValueError):
     pass
 
 

@@ -3,8 +3,6 @@
 `clocking` is a command line utility to help you manage your worked hours, vacation, projects or whatever you need to
 consider tracking time.
 
-> This project is WIP!
-
 ## Testing
 
 [![CircleCI](https://circleci.com/gh/MatteoGuadrini/clocking.svg?style=svg)](https://circleci.com/gh/MatteoGuadrini/clocking)
@@ -18,9 +16,28 @@ cd clocking
 pytest tests 
 ```
 
+## Installing
+
+To install package, follow below.
+
+With `pip`:
+
+```commandline
+pip install clocking
+```
+
+With `git`:
+
+```commandline
+git clone https://github.com/MatteoGuadrini/clocking.git
+cd clocking
+pip install .
+```
+
 ## Usage
 
 `clocking` was born to be a python library that offers a command line utility.
+For more information, see the official documentation on [ReadTheDocs](https://clocking.readthedocs.io/en/latest/).
 
 ### As a command line
 
@@ -131,6 +148,150 @@ $> clocking delete --year 2022 --force
 $> clocking delete --clear --force
 ```
 
+### Printing
+
+`clocking` uses print mode to print data from own database; print data in command line through `print` section.
+
+```console
+# Print day
+$> clocking print --date '01/25/2022'
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+$> clocking print --day 25 --month 1 --year 2022
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+# Print whole month
+$> clocking print --year 2022 --month 1
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220124 | 2022 |   1   |  24 |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+# Print whole year
+$> clocking print --year 2022
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220103 | 2022 |   1   |  3  |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220124 | 2022 |   1   |  24 |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+# Print holiday in whole year
+$> clocking print --holiday --year 2022
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day |   hours    | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220104 | 2022 |   1   |  4  | Not worked |     None    |  Home!   |      0.0      |     0.0      |     0.0     |    1    |    0    |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+# Print disease in whole month
+$> clocking print --disease --month 1
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day |   hours    | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Home!   |      0.0      |     0.0      |     0.0     |    0    |    1    |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+# Print disease in whole year
+$> clocking print --disease --year 2022
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220111 | 2022 |   1   |  11 |  7.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+# Print in other format: csv, json, html
+$> clocking print --date '01/25/2022' --csv
+date_id,year,month,day,hours,description,location,extraordinary,permit_hours,other_hours,holiday,disease
+20220125,2022,1,25,8.0,,Milan,1.0,0.0,0.0,0,0
+$> clocking print --date '01/25/2022' --json
+[
+    [
+        "date_id",
+        "year",
+        "month",
+        "day",
+        "hours",
+        "description",
+        "location",
+        "extraordinary",
+        "permit_hours",
+        "other_hours",
+        "holiday",
+        "disease"
+    ],
+    {
+        "date_id": 20220125,
+        "day": 25,
+        "description": null,
+        "disease": "0",
+        "extraordinary": 1.0,
+        "holiday": "0",
+        "hours": 8.0,
+        "location": "Milan",
+        "month": 1,
+        "other_hours": 0.0,
+        "permit_hours": 0.0,
+        "year": 2022
+    }
+]
+$> clocking print --date '01/25/2022' --html
+<table>
+    <thead>
+        <tr>
+            <th>date_id</th>
+            <th>year</th>
+            <th>month</th>
+            <th>day</th>
+            <th>hours</th>
+            <th>description</th>
+            <th>location</th>
+            <th>extraordinary</th>
+            <th>permit_hours</th>
+            <th>other_hours</th>
+            <th>holiday</th>
+            <th>disease</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>20220125</td>
+            <td>2022</td>
+            <td>1</td>
+            <td>25</td>
+            <td>8.0</td>
+            <td>None</td>
+            <td>Milan</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+    </tbody>
+</table>
+# Print with rewards
+$> clocking print --date '01/25/2022' --rewards
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease | rewards |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |  81.0€  |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+# Export data
+$> clocking print --date '01/25/2022' --export my_hours.txt
+$> cat my_hours.txt
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+```
+
 ### As a python module
 
 All useful functions to create scripts or software to track time on projects or days worked, are found in the core
@@ -170,8 +331,6 @@ if not get_current_configuration(mydb, user):
                       other_reward=8.0
                       )
     enable_configuration(mydb, row_id=1)
-    # Prepare table for insert hours
-    create_working_hours_table(mydb, user)
 
 # Insert daily hours...
 insert_working_hours(mydb, user, argv[1])

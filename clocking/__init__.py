@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # __init__.py -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -20,4 +20,8 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "0.0.9"
+__version__ = "0.1.0"
+
+from .core import *  # noqa: F403
+from .exception import *  # noqa: F403
+from .util import *  # noqa: F403

@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # util -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -34,6 +34,16 @@ from .exception import UserConfigurationError
 # endregion
 
 # region globals
+__all__ = (
+    "UserConfiguration",
+    "DataTable",
+    "datestring_to_datetime",
+    "build_dateid",
+    "split_dateid",
+    "make_printable_table",
+    "sum_rewards",
+    "datetime",
+)
 UserConfiguration = namedtuple(
     "UserConfiguration",
     [
@@ -60,6 +70,7 @@ DataTable = namedtuple("DataTable", ["data", "table"])
 
 
 # endregion
+
 
 # region functions
 def datestring_to_datetime(date):
@@ -162,9 +173,6 @@ def sum_rewards(data, configuration: UserConfiguration):
     :return: float
     :raises: ValueError, UserConfigurationError
     """
-    # Check data contains numbers
-    if not all(isinstance(row[4], (int, float)) for row in data):
-        raise ValueError("all element of data doesn't contain a numbers")
     # Check configuration
     if not isinstance(configuration, UserConfiguration):
         raise UserConfigurationError(
@@ -182,7 +190,7 @@ def sum_rewards(data, configuration: UserConfiguration):
                 ]
             )
             + configuration.food_ticket
-            if row[4] > 0
+            if isinstance(row[4], (int, float)) and row[4] > 0
             else 0
         )
         + configuration.currency

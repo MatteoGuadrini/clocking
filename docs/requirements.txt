@@ -1,0 +1,5 @@
+prettytable
+mkdocs
+mkdocs-cinder
+mkdocstrings
+mkdocstrings-python

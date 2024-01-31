@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # core -- clocking
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -36,8 +36,36 @@ from .util import (
     UserConfiguration,
 )
 
-
 # endregion
+
+__all__ = (
+    "database_exists",
+    "make_database",
+    "delete_database",
+    "get_current_version",
+    "update_version",
+    "create_configuration_table",
+    "add_configuration",
+    "enable_configuration",
+    "reset_configuration",
+    "get_configurations",
+    "get_current_configuration",
+    "get_working_hours",
+    "get_whole_year",
+    "get_whole_month",
+    "get_all_days",
+    "delete_configuration",
+    "insert_working_hours",
+    "remove_working_hours",
+    "delete_working_hours",
+    "delete_whole_year",
+    "delete_whole_month",
+    "delete_user",
+    "print_configurations",
+    "print_working_table",
+    "save_working_table",
+)
+
 
 # region functions
 def database_exists(database):
@@ -284,7 +312,6 @@ def enable_configuration(database, row_id):
         result = cur.fetchone()
         active = result[0] if result else None
         if not active:
-
             # Update active into configuration table
             cur.execute(
                 r"UPDATE configuration SET active = ? WHERE id = ?;",
@@ -416,9 +443,9 @@ def get_working_hours(
         query = f"SELECT * FROM '{user}' WHERE date_id='{date_id}'"
         # Check if return only holiday
         if holiday:
-            query += " AND holiday IS NOT NULL"
+            query += " AND (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " AND disease IS NOT NULL"
+            query += " AND (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -461,9 +488,9 @@ def get_whole_year(
         query = f"SELECT * FROM '{user}' WHERE year = ?"
         # Check if return only holiday
         if holiday:
-            query += " AND holiday IS NOT NULL"
+            query += " AND (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " AND disease IS NOT NULL"
+            query += " AND (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -508,9 +535,9 @@ def get_whole_month(
         query = rf"SELECT * FROM '{user}' WHERE year = ? AND month = ?"
         # Check if return only holiday
         if holiday:
-            query += " AND holiday IS NOT NULL"
+            query += " AND (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " AND disease IS NOT NULL"
+            query += " AND (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " AND (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -551,9 +578,9 @@ def get_all_days(
         query = rf"SELECT * FROM '{user}'"
         # Check if return only holiday
         if holiday:
-            query += " WHERE holiday IS NOT NULL"
+            query += " WHERE (holiday IS NOT 0 AND holiday IS NOT NULL)"
         elif disease:
-            query += " WHERE disease IS NOT NULL"
+            query += " WHERE (disease IS NOT 0 AND disease IS NOT NULL)"
         elif extraordinary:
             query += " WHERE (extraordinary IS NOT 0 AND extraordinary IS NOT NULL)"
         elif permit_hours:
@@ -677,7 +704,6 @@ def insert_working_hours(
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if not cur.fetchone():
-
             # Insert into database
             cur.execute(
                 rf"INSERT INTO '{user}' ("
@@ -700,7 +726,6 @@ def insert_working_hours(
                 ),
             )
         else:
-
             # Update into database
             cur.execute(
                 rf"UPDATE '{user}' "
@@ -754,7 +779,6 @@ def remove_working_hours(
         # Check if date_id exists
         cur.execute(f"SELECT date_id FROM '{user}' WHERE date_id='{date_id}'")
         if cur.fetchone():
-
             # Update empty day into database
             cur.execute(
                 rf"UPDATE '{user}' "

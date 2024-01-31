@@ -534,7 +534,6 @@ def test_delete_day():
     rv, out = getstatusoutput(
         f"python3 {prg} delete --database {TEMP_DB} --user test --day 1 --force"
     )
-    print(out)
     assert rv == 0
     assert out == ""
 
@@ -556,7 +555,7 @@ def test_delete_month():
     """delete month"""
 
     rv, out = getstatusoutput(
-        f"python3 {prg} delete --database {TEMP_DB} --user test --month 11 --force"
+        f"python3 {prg} delete --database {TEMP_DB} --user test --month 1 --force"
     )
     assert rv == 0
     assert out == ""
@@ -598,7 +597,6 @@ def test_delete_user():
     rv, out = getstatusoutput(
         f"python3 {prg} delete --database {TEMP_DB} --user test2 --clear --force"
     )
-    print(out)
     assert rv == 4
     assert out == "error: working user data deletion failed"
 
@@ -611,3 +609,405 @@ def test_print_usage():
         rv, out = getstatusoutput(f"python3 {prg} print {flag}")
         assert rv == 0
         assert out.lower().startswith("usage: clocking print")
+
+
+# --------------------------------------------------
+def test_print_day():
+    """print day"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 9 --date '01/25/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --date '01/25/2022'"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --day 25 --month 1 --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_month():
+    """print month"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --date '01/24/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --year 2022 --month 1"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220124 | 2022 |   1   |  24 |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_year():
+    """print year"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --date '03/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220103 | 2022 |   1   |  3  |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220124 | 2022 |   1   |  24 |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_holiday():
+    """print holiday"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --holiday --date '04/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --holiday --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day |   hours    | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220104 | 2022 |   1   |  4  | Not worked |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    1    |    0    |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_disease():
+    """print disease"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --disease --date '05/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --disease --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day |   hours    | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    1    |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_extraordinary():
+    """print extraordinary"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --extraordinary 1 --date '11/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --extraordinary --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220111 | 2022 |   1   |  11 |  7.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_permit():
+    """print permit hours"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 7 --permit 1 --date '21/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --permit-hours --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220121 | 2022 |   1   |  21 |  7.0  |     None    |  Milan   |      0.0      |     1.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_other():
+    """print other hours"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --other 1 --date '22/01/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test "
+        "--other-hours --year 2022"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220122 | 2022 |   1   |  22 |  8.0  |     None    |  Milan   |      0.0      |     0.0      |     1.0     |    0    |    0    |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_all():
+    """print all"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 8 --date '03/02/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --all"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| date_id  | year | month | day |   hours    | description | location | extraordinary | permit_hours | other_hours | holiday | disease |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+
+| 20220103 | 2022 |   1   |  3  |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220104 | 2022 |   1   |  4  | Not worked |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    1    |    0    |
+| 20220105 | 2022 |   1   |  5  | Not worked |   Disease   |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    1    |
+| 20220111 | 2022 |   1   |  11 |    7.0     |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220121 | 2022 |   1   |  21 |    7.0     |     None    |  Milan   |      0.0      |     1.0      |     0.0     |    0    |    0    |
+| 20220122 | 2022 |   1   |  22 |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     1.0     |    0    |    0    |
+| 20220124 | 2022 |   1   |  24 |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220125 | 2022 |   1   |  25 |    8.0     |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |
+| 20220203 | 2022 |   2   |  3  |    8.0     |     None    |  Milan   |      0.0      |     0.0      |     0.0     |    0    |    0    |
++----------+------+-------+-----+------------+-------------+----------+---------------+--------------+-------------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_csv():
+    """print date in csv"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test "
+        "--date '01/25/2022' --csv"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """date_id,year,month,day,hours,description,location,extraordinary,permit_hours,other_hours,holiday,disease
+20220125,2022,1,25,8.0,,Milan,1.0,0.0,0.0,0,0
+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_json():
+    """print date in json"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test "
+        "--date '01/25/2022' --json"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """[
+    [
+        "date_id",
+        "year",
+        "month",
+        "day",
+        "hours",
+        "description",
+        "location",
+        "extraordinary",
+        "permit_hours",
+        "other_hours",
+        "holiday",
+        "disease"
+    ],
+    {
+        "date_id": 20220125,
+        "day": 25,
+        "description": null,
+        "disease": "0",
+        "extraordinary": 1.0,
+        "holiday": "0",
+        "hours": 8.0,
+        "location": "Milan",
+        "month": 1,
+        "other_hours": 0.0,
+        "permit_hours": 0.0,
+        "year": 2022
+    }
+]"""
+    )
+
+
+# --------------------------------------------------
+def test_print_html():
+    """print date in html"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test "
+        "--date '01/25/2022' --html"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """<table>
+    <thead>
+        <tr>
+            <th>date_id</th>
+            <th>year</th>
+            <th>month</th>
+            <th>day</th>
+            <th>hours</th>
+            <th>description</th>
+            <th>location</th>
+            <th>extraordinary</th>
+            <th>permit_hours</th>
+            <th>other_hours</th>
+            <th>holiday</th>
+            <th>disease</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>20220125</td>
+            <td>2022</td>
+            <td>1</td>
+            <td>25</td>
+            <td>8.0</td>
+            <td>None</td>
+            <td>Milan</td>
+            <td>1.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+    </tbody>
+</table>"""
+    )
+
+
+# --------------------------------------------------
+def test_print_rewards():
+    """print date in rewards"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --date '01/25/2022' --rewards"
+    )
+    assert rv == 0
+    assert (
+        out
+        == """+----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+| date_id  | year | month | day | hours | description | location | extraordinary | permit_hours | other_hours | holiday | disease | rewards |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+
+| 20220125 | 2022 |   1   |  25 |  8.0  |     None    |  Milan   |      1.0      |     0.0      |     0.0     |    0    |    0    |  81.0€  |
++----------+------+-------+-----+-------+-------------+----------+---------------+--------------+-------------+---------+---------+---------+"""
+    )
+
+
+# --------------------------------------------------
+def test_print_export():
+    """export data"""
+
+    tmp_file = "/tmp/test.txt"
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} set --database {TEMP_DB} --user test --hours 9 --date '01/25/2022'"
+    )
+    assert rv == 0
+    assert out == ""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} print --database {TEMP_DB} --user test --date '01/25/2022' --export '{tmp_file}'"
+    )
+    print(out)
+    assert rv == 0
+    assert out == ""
+
+    assert os.path.exists(tmp_file) is True
+
+
+# --------------------------------------------------
+def test_delete_database():
+    """delete database"""
+
+    rv, out = getstatusoutput(
+        f"python3 {prg} config --database {TEMP_DB} --delete-db --force"
+    )
+    assert rv == 0
+    assert out == ""
