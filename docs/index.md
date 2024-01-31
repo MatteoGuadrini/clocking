@@ -51,7 +51,6 @@ pip install .
 ## Start here
 
 Now that clocking is installed, you can start using it.
-Let's start by understanding where to start.
 Let's start with version control and help.
 
 ```commandline

@@ -1,5 +1,15 @@
 # Release notes
 
+## 0.1.0
+
+Jan 31, 2024
+
+- Add _printing_ function
+- Add _date_ common parser
+- Add _docs_ to project
+- Add check day name into **configuration**
+- Fix default word into _description_ of configuration arguments
+
 ## 0.0.9
 
 Nov 09, 2023

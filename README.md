@@ -3,8 +3,6 @@
 `clocking` is a command line utility to help you manage your worked hours, vacation, projects or whatever you need to
 consider tracking time.
 
-> This project is WIP!
-
 ## Testing
 
 [![CircleCI](https://circleci.com/gh/MatteoGuadrini/clocking.svg?style=svg)](https://circleci.com/gh/MatteoGuadrini/clocking)
@@ -39,6 +37,7 @@ pip install .
 ## Usage
 
 `clocking` was born to be a python library that offers a command line utility.
+For more information, see the official documentation on [ReadTheDocs](https://clocking.readthedocs.io/en/latest/).
 
 ### As a command line
 
