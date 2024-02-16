@@ -664,6 +664,10 @@ def setting(**options):
     if isinstance(hours_value, (int, float)) and isinstance(
         extraordinary, (int, float)
     ):
+        # Check if day is in working days
+        if today_name not in user_configuration.working_days:
+            extraordinary = hours_value
+            hours_value = 0
         # Check if worked hours is less than of default
         if hours_value < user_configuration.daily_hours and extraordinary:
             print(
@@ -678,21 +682,17 @@ def setting(**options):
                 f"greater than the default({user_configuration.daily_hours})"
             )
             permit = 0
-        # Check if day is in working days
-        elif today_name not in user_configuration.working_days:
-            extraordinary = hours_value
-            hours_value = 0
-        # Check if hours value contains extraordinary hours
-        else:
-            extraordinary = extraordinary + find_extraordinary_hours(
-                hours_value, user_configuration.daily_hours
-            )
         # Check if permit and extraordinary are specified
-        if permit and extraordinary:
+        elif permit and extraordinary:
             print("warning: no permit and extraordinary hours in the same day")
             permit = 0
             extraordinary = 0
-        hours_value = hours_value - extraordinary
+        else:
+            # Check if hours value contains extraordinary hours
+            extraordinary = extraordinary + find_extraordinary_hours(
+                hours_value, user_configuration.daily_hours
+            )
+            hours_value = hours_value - extraordinary
     # Default: check location value
     location = (
         options.get("location")
