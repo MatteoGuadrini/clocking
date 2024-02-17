@@ -669,7 +669,7 @@ def setting(**options):
             extraordinary = hours_value
             hours_value = 0
         # Check if worked hours is less than of default
-        if hours_value < user_configuration.daily_hours and extraordinary:
+        elif hours_value < user_configuration.daily_hours and extraordinary:
             print(
                 "warning: no extraordinary because the hours worked are "
                 f"lower than the default({user_configuration.daily_hours})"
@@ -687,11 +687,12 @@ def setting(**options):
             print("warning: no permit and extraordinary hours in the same day")
             permit = 0
             extraordinary = 0
-        else:
-            # Check if hours value contains extraordinary hours
-            extraordinary = extraordinary + find_extraordinary_hours(
-                hours_value, user_configuration.daily_hours
-            )
+        # Check if hours value contains extraordinary hours
+        more_extraordinary = find_extraordinary_hours(
+            hours_value, user_configuration.daily_hours
+        )
+        if more_extraordinary:
+            extraordinary = extraordinary + more_extraordinary
             hours_value = hours_value - extraordinary
     # Default: check location value
     location = (
