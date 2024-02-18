@@ -72,13 +72,13 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prog="clocking",
     )
+    parser.add_argument(
+        "-V", "--version", help="print version", action="version", version=__version__
+    )
     # Common parser
     common_parser = argparse.ArgumentParser(add_help=False)
     common_parser.add_argument(
         "-v", "--verbose", help="enable verbosity", action="store_true"
-    )
-    common_parser.add_argument(
-        "-V", "--version", help="print version", action="version", version=__version__
     )
     common_parser.add_argument(
         "-B",
