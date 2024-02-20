@@ -1,5 +1,13 @@
 # Release notes
 
+## 0.1.1
+
+Feb 21, 2024
+
+- Fix result into _get_current_version_ function
+- Fix issue of wrong extraordinary calculations
+- Fix _version_ argument
+
 ## 0.1.0
 
 Jan 31, 2024
