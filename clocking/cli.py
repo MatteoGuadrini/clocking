@@ -72,13 +72,13 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prog="clocking",
     )
+    parser.add_argument(
+        "-V", "--version", help="print version", action="version", version=__version__
+    )
     # Common parser
     common_parser = argparse.ArgumentParser(add_help=False)
     common_parser.add_argument(
         "-v", "--verbose", help="enable verbosity", action="store_true"
-    )
-    common_parser.add_argument(
-        "-V", "--version", help="print version", action="version", version=__version__
     )
     common_parser.add_argument(
         "-B",
@@ -664,8 +664,12 @@ def setting(**options):
     if isinstance(hours_value, (int, float)) and isinstance(
         extraordinary, (int, float)
     ):
+        # Check if day is in working days
+        if today_name not in user_configuration.working_days:
+            extraordinary = hours_value
+            hours_value = 0
         # Check if worked hours is less than of default
-        if hours_value < user_configuration.daily_hours and extraordinary:
+        elif hours_value < user_configuration.daily_hours and extraordinary:
             print(
                 "warning: no extraordinary because the hours worked are "
                 f"lower than the default({user_configuration.daily_hours})"
@@ -678,21 +682,18 @@ def setting(**options):
                 f"greater than the default({user_configuration.daily_hours})"
             )
             permit = 0
-        # Check if day is in working days
-        elif today_name not in user_configuration.working_days:
-            extraordinary = hours_value
-            hours_value = 0
-        # Check if hours value contains extraordinary hours
-        else:
-            extraordinary = extraordinary + find_extraordinary_hours(
-                hours_value, user_configuration.daily_hours
-            )
         # Check if permit and extraordinary are specified
-        if permit and extraordinary:
+        elif permit and extraordinary:
             print("warning: no permit and extraordinary hours in the same day")
             permit = 0
             extraordinary = 0
-        hours_value = hours_value - extraordinary
+        # Check if hours value contains extraordinary hours
+        more_extraordinary = find_extraordinary_hours(
+            hours_value, user_configuration.daily_hours
+        )
+        if more_extraordinary:
+            extraordinary = extraordinary + more_extraordinary
+            hours_value = hours_value - extraordinary
     # Default: check location value
     location = (
         options.get("location")

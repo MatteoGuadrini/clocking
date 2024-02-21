@@ -147,7 +147,7 @@ def get_current_version(database):
         # Get clocking version
         cur.execute("SELECT version_id FROM version;")
 
-        result = cur.fetchone()[0]
+        result = cur.fetchall()[-1][0]
 
     return result
 
