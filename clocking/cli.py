@@ -691,9 +691,9 @@ def setting(**options):
         more_extraordinary = find_extraordinary_hours(
             hours_value, user_configuration.daily_hours
         )
+        hours_value = hours_value - more_extraordinary
         if more_extraordinary:
             extraordinary = extraordinary + more_extraordinary
-            hours_value = hours_value - extraordinary
     # Default: check location value
     location = (
         options.get("location")
@@ -702,7 +702,7 @@ def setting(**options):
     )
     vprint(
         f"setting hours={hours_value}, location={location}, "
-        f"extraordinary={extraordinary}, permit={permit}, other={other}"
+        f"extraordinary={extraordinary}, permit={permit}, other={other} "
         f"description={description}",
         verbose=verbosity,
     )
