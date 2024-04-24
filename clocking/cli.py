@@ -27,6 +27,7 @@ import sqlite3
 from getpass import getuser
 
 from clocking import (
+    datestring_to_datetime,
     database_exists,
     make_database,
     delete_database,
@@ -598,7 +599,11 @@ def setting(**options):
     force = options.get("force")
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
     # Set filled daily values
-    today = datetime.today()
+    today = (
+        datestring_to_datetime(options.get("date"))
+        if options.get("date")
+        else datetime.today()
+    )
     today_name = today.strftime("%a")
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
