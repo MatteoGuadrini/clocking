@@ -1,5 +1,12 @@
 # Release notes
 
+## 0.1.2
+
+Apr 26, 2024
+
+- Fix into "_today_" variable, a specific date
+- Fix _hours_ value with extraordinaries
+
 ## 0.1.1
 
 Feb 21, 2024

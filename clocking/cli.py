@@ -27,6 +27,7 @@ import sqlite3
 from getpass import getuser
 
 from clocking import (
+    datestring_to_datetime,
     database_exists,
     make_database,
     delete_database,
@@ -598,7 +599,11 @@ def setting(**options):
     force = options.get("force")
     vprint(f"insert data into database {db} for user {user}", verbose=verbosity)
     # Set filled daily values
-    today = datetime.today()
+    today = (
+        datestring_to_datetime(options.get("date"))
+        if options.get("date")
+        else datetime.today()
+    )
     today_name = today.strftime("%a")
     year = today.year if not options.get("year") else options.get("year")
     month = today.month if not options.get("month") else options.get("month")
@@ -691,9 +696,9 @@ def setting(**options):
         more_extraordinary = find_extraordinary_hours(
             hours_value, user_configuration.daily_hours
         )
+        hours_value = hours_value - more_extraordinary
         if more_extraordinary:
             extraordinary = extraordinary + more_extraordinary
-            hours_value = hours_value - extraordinary
     # Default: check location value
     location = (
         options.get("location")
@@ -702,7 +707,7 @@ def setting(**options):
     )
     vprint(
         f"setting hours={hours_value}, location={location}, "
-        f"extraordinary={extraordinary}, permit={permit}, other={other}"
+        f"extraordinary={extraordinary}, permit={permit}, other={other} "
         f"description={description}",
         verbose=verbosity,
     )
